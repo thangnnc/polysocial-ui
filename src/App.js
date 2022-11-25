@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+// routes
+import Router from './routes';
+// components
+import ScrollToTop from './components/scroll-to-top';
+import { ThemeProvider } from '@mui/material/';
+import theme from './utils/Theme/theme';
+import { BrowserRouter } from 'react-router-dom/dist';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <ScrollToTop/>
+          <Router/>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 
