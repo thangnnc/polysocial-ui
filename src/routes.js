@@ -2,6 +2,7 @@ import { Navigate, useRoutes } from "react-router-dom";
 import AdminLayout from "./layouts/admin/AdminLayout";
 import UserLayout from "./layouts/user/UserLayout";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
+import ManagementContent from "./pages/AdminManagementContent/ManagementContent";
 import ManagementGroup from "./pages/AdminManagementGroup/ManagementGroup";
 import ManagementUser from "./pages/AdminManagementUser/ManagementUser";
 import Page404 from "./pages/ErrorPage/Page404";
@@ -39,7 +40,7 @@ export default function Router() {
         { path: "dashboard", element: <AdminDashboard /> },
         { path: "users", element: <ManagementUser /> },
         { path: "groups", element: <ManagementGroup /> },
-        { path: "posts", element: <h2>Quản lý bài viết</h2> },
+        { path: "posts", element: <ManagementContent /> },
         { path: "comments", element: <h2>Quản lý bình luận</h2> },
         { path: "likes", element: <h2>Quản lý lượt yêu thích</h2> },
         { path: "activities", element: <h2>Quản lý lịch sử hoạt động</h2> },

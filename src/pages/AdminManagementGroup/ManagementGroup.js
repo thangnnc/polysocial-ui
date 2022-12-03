@@ -105,15 +105,23 @@ export default function ManagementGroup() {
 
   const [groups, setGroups] = useState([]);
 
+  const [groupsDelete, setGroupsDelete] = useState([]);
+
   const [value, setValue] = useState("1");
 
   useEffect(() => {
     getAllData();
+    getAllDataDelete();
   }, []);
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroups();
     setGroups(response.content);
+  };
+
+  const getAllDataDelete = async () => {
+    const response = await Axios.Groups.getAllGroupsFalse();
+    setGroupsDelete(response.content);
   };
 
   const handleOpenMenu = (event, value) => {
@@ -183,6 +191,14 @@ export default function ManagementGroup() {
 
   const isNotFound = !filteredGroup.length && !!filterName;
 
+  const filteredGroupDelete = applySortFilter(
+    groupsDelete,
+    getComparator(order, orderBy),
+    filterName
+  );
+
+  const isNotFoundDelete = !filteredGroupDelete.length && !!filterName;
+
   const handleCreateGroup = () => {
     setIsCreate(true);
   };
@@ -212,14 +228,35 @@ export default function ManagementGroup() {
           <TabContext value={value}>
             <Box
               sx={{ borderBottom: 1, borderColor: "divider" }}
-              backgroundColor="white"
+              style={{
+                backgroundColor: "white",
+                margin: " 0 22px",
+                border: "1px solid #e4e4e4",
+                borderRadius: "12px",
+                paddingTop: 10,
+              }}
             >
               <TabList
                 onChange={handleChange}
                 aria-label="lab API tabs example"
+                style={{ borderRadius: "12px" }}
               >
-                <Tab label="Danh sách nhóm hoạt động" value="1" />
-                <Tab label="Danh sách nhóm đã xoá" value="2" />
+                <Tab
+                  label="Danh sách nhóm hoạt động"
+                  value="1"
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}
+                />
+                <Tab
+                  label="Danh sách nhóm đã xoá"
+                  value="2"
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}
+                />
               </TabList>
             </Box>
             <TabPanel value="1">
@@ -363,7 +400,147 @@ export default function ManagementGroup() {
                 />
               </Card>
             </TabPanel>
-            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="2">
+              <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
+                <GroupListToolbar
+                  numSelected={selected.length}
+                  filterName={filterName}
+                  onFilterName={handleFilterByName}
+                />
+                <TableContainer sx={{ minWidth: 800 }}>
+                  <Table>
+                    <GroupListHead
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={groupsDelete.length}
+                      numSelected={selected.length}
+                      onRequestSort={handleRequestSort}
+                      onSelectAllClick={handleSelectAllClick}
+                    />
+                    <TableBody>
+                      {filteredGroupDelete
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row) => {
+                          const selectedGroup =
+                            selected.indexOf(row.name) !== -1;
+
+                          return (
+                            <TableRow
+                              hover
+                              key={row.groupId}
+                              tabIndex={-1}
+                              role="checkbox"
+                              selected={selectedGroup}
+                            >
+                              <TableCell
+                                padding="checkbox"
+                                sx={{ width: "5%" }}
+                              >
+                                <Checkbox
+                                  checked={selectedGroup}
+                                  onChange={(event) =>
+                                    handleClick(event, row.name)
+                                  }
+                                />
+                              </TableCell>
+
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                padding="none"
+                                sx={{ width: "25%" }}
+                              >
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  spacing={2}
+                                  style={{ paddingLeft: 20 }}
+                                >
+                                  <Typography variant="subtitle2" noWrap>
+                                    {row.name}
+                                  </Typography>
+                                </Stack>
+                              </TableCell>
+
+                              <TableCell align="left" sx={{ width: "25%" }}>
+                                {row.description}
+                              </TableCell>
+
+                              <TableCell align="left" sx={{ width: "10%" }}>
+                                {row.totalMember}
+                              </TableCell>
+
+                              <TableCell align="left" sx={{ width: "15%" }}>
+                                {row.status
+                                  ? "Đang hoạt động"
+                                  : "Ngừng hoạt động"}
+                              </TableCell>
+
+                              <TableCell align="left" sx={{ width: "15%" }}>
+                                {fDateTime(row.createdDate)}
+                              </TableCell>
+
+                              <TableCell align="right" sx={{ width: "5%" }}>
+                                <IconButton
+                                  size="large"
+                                  color="inherit"
+                                  onClick={(e) => handleOpenMenu(e, row)}
+                                >
+                                  <Iconify icon={"eva:more-vertical-fill"} />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      {emptyRows > 0 && (
+                        <TableRow style={{ height: 53 * emptyRows }}>
+                          <TableCell colSpan={6} />
+                        </TableRow>
+                      )}
+                    </TableBody>
+
+                    {isNotFoundDelete && (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                            <Paper
+                              sx={{
+                                textAlign: "center",
+                              }}
+                            >
+                              <Typography variant="h6" paragraph>
+                                Not found
+                              </Typography>
+
+                              <Typography variant="body2">
+                                No results found for &nbsp;
+                                <strong>&quot;{filterName}&quot;</strong>.
+                                <br /> Try checking for typos or using complete
+                                words.
+                              </Typography>
+                            </Paper>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    )}
+                  </Table>
+                </TableContainer>
+
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={groupsDelete.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Card>
+            </TabPanel>
           </TabContext>
         </Box>
       </Container>

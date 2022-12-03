@@ -37,13 +37,13 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-GroupListToolbar.propTypes = {
+ContentListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
 };
 
-export default function GroupListToolbar({
+export default function ContentListToolbar({
   numSelected,
   filterName,
   onFilterName,
@@ -65,7 +65,7 @@ export default function GroupListToolbar({
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Tìm kiếm nhóm học tập theo tên nhóm"
+          placeholder="Tìm kiếm bài viết theo người đăng bài"
           startAdornment={
             <InputAdornment position="start">
               <Iconify
