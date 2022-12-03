@@ -1,17 +1,34 @@
-import { Helmet } from 'react-helmet';
-import { filter, sample } from 'lodash';
-import { sentenceCase } from 'change-case';
+import { Helmet } from "react-helmet";
+import { filter, sample } from "lodash";
+import { sentenceCase } from "change-case";
 // @mui
-import { Avatar, Card, Checkbox, Container, IconButton, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, TablePagination, Paper, Popover, MenuItem } from '@mui/material';
-import Title from '../../components/title';
-import { faker } from '@faker-js/faker';
-import { useState } from 'react';
-import { Label } from '@mui/icons-material';
-import Iconify from '../../components/iconify';
-import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
-import { fDateTime } from '../../utils/Format/formatTime';
-import BasicSpeedDial from './components/BasicSpeedDial';
-import { DialogEditUser } from './components/DialogEditUser';
+import {
+  Avatar,
+  Card,
+  Checkbox,
+  Container,
+  IconButton,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+  TablePagination,
+  Paper,
+  Popover,
+  MenuItem,
+} from "@mui/material";
+import Title from "../../components/title";
+import { faker } from "@faker-js/faker";
+import { useState } from "react";
+import { Label } from "@mui/icons-material";
+import Iconify from "../../components/iconify";
+import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
+import { fDateTime } from "../../utils/Format/formatTime";
+import BasicSpeedDial from "./components/BasicSpeedDial";
+import { DialogEditUser } from "./components/DialogEditUser";
 
 // ----------------------------------------------------------------------
 // Fake data user
@@ -21,61 +38,65 @@ const users = [...Array(24)].map((_, index) => ({
   fullName: faker.name.fullName(),
   email: faker.internet.email(),
   createdDate: faker.date.past(),
-  status: sample(['active', 'banned']),
+  status: sample(["active", "banned"]),
   role: sample([
-    'Leader',
-    'Hr Manager',
-    'UI Designer',
-    'UX Designer',
-    'UI/UX Designer',
-    'Project Manager',
-    'Backend Developer',
-    'Full Stack Designer',
-    'Front End Developer',
-    'Full Stack Developer',
+    "Leader",
+    "Hr Manager",
+    "UI Designer",
+    "UX Designer",
+    "UI/UX Designer",
+    "Project Manager",
+    "Backend Developer",
+    "Full Stack Designer",
+    "Front End Developer",
+    "Full Stack Developer",
   ]),
 }));
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-{ id: 'fullName', label: 'Họ Và Tên', alignRight: false },
-{ id: 'email', label: 'Email', alignRight: false },
-{ id: 'role', label: 'Chức Vụ', alignRight: false },
-{ id: 'status', label: 'Trạng Thái', alignRight: false },
-{ id: 'createdDate', label: 'Ngày Tạo', alignRight: false },
-{ id: '' },
+  { id: "fullName", label: "Họ Và Tên", alignRight: false },
+  { id: "email", label: "Email", alignRight: false },
+  { id: "role", label: "Chức Vụ", alignRight: false },
+  { id: "status", label: "Trạng Thái", alignRight: false },
+  { id: "createdDate", label: "Ngày Tạo", alignRight: false },
+  { id: "" },
 ];
 
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
-if (b[orderBy] < a[orderBy]) {
-  return -1;
-}
-if (b[orderBy] > a[orderBy]) {
-  return 1;
-}
-return 0;
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
 }
 
 function getComparator(order, orderBy) {
-return order === 'desc'
-  ? (a, b) => descendingComparator(a, b, orderBy)
-  : (a, b) => -descendingComparator(a, b, orderBy);
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function applySortFilter(array, comparator, query) {
-const stabilizedThis = array.map((el, index) => [el, index]);
-stabilizedThis.sort((a, b) => {
-  const order = comparator(a[0], b[0]);
-  if (order !== 0) return order;
-  return a[1] - b[1];
-});
-if (query) {
-  return filter(array, (_user) => _user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-}
-return stabilizedThis.map((el) => el[0]);
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  if (query) {
+    return filter(
+      array,
+      (_user) =>
+        _user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    );
+  }
+  return stabilizedThis.map((el) => el[0]);
 }
 
 export default function ManagementUser() {
@@ -87,19 +108,19 @@ export default function ManagementUser() {
 
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState("asc");
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('fullName');
+  const [orderBy, setOrderBy] = useState("fullName");
 
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleOpenMenu = (event, value) => {
     setOpen(event.currentTarget);
-    setUser(value)
+    setUser(value);
   };
 
   const handleCloseMenu = () => {
@@ -107,8 +128,8 @@ export default function ManagementUser() {
   };
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -131,7 +152,10 @@ export default function ManagementUser() {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
     }
     setSelected(newSelected);
   };
@@ -150,21 +174,26 @@ export default function ManagementUser() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(
+    users,
+    getComparator(order, orderBy),
+    filterName
+  );
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
   const handleCreateUser = () => {
     setIsEdit(true);
-    setUser({})
-    console.log('Create user');
-  }
-  
+    setUser({});
+    console.log("Create user");
+  };
+
   const handleExport = () => {
-    console.log('Export list user');
-  }
+    console.log("Export list user");
+  };
 
   return (
     <>
@@ -173,12 +202,14 @@ export default function ManagementUser() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Title icon={'bxs:dashboard'}>
-          Quản lý người dùng
-        </Title>
+        <Title icon={"bxs:dashboard"}>Quản lý người dùng</Title>
 
-        <Card sx={{boxShadow: '0px 0px 2px #9e9e9e'}}>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+        <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
+          <UserListToolbar
+            numSelected={selected.length}
+            filterName={filterName}
+            onFilterName={handleFilterByName}
+          />
           <TableContainer sx={{ minWidth: 800 }}>
             <Table>
               <UserListHead
@@ -191,43 +222,87 @@ export default function ManagementUser() {
                 onSelectAllClick={handleSelectAllClick}
               />
               <TableBody>
-                {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                  const { id, fullName, role, status, email, avatarUrl, createdDate } = row;
-                  const selectedUser = selected.indexOf(fullName) !== -1;
+                {filteredUsers
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    const {
+                      id,
+                      fullName,
+                      role,
+                      status,
+                      email,
+                      avatarUrl,
+                      createdDate,
+                    } = row;
+                    const selectedUser = selected.indexOf(fullName) !== -1;
 
-                  return (
-                    <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                      <TableCell padding="checkbox" sx={{width: '5%'}}>
-                        <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, fullName)} />
-                      </TableCell>
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={selectedUser}
+                      >
+                        <TableCell padding="checkbox" sx={{ width: "5%" }}>
+                          <Checkbox
+                            checked={selectedUser}
+                            onChange={(event) => handleClick(event, fullName)}
+                          />
+                        </TableCell>
 
-                      <TableCell component="th" scope="row" padding="none" sx={{width: '25%'}}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Avatar alt={fullName} src={avatarUrl} />
-                          <Typography variant="subtitle2" noWrap>
-                            {fullName}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          padding="none"
+                          sx={{ width: "25%" }}
+                        >
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={2}
+                          >
+                            <Avatar alt={fullName} src={avatarUrl} />
+                            <Typography variant="subtitle2" noWrap>
+                              {fullName}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
 
-                      <TableCell align="left" sx={{width: '20%'}}>{email}</TableCell>
+                        <TableCell align="left" sx={{ width: "20%" }}>
+                          {email}
+                        </TableCell>
 
-                      <TableCell align="left" sx={{width: '15%'}}>{role}</TableCell>
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {role}
+                        </TableCell>
 
-                      <TableCell align="left" sx={{width: '15%'}}>
-                        <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                      </TableCell>
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          <Label
+                            color={
+                              (status === "banned" && "error") || "success"
+                            }
+                          >
+                            {sentenceCase(status)}
+                          </Label>
+                        </TableCell>
 
-                      <TableCell align="left" sx={{width: '15%'}}>{fDateTime(createdDate)}</TableCell>
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {fDateTime(createdDate)}
+                        </TableCell>
 
-                      <TableCell align="right" sx={{width: '5%'}}>
-                        <IconButton size="large" color="inherit" onClick={e => handleOpenMenu(e,row)}>
-                          <Iconify icon={'eva:more-vertical-fill'} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                        <TableCell align="right" sx={{ width: "5%" }}>
+                          <IconButton
+                            size="large"
+                            color="inherit"
+                            onClick={(e) => handleOpenMenu(e, row)}
+                          >
+                            <Iconify icon={"eva:more-vertical-fill"} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
@@ -241,7 +316,7 @@ export default function ManagementUser() {
                     <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
                       <Paper
                         sx={{
-                          textAlign: 'center',
+                          textAlign: "center",
                         }}
                       >
                         <Typography variant="h6" paragraph>
@@ -277,34 +352,37 @@ export default function ManagementUser() {
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
           sx: {
             p: 1,
             width: 140,
-            '& .MuiMenuItem-root': {
+            "& .MuiMenuItem-root": {
               px: 1,
-              typography: 'body2',
+              typography: "body2",
               borderRadius: 0.75,
             },
           },
         }}
       >
-        <MenuItem onClick={() => setIsEdit(true)} >
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+        <MenuItem onClick={() => setIsEdit(true)}>
+          <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
           Chỉnh sửa
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+        <MenuItem sx={{ color: "error.main" }}>
+          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
           Xóa
         </MenuItem>
       </Popover>
 
       <DialogEditUser open={isEdit} setOpen={setIsEdit} user={user} />
 
-      <BasicSpeedDial handleCreateUser={handleCreateUser} handleExport={handleExport} />
+      <BasicSpeedDial
+        handleCreateUser={handleCreateUser}
+        handleExport={handleExport}
+      />
     </>
   );
 }
