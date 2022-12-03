@@ -4,6 +4,7 @@ import UserLayout from "./layouts/user/UserLayout";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import ManagementContent from "./pages/AdminManagementContent/ManagementContent";
 import ManagementGroup from "./pages/AdminManagementGroup/ManagementGroup";
+import ManagementGroupDetail from "./pages/AdminManagementGroupDetail/ManagementGroupDetail";
 import ManagementUser from "./pages/AdminManagementUser/ManagementUser";
 import Page404 from "./pages/ErrorPage/Page404";
 // layouts
@@ -40,6 +41,7 @@ export default function Router() {
         { path: "dashboard", element: <AdminDashboard /> },
         { path: "users", element: <ManagementUser /> },
         { path: "groups", element: <ManagementGroup /> },
+        { path: "groups/detail/:groupId", element: <ManagementGroupDetail /> },
         { path: "posts", element: <ManagementContent /> },
         { path: "comments", element: <h2>Quản lý bình luận</h2> },
         { path: "likes", element: <h2>Quản lý lượt yêu thích</h2> },

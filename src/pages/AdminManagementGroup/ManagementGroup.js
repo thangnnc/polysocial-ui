@@ -34,6 +34,7 @@ import Axios from "./../../utils/Axios/index";
 import { DialogCreateGroup } from "./components/DialogCreateGroup";
 import { DialogCreateGroupExcel } from "./components/DialogCreateGroupExcel";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Link } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -313,16 +314,22 @@ export default function ManagementGroup() {
                                 padding="none"
                                 sx={{ width: "25%" }}
                               >
-                                <Stack
-                                  direction="row"
-                                  alignItems="center"
-                                  spacing={2}
-                                  style={{ paddingLeft: 20 }}
+                                <Link
+                                  to={`detail/${row.groupId}`}
+                                  underline="none"
+                                  color="inherit"
                                 >
-                                  <Typography variant="subtitle2" noWrap>
-                                    {row.name}
-                                  </Typography>
-                                </Stack>
+                                  <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    spacing={2}
+                                    style={{ paddingLeft: 20 }}
+                                  >
+                                    <Typography variant="subtitle2" noWrap>
+                                      {row.name}
+                                    </Typography>
+                                  </Stack>
+                                </Link>
                               </TableCell>
 
                               <TableCell align="left" sx={{ width: "25%" }}>
