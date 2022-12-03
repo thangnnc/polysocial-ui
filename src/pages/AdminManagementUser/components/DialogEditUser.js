@@ -43,7 +43,7 @@ const marjorList = [
   {title: 'Tự Động Hóa', value: 'Tự Động Hóa'},
 ]
 
-export const DialogEditUser = ({ open, setOpen, userId }) => {
+export const DialogEditUser = ({ open, setOpen, user }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -76,7 +76,7 @@ export const DialogEditUser = ({ open, setOpen, userId }) => {
               <TextField 
                 name="email" 
                 label="Email" 
-                value={userId}
+                value={user.email}
                 variant="standard"
                 placeholder="Nhập email"
                 InputProps={{

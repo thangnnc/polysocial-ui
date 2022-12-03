@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 //
 import Header from './header';
-import Nav from './nav';
 
 // ----------------------------------------------------------------------
 
@@ -32,14 +30,11 @@ const Main = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function AdminLayout() {
-  const [open, setOpen] = useState(false);
+export default function UserLayout() {
 
   return (
     <StyledRoot>
-      <Header onOpenNav={() => setOpen(true)} />
-
-      <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+      <Header />
 
       <Main>
         <Outlet />

@@ -6,8 +6,6 @@ import Logo from "../../components/logo";
 // sections
 import { LoginForm } from "./components/LoginForm";
 import { Helmet } from "react-helmet";
-import { RegisterDialog } from "./components/RegisterDialog";
-import { useState } from "react";
 
 // ----------------------------------------------------------------------
 
@@ -34,17 +32,6 @@ const StyledContent = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function LoginPage() {
-  const [isShowRegister, setShowRegister] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    "email": undefined,
-    "fullName": undefined,
-    "studentCode": undefined,
-    "avatar": undefined,
-    "course": undefined,
-    "major": undefined,
-    "birthday": undefined,
-    "gender": undefined
-  });
 
   return (
     <>
@@ -64,9 +51,7 @@ export default function LoginPage() {
 							}}/>
             </Typography>
 
-            <LoginForm showRegister={setShowRegister} setUser={setUserInfo}/>
-
-            <RegisterDialog open={isShowRegister} setOpen={setShowRegister} newUser={userInfo}/>
+            <LoginForm />
           </StyledContent>
         </Container>
       </StyledRoot>

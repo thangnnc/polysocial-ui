@@ -8,19 +8,30 @@ import useLogin from '../../../utils/Login/useLogin';
 import useValidator from '../../../utils/Validator';
 import { GoogleLogin } from 'react-google-login';
 import { gapi } from 'gapi-script';
+import { RegisterDialog } from "../components/RegisterDialog";
 
 // ----------------------------------------------------------------------
 
 const clientId = '42163288513-umf3io4r9hoab89kvqm5bu4tafmsqtqv.apps.googleusercontent.com';
 
 
-export const LoginForm = ({showRegister, setUser, ...props}) => {
+export const LoginForm = (props) => {
   const {setAccount} = useLogin();
   const {validate} = useValidator();
   const [showPassword, setShowPassword] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
-  const [googleAccount, setGoogleAccount] = useState({});
+  const [isShowRegister, setShowRegister] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    "email": undefined,
+    "fullName": undefined,
+    "studentCode": undefined,
+    "avatar": undefined,
+    "course": undefined,
+    "major": undefined,
+    "birthday": undefined,
+    "gender": undefined
+  });
   const [inputValues, setInputValues] = useState({
     email: "",
     password: "",
@@ -61,20 +72,14 @@ export const LoginForm = ({showRegister, setUser, ...props}) => {
     setShowLoading(() => false);
   };
 
-  const loginWithEmail = async (email) => {
-    const response = await Axios.post("/api/login-email", {email: email});
+  const loginWithEmail = async () => {
+    const response = await Axios.post("/api/login-email", {email: userInfo});
     if (response.status === 200 && response.data) {
       setAccount(response.data);
       window.location = "/home";
       return true;
     } else {
-      showRegister(true);
-      setUser((user) => ({
-        ...user, 
-        email: googleAccount.email,
-        fullName: googleAccount.name,
-        avatar: googleAccount.imageUrl
-      }))
+      setShowRegister(true);
     }
   };
 
@@ -115,7 +120,6 @@ export const LoginForm = ({showRegister, setUser, ...props}) => {
 
   const responseGoogle = (response) => {
     const data = response.profileObj;
-    setGoogleAccount(data);
     if(!(data.email.includes("fpt.edu.vn") || data.email.includes("fe.fpt.vn"))){
       setForm(() => ({
         status: "warning",
@@ -124,8 +128,14 @@ export const LoginForm = ({showRegister, setUser, ...props}) => {
       setShowAlert(true);
       return;
     }
-    loginWithEmail(data.email);
-
+    
+    setUserInfo((user) => ({
+      ...user, 
+      email: data.email,
+      fullName: data.name,
+      avatar: data.imageUrl
+    }))
+    loginWithEmail();
   }
 
   // Alert
@@ -212,9 +222,7 @@ export const LoginForm = ({showRegister, setUser, ...props}) => {
           </Stack>
         )}
         onSuccess={responseGoogle}
-        onFailure={responseGoogle}
         cookiePolicy={'single_host_origin'}
-        isSignedIn={true}
       />
       <Snackbar open={showAlert} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={form.status} sx={{ width: '100%' }}>
@@ -228,6 +236,8 @@ export const LoginForm = ({showRegister, setUser, ...props}) => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      
+      <RegisterDialog newUser={userInfo} open={isShowRegister} setOpen={setShowRegister}/>
     </>
   );
 }

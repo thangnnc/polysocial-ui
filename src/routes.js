@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 import AdminLayout from './layouts/admin/AdminLayout';
+import UserLayout from './layouts/user/UserLayout';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import ManagementUser from './pages/AdminManagementUser/ManagementUser';
 import Page404 from './pages/ErrorPage/Page404';
@@ -22,8 +23,12 @@ export default function Router() {
       element: !account ? <LoginPage /> : <Navigate to="/home" />,
     },
     {
-      path: '/home',
-      element: !account ? <Navigate to="/login" /> : (<h2>Home</h2>) ,
+      path: '/',
+      element: !account ? <Navigate to="/login" /> : <UserLayout /> ,
+      children: [
+        { element: <Navigate to="/home" />, index: true },
+        { path: 'home', element: <h2>Home</h2>},
+      ],
     },
     {
       path: '/admin',

@@ -43,22 +43,29 @@ const marjorList = [
   {title: 'Tự Động Hóa', value: 'Tự Động Hóa'},
 ]
 
-export const RegisterDialog = ({ open, setOpen, userId }) => {
+export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
   const handleClose = () => {
     setOpen(false);
   };
 
+  const getStudentCodeFromEmail = (email) => {
+    if (email) {
+      let regexCode = /ps[0-9]{5}/;
+      let arrEmail = email.split(regexCode);
+      return email.replace(arrEmail[0], "").replace(arrEmail[1], "").toUpperCase();
+    }
+  }
   return (
     <div>
       <Dialog open={open} onClose={handleClose} maxWidth="1000">
-        <DialogTitle>Chỉnh Sửa Tài Khoản</DialogTitle>
+        <DialogTitle>Đăng Ký Tài Khoản Mới</DialogTitle>
         <Divider/>
         <DialogContent >
           <DialogContentText/>
           <Grid container spacing={2} sx={{width: 800}}>
             <Grid item xs={5}>
               <label htmlFor='avatar'>
-                <Avatar sx={styleAvatar} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar sx={styleAvatar} alt="Remy Sharp" src={newUser.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
                   Chọn ảnh đại diện
                 </Typography>
@@ -76,7 +83,7 @@ export const RegisterDialog = ({ open, setOpen, userId }) => {
               <TextField 
                 name="email" 
                 label="Email" 
-                value={userId}
+                value={newUser.email}
                 variant="standard"
                 placeholder="Nhập email"
                 InputProps={{
@@ -90,8 +97,25 @@ export const RegisterDialog = ({ open, setOpen, userId }) => {
                 sx={styleInputFullField}
               />
               <TextField 
+                name="password" 
+                type="password"
+                label="Mật khẩu"
+                placeholder='Nhập Mật Khẩu'
+                variant='standard'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={'carbon:password'} />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete='none'
+                sx={styleInputFullField}
+              />
+              <TextField 
                 name="fullName" 
                 label="Họ Và Tên"
+                value={newUser.fullName}
                 placeholder='Nhập Họ Và Tên'
                 variant='standard'
                 InputProps={{
@@ -109,6 +133,7 @@ export const RegisterDialog = ({ open, setOpen, userId }) => {
                   <TextField 
                     name="studentCode" 
                     label="Mã Sinh Viên"
+                    value={getStudentCodeFromEmail(newUser.email)}
                     placeholder='Nhập Mã Sinh Viên'
                     variant='standard'
                     InputProps={{
@@ -221,8 +246,7 @@ export const RegisterDialog = ({ open, setOpen, userId }) => {
           </Grid>
         </DialogContent>
         <DialogActions sx={{p: "0 24px 12px 24px"}}>
-          <Button onClick={handleClose} variant='contained' className='btn-orange'>Tắt Hoạt Động</Button>
-          <Button onClick={handleClose} variant='contained' className='btn-red'>Xóa</Button>
+          <Button onClick={handleClose} variant='contained' className='btn-orange'>Đăng Ký</Button>
           <Button onClick={handleClose} variant='contained' className='btn-secondary'>Hủy</Button>
         </DialogActions>
       </Dialog>

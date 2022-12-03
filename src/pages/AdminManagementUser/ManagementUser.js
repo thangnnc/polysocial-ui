@@ -10,7 +10,7 @@ import { Label } from '@mui/icons-material';
 import Iconify from '../../components/iconify';
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 import { fDateTime } from '../../utils/Format/formatTime';
-import BasicSpeedDial from '../../components/speed-dial/BasicSpeedDial';
+import BasicSpeedDial from './components/BasicSpeedDial';
 import { DialogEditUser } from './components/DialogEditUser';
 
 // ----------------------------------------------------------------------
@@ -83,7 +83,7 @@ export default function ManagementUser() {
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const [userId, setUserId] = useState();
+  const [user, setUser] = useState({});
 
   const [page, setPage] = useState(0);
 
@@ -99,7 +99,7 @@ export default function ManagementUser() {
 
   const handleOpenMenu = (event, value) => {
     setOpen(event.currentTarget);
-    setUserId(value)
+    setUser(value)
   };
 
   const handleCloseMenu = () => {
@@ -158,7 +158,7 @@ export default function ManagementUser() {
 
   const handleCreateUser = () => {
     setIsEdit(true);
-    setUserId('')
+    setUser({})
     console.log('Create user');
   }
   
@@ -221,7 +221,7 @@ export default function ManagementUser() {
                       <TableCell align="left" sx={{width: '15%'}}>{fDateTime(createdDate)}</TableCell>
 
                       <TableCell align="right" sx={{width: '5%'}}>
-                        <IconButton size="large" color="inherit" onClick={e => handleOpenMenu(e,email)}>
+                        <IconButton size="large" color="inherit" onClick={e => handleOpenMenu(e,row)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
                         </IconButton>
                       </TableCell>
@@ -302,7 +302,7 @@ export default function ManagementUser() {
         </MenuItem>
       </Popover>
 
-      <DialogEditUser open={isEdit} setOpen={setIsEdit} userId={userId} />
+      <DialogEditUser open={isEdit} setOpen={setIsEdit} user={user} />
 
       <BasicSpeedDial handleCreateUser={handleCreateUser} handleExport={handleExport} />
     </>
