@@ -36,7 +36,7 @@ import { DialogCreateContent } from "./components/DialogCreateContent";
 const TABLE_HEAD = [
   { id: "fullName", label: "Người Tạo", alignRight: false },
   { id: "content", label: "Nội Dung", alignRight: false },
-  { id: "groupId", label: "Nhóm Học Tập", alignRight: false },
+  { id: "groupId", label: "Nhóm", alignRight: false },
   { id: "statcountComment", label: "Tổng Bình Luận", alignRight: false },
   { id: "countLike", label: "Tổng Yêu Thích", alignRight: false },
   { id: "createdDate", label: "Ngày Tạo", alignRight: false },
@@ -251,19 +251,31 @@ export default function ManagementContent() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "20%" }}>
+                        <TableCell align="left" sx={{ width: "22%" }}>
                           {row.content}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "10%" }}>
+                        <TableCell
+                          align="left"
+                          sx={{ width: "8%" }}
+                          style={{ paddingLeft: 30 }}
+                        >
                           {row.groupId}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "10%" }}>
+                        <TableCell
+                          align="left"
+                          sx={{ width: "10%" }}
+                          style={{ paddingLeft: 70 }}
+                        >
                           {row.countComment}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "10%" }}>
+                        <TableCell
+                          align="left"
+                          sx={{ width: "10%" }}
+                          style={{ paddingLeft: 70 }}
+                        >
                           {row.countLike}
                         </TableCell>
 

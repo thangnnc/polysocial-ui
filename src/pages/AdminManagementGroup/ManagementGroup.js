@@ -329,7 +329,11 @@ export default function ManagementGroup() {
                                 {row.description}
                               </TableCell>
 
-                              <TableCell align="left" sx={{ width: "10%" }}>
+                              <TableCell
+                                align="left"
+                                sx={{ width: "10%" }}
+                                style={{ paddingLeft: 35 }}
+                              >
                                 {row.totalMember}
                               </TableCell>
 
@@ -470,7 +474,11 @@ export default function ManagementGroup() {
                                 {row.description}
                               </TableCell>
 
-                              <TableCell align="left" sx={{ width: "10%" }}>
+                              <TableCell
+                                align="left"
+                                sx={{ width: "10%" }}
+                                style={{ paddingLeft: 35 }}
+                              >
                                 {row.totalMember}
                               </TableCell>
 
