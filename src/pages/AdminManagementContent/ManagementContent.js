@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet";
 import { filter } from "lodash";
 // @mui
 import {
-  Avatar,
   Card,
   Checkbox,
   Container,
@@ -20,21 +19,28 @@ import {
   MenuItem,
 } from "@mui/material";
 import Title from "../../components/title";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Iconify from "../../components/iconify";
-import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
+import {
+  ContentListHead,
+  ContentListToolbar,
+} from "../../sections/@dashboard/content";
+import { fDateTime } from "../../utils/Format/formatTime";
 import BasicSpeedDial from "./components/BasicSpeedDial";
-import { DialogEditUser } from "./components/DialogEditUser";
+import { DialogEditContent } from "./components/DialogEditContent";
 import Axios from "./../../utils/Axios/index";
+import { DialogCreateContent } from "./components/DialogCreateContent";
 import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "fullName", label: "Họ Và Tên", alignRight: false },
-  { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
-  { id: "email", label: "Email", alignRight: false },
-  { id: "status", label: "Trạng Thái", alignRight: false },
+  { id: "fullName", label: "Người Tạo", alignRight: false },
+  { id: "content", label: "Nội Dung", alignRight: false },
+  { id: "groupId", label: "Nhóm", alignRight: false },
+  { id: "statcountComment", label: "Tổng Bình Luận", alignRight: false },
+  { id: "countLike", label: "Tổng Yêu Thích", alignRight: false },
+  { id: "createdDate", label: "Ngày Tạo", alignRight: false },
   { id: "" },
 ];
 
@@ -66,21 +72,21 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) =>
-        _user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_content) =>
+        _content.user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ManagementUser() {
+export default function ManagementContent() {
   const [open, setOpen] = useState(null);
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const [user, setUser] = useState({});
+  const [isCreate, setIsCreate] = useState(false);
 
-  const [users, setUsers] = useState([]);
+  const [content, setContent] = useState({});
 
   const [page, setPage] = useState(0);
 
@@ -94,15 +100,16 @@ export default function ManagementUser() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [contents, setContents] = useState([]);
+
   useEffect(() => {
-    getAllUser();
+    getAllData();
   }, []);
 
-  const getAllUser = async () => {
-    const response = await Axios.Accounts.getAllUser();
-    console.log(response);
-    if (response) {
-      setUsers(response);
+  const getAllData = async () => {
+    const response = await Axios.Contents.getAllByAllPost();
+    if (response.listPostDTO) {
+      setContents(response.listPostDTO);
       toast.success("Lấy dữ liệu thành công");
     } else {
       toast.error("Lấy dữ liệu thất bại");
@@ -111,12 +118,12 @@ export default function ManagementUser() {
 
   //Call back data
   const onlDailogChange = () => {
-    getAllUser();
+    getAllData();
   };
 
   const handleOpenMenu = (event, value) => {
     setOpen(event.currentTarget);
-    setUser(value);
+    setContent(value);
   };
 
   const handleCloseMenu = () => {
@@ -131,7 +138,7 @@ export default function ManagementUser() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.fullName);
+      const newSelecteds = contents.map((n) => n.fullName);
       setSelected(newSelecteds);
       return;
     }
@@ -171,66 +178,69 @@ export default function ManagementUser() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - contents.length) : 0;
 
-  const filteredUsers = applySortFilter(
-    users,
+  const filteredContent = applySortFilter(
+    contents,
     getComparator(order, orderBy),
     filterName
   );
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = !filteredContent.length && !!filterName;
+
+  const handleCreateContent = () => {
+    setIsCreate(true);
+  };
 
   const handleExport = () => {
-    console.log("Export list user");
+    console.log("Export list content");
   };
 
   return (
     <>
       <Helmet>
-        <title> Quản lý người dùng | Poly Social</title>
+        <title> Quản lý bài viết | Poly Social</title>
       </Helmet>
 
       <Container maxWidth="xl">
-        <Title icon={"bxs:dashboard"}>Quản lý người dùng</Title>
+        <Title icon={"bxs:dashboard"}>Quản lý bài viết</Title>
 
         <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
-          <UserListToolbar
+          <ContentListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
           />
           <TableContainer sx={{ minWidth: 800 }}>
             <Table>
-              <UserListHead
+              <ContentListHead
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={users.length}
+                rowCount={contents.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
                 onSelectAllClick={handleSelectAllClick}
               />
               <TableBody>
-                {filteredUsers
+                {filteredContent
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    const selectedUser = selected.indexOf(row.fullName) !== -1;
+                  .map((row, index) => {
+                    const selectedContent =
+                      selected.indexOf(row.groupId) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={row.studentCode}
+                        key={index}
                         tabIndex={-1}
                         role="checkbox"
-                        selected={selectedUser}
+                        selected={selectedContent}
                       >
                         <TableCell padding="checkbox" sx={{ width: "5%" }}>
                           <Checkbox
-                            checked={selectedUser}
-                            onChange={(event) =>
-                              handleClick(event, row.fullName)
-                            }
+                            checked={selectedContent}
+                            onChange={(event) => handleClick(event, row.name)}
                           />
                         </TableCell>
 
@@ -238,30 +248,50 @@ export default function ManagementUser() {
                           component="th"
                           scope="row"
                           padding="none"
-                          sx={{ width: "30%" }}
+                          sx={{ width: "25%" }}
                         >
                           <Stack
                             direction="row"
                             alignItems="center"
                             spacing={2}
+                            style={{ paddingLeft: 20 }}
                           >
-                            <Avatar alt={row.fullName} src={row.avatar} />
                             <Typography variant="subtitle2" noWrap>
-                              {row.fullName}
+                              {row.user.fullName}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "20%" }}>
-                          {row.studentCode}
+                        <TableCell align="left" sx={{ width: "22%" }}>
+                          {row.content}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "25%" }}>
-                          {row.email}
+                        <TableCell
+                          align="left"
+                          sx={{ width: "8%" }}
+                          style={{ paddingLeft: 30 }}
+                        >
+                          {row.groupId}
+                        </TableCell>
+
+                        <TableCell
+                          align="left"
+                          sx={{ width: "10%" }}
+                          style={{ paddingLeft: 70 }}
+                        >
+                          {row.countComment}
+                        </TableCell>
+
+                        <TableCell
+                          align="left"
+                          sx={{ width: "10%" }}
+                          style={{ paddingLeft: 70 }}
+                        >
+                          {row.countLike}
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "15%" }}>
-                          {!row.status ? "Đang hoạt động" : "Đã khóa"}
+                          {fDateTime(row.createdDate)}
                         </TableCell>
 
                         <TableCell align="right" sx={{ width: "5%" }}>
@@ -312,7 +342,7 @@ export default function ManagementUser() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users.length}
+            count={contents.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -350,14 +380,23 @@ export default function ManagementUser() {
         </MenuItem>
       </Popover>
 
-      <DialogEditUser
+      <DialogEditContent
         onChange={onlDailogChange}
         open={isEdit}
         setOpen={setIsEdit}
-        user={user}
+        content={content}
       />
 
-      <BasicSpeedDial handleExport={handleExport} />
+      <DialogCreateContent
+        onChange={onlDailogChange}
+        open={isCreate}
+        setOpen={setIsCreate}
+      />
+
+      <BasicSpeedDial
+        handleCreateContent={handleCreateContent}
+        handleExport={handleExport}
+      />
     </>
   );
 }

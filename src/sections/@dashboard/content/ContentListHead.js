@@ -23,7 +23,7 @@ const visuallyHidden = {
   clip: "rect(0 0 0 0)",
 };
 
-UserListHead.propTypes = {
+ContentListHead.propTypes = {
   order: PropTypes.oneOf(["asc", "desc"]),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
@@ -33,7 +33,7 @@ UserListHead.propTypes = {
   onSelectAllClick: PropTypes.func,
 };
 
-export default function UserListHead({
+export default function ContentListHead({
   order,
   orderBy,
   rowCount,
@@ -58,6 +58,7 @@ export default function UserListHead({
         </TableCell>
         {headLabel.map((headCell) => (
           <TableCell
+            style={{ fontWeight: "bold" }}
             key={headCell.id}
             align={headCell.alignRight ? "right" : "left"}
             sortDirection={orderBy === headCell.id ? order : false}

@@ -5,11 +5,16 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import Iconify from "../../../components/iconify";
 
-export default function BasicSpeedDial({ handleExport }) {
+export default function BasicSpeedDial({ handleCreateContent, handleExport }) {
   const actions = [
     {
+      icon: <Iconify icon="el:file-new" />,
+      name: "Tạo bài viết",
+      onClick: handleCreateContent,
+    },
+    {
       icon: <Iconify icon="fa-solid:file-export" />,
-      name: "Export",
+      name: "Xuất Excel",
       onClick: handleExport,
     },
   ];

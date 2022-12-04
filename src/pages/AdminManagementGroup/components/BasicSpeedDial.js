@@ -5,11 +5,25 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import Iconify from "../../../components/iconify";
 
-export default function BasicSpeedDial({ handleExport }) {
+export default function BasicSpeedDial({
+  handleCreateGroup,
+  handleCreateGroupExcel,
+  handleExport,
+}) {
   const actions = [
     {
+      icon: <Iconify icon="el:file-new" />,
+      name: "Tạo nhóm",
+      onClick: handleCreateGroup,
+    },
+    {
+      icon: <Iconify icon="material-symbols:file-present-outline-sharp" />,
+      name: "Thêm sinh viên bằng excel",
+      onClick: handleCreateGroupExcel,
+    },
+    {
       icon: <Iconify icon="fa-solid:file-export" />,
-      name: "Export",
+      name: "Xuất Excel",
       onClick: handleExport,
     },
   ];

@@ -2,12 +2,10 @@ import { Helmet } from "react-helmet";
 import { filter } from "lodash";
 // @mui
 import {
-  Avatar,
   Card,
   Checkbox,
   Container,
   IconButton,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -18,14 +16,22 @@ import {
   Paper,
   Popover,
   MenuItem,
+  Stack,
+  Avatar,
 } from "@mui/material";
 import Title from "../../components/title";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Iconify from "../../components/iconify";
-import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
+import {
+  GroupListHead,
+  GroupListToolbar,
+} from "../../sections/@dashboard/group";
 import BasicSpeedDial from "./components/BasicSpeedDial";
-import { DialogEditUser } from "./components/DialogEditUser";
+import { DialogEditGroupDetail } from "./components/DialogEditGroupDetail";
 import Axios from "./../../utils/Axios/index";
+import { DialogCreateMember } from "./components/DialogCreateMember";
+import { useParams } from "react-router-dom";
+import { fDateTime } from "../../utils/Format/formatTime";
 import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
@@ -35,6 +41,7 @@ const TABLE_HEAD = [
   { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
   { id: "status", label: "Trạng Thái", alignRight: false },
+  { id: "createdDate", label: "Ngày Tham Gia", alignRight: false },
   { id: "" },
 ];
 
@@ -66,21 +73,21 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) =>
-        _user.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_member) =>
+        _member.fullName.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ManagementUser() {
+export default function ManagementGroupDetail() {
+  const { groupId } = useParams();
+
   const [open, setOpen] = useState(null);
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const [user, setUser] = useState({});
-
-  const [users, setUsers] = useState([]);
+  const [isCreate, setIsCreate] = useState(false);
 
   const [page, setPage] = useState(0);
 
@@ -94,15 +101,18 @@ export default function ManagementUser() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  useEffect(() => {
-    getAllUser();
-  }, []);
+  const [members, setMembers] = useState([]);
 
-  const getAllUser = async () => {
-    const response = await Axios.Accounts.getAllUser();
-    console.log(response);
+  const [member, setMember] = useState({});
+
+  useEffect(() => {
+    getAllData(groupId);
+  }, [groupId]);
+
+  const getAllData = async (groupId) => {
+    const response = await Axios.Groups.getAllStudentGroup(groupId);
     if (response) {
-      setUsers(response);
+      setMembers(response);
       toast.success("Lấy dữ liệu thành công");
     } else {
       toast.error("Lấy dữ liệu thất bại");
@@ -111,12 +121,12 @@ export default function ManagementUser() {
 
   //Call back data
   const onlDailogChange = () => {
-    getAllUser();
+    getAllData(groupId);
   };
 
   const handleOpenMenu = (event, value) => {
     setOpen(event.currentTarget);
-    setUser(value);
+    setMember(value);
   };
 
   const handleCloseMenu = () => {
@@ -131,7 +141,7 @@ export default function ManagementUser() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.fullName);
+      const newSelecteds = members?.map((n) => n.fullName);
       setSelected(newSelecteds);
       return;
     }
@@ -171,65 +181,70 @@ export default function ManagementUser() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - members.length) : 0;
 
-  const filteredUsers = applySortFilter(
-    users,
+  const filteredMember = applySortFilter(
+    members,
     getComparator(order, orderBy),
     filterName
   );
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = !filteredMember.length && !!filterName;
+
+  const handleCreateGroup = () => {
+    setIsCreate(true);
+  };
 
   const handleExport = () => {
-    console.log("Export list user");
+    console.log("Export list member");
   };
 
   return (
     <>
       <Helmet>
-        <title> Quản lý người dùng | Poly Social</title>
+        <title> Quản lý thành viên trong nhóm học tập | Poly Social</title>
       </Helmet>
 
       <Container maxWidth="xl">
-        <Title icon={"bxs:dashboard"}>Quản lý người dùng</Title>
+        <Title icon={"bxs:dashboard"}>Quản lý thành viên trong nhóm</Title>
 
         <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
-          <UserListToolbar
+          <GroupListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
           />
           <TableContainer sx={{ minWidth: 800 }}>
             <Table>
-              <UserListHead
+              <GroupListHead
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={users.length}
+                rowCount={members.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
                 onSelectAllClick={handleSelectAllClick}
               />
               <TableBody>
-                {filteredUsers
+                {filteredMember
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    const selectedUser = selected.indexOf(row.fullName) !== -1;
+                  .map((row, index) => {
+                    const selectedMember =
+                      selected.indexOf(row?.fullName) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={row.studentCode}
+                        key={index}
                         tabIndex={-1}
                         role="checkbox"
-                        selected={selectedUser}
+                        selected={selectedMember}
                       >
                         <TableCell padding="checkbox" sx={{ width: "5%" }}>
                           <Checkbox
-                            checked={selectedUser}
+                            checked={selectedMember}
                             onChange={(event) =>
-                              handleClick(event, row.fullName)
+                              handleClick(event, row?.fullName)
                             }
                           />
                         </TableCell>
@@ -238,7 +253,7 @@ export default function ManagementUser() {
                           component="th"
                           scope="row"
                           padding="none"
-                          sx={{ width: "30%" }}
+                          sx={{ width: "25%" }}
                         >
                           <Stack
                             direction="row"
@@ -252,16 +267,26 @@ export default function ManagementUser() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "20%" }}>
-                          {row.studentCode}
-                        </TableCell>
-
-                        <TableCell align="left" sx={{ width: "25%" }}>
-                          {row.email}
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          padding="none"
+                          sx={{ width: "15%" }}
+                          style={{ paddingLeft: 20 }}
+                        >
+                          {row?.studentCode}
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "15%" }}>
-                          {!row.status ? "Đang hoạt động" : "Đã khóa"}
+                          {row?.email}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {row.active ? "Đang hoạt động" : "Ngừng hoạt động"}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {fDateTime(row.createdDate)}
                         </TableCell>
 
                         <TableCell align="right" sx={{ width: "5%" }}>
@@ -312,7 +337,7 @@ export default function ManagementUser() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users.length}
+            count={members.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -350,14 +375,25 @@ export default function ManagementUser() {
         </MenuItem>
       </Popover>
 
-      <DialogEditUser
+      <DialogEditGroupDetail
         onChange={onlDailogChange}
         open={isEdit}
         setOpen={setIsEdit}
-        user={user}
+        member={member}
+        groupId={groupId}
       />
 
-      <BasicSpeedDial handleExport={handleExport} />
+      <DialogCreateMember
+        onChange={onlDailogChange}
+        open={isCreate}
+        setOpen={setIsCreate}
+        groupId={groupId}
+      />
+
+      <BasicSpeedDial
+        handleCreateGroup={handleCreateGroup}
+        handleExport={handleExport}
+      />
     </>
   );
 }

@@ -1,4 +1,3 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -9,20 +8,14 @@ import {
   Avatar,
   DialogContentText,
   Divider,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   Grid,
   InputAdornment,
-  Radio,
-  RadioGroup,
   Typography,
 } from "@mui/material";
 import Iconify from "../../../components/iconify";
-import { useState } from "react";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
 import Axios from "./../../../utils/Axios/index";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
@@ -37,21 +30,30 @@ const styleAvatar = {
   mb: 4,
 };
 
-export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
-  const [userEdit, setUserEdit] = useState([]);
+export const DialogEditGroupDetail = ({
+  open,
+  setOpen,
+  member,
+  groupId,
+  onChange,
+}) => {
+  const [memberEdit, setMemberEdit] = useState([]);
 
   useEffect(() => {
-    setUserEdit(user);
-  }, [user]);
+    setMemberEdit(member);
+  }, [member]);
 
-  const updateUser = async () => {
-    const response = await Axios.Accounts.updateUser(userEdit);
-    if (response) {
-      toast.success("Cập nhật người dùng thành công");
+  const deleteMember = async () => {
+    const response = await Axios.Groups.deleteStudentGroup(
+      memberEdit.userId,
+      groupId
+    );
+    if (response.status === 200) {
+      toast.success("Xoá sinh viên thành công");
       setOpen(false);
-      onChange(); // set call back update group
+      onChange();
     } else {
-      toast.error("Cập nhật người dùng thất bại!");
+      toast.error("Xoá sinh viên thất bại");
     }
   };
 
@@ -62,16 +64,16 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose} maxWidth="1000">
-        <DialogTitle>Chỉnh Sửa Tài Khoản</DialogTitle>
+        <DialogTitle>Chỉnh Sửa Sinh Viên Nhóm Học Tập</DialogTitle>
         <Divider />
         <DialogContent>
           <DialogContentText />
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={5}>
               <label htmlFor="avatar">
-                <Avatar sx={styleAvatar} alt="Remy Sharp" src={user.avatar} />
+                <Avatar sx={styleAvatar} alt="Remy Sharp" src={member.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
-                  Ảnh đại diện
+                  Ảnh sinh viên
                 </Typography>
               </label>
               <TextField
@@ -83,12 +85,30 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
               />
             </Grid>
 
-            <Grid item xs={7} style={{ marginTop: 17 }}>
+            <Grid item xs={7}>
+              <TextField
+                name="groupId"
+                label="Mã nhóm học tập"
+                value={groupId}
+                variant="standard"
+                placeholder="Nhập mã nhóm học tập"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify
+                        icon={"material-symbols:qr-code-scanner-rounded"}
+                      />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete="none"
+                sx={styleInputFullField}
+              />
+
               <TextField
                 name="fullName"
-                label="Họ Và Tên"
-                placeholder="Nhập Họ Và Tên"
-                value={user.fullName}
+                label="Họ và tên"
+                value={memberEdit.fullName}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -102,11 +122,26 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
               />
 
               <TextField
+                name="studentCode"
+                label="Mã số sinh viên"
+                value={memberEdit.studentCode}
+                variant="standard"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={"bxs:id-card"} />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete="none"
+                sx={styleInputFullField}
+              />
+
+              <TextField
                 name="email"
                 label="Email"
-                value={user.email}
+                value={memberEdit.email}
                 variant="standard"
-                placeholder="Nhập email"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -119,63 +154,27 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
               />
 
               <TextField
-                name="studentCode"
-                label="Mã Sinh Viên"
-                placeholder="Nhập Mã Sinh Viên"
-                value={user.studentCode}
+                name="createdDate"
+                label="Ngày vào nhóm học tập"
+                type="datetime-local"
+                value={memberEdit.createdDate}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"bxs:id-card"} />
+                      <Iconify icon={"material-symbols:date-range"} />
                     </InputAdornment>
                   ),
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
               />
-              <FormControl>
-                <FormLabel id="demo-row-radio-buttons-group-label">
-                  Trạng thái
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="true"
-                    control={
-                      <Radio
-                        checked={!user.status}
-                        value="true"
-                        name="radio-buttons"
-                      />
-                    }
-                    label="Đang hoạt động"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={
-                      <Radio
-                        checked={user.status}
-                        value="false"
-                        name="radio-buttons"
-                      />
-                    }
-                    label="Đã khóa"
-                  />
-                </RadioGroup>
-              </FormControl>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: "0 24px 12px 24px" }}>
-          <Button onClick={updateUser} variant="contained" color="warning">
-            Cập nhật
-          </Button>
-          <Button onClick={handleClose} variant="contained" color="success">
-            Làm mới
+          <Button onClick={deleteMember} variant="contained" color="error">
+            Xóa
           </Button>
           <Button
             onClick={handleClose}

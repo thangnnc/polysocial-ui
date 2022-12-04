@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 // @mui
-import { styled } from '@mui/material/styles';
-import { Box, Link, Drawer, Typography, Avatar } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import { Box, Link, Drawer, Typography, Avatar } from "@mui/material";
 // components
-import Logo from '../../../components/logo';
-import Scrollbar from '../../../components/scrollbar';
-import NavSection from '../../../components/nav-section';
+import Logo from "../../../components/logo";
+import Scrollbar from "../../../components/scrollbar";
+import NavSection from "../../../components/nav-section";
 //
 import navAdminConfig from './config';
 import useLogin from '../../../utils/Login/useLogin';
@@ -16,12 +16,12 @@ import useLogin from '../../../utils/Login/useLogin';
 
 const NAV_WIDTH = 320;
 
-const StyledAccount = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+const StyledAccount = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: '#f9d3bb',
+  backgroundColor: "#f9d3bb",
 }));
 
 // ----------------------------------------------------------------------
@@ -46,24 +46,40 @@ export default function Nav({ openNav, onCloseNav }) {
     <Scrollbar
       sx={{
         height: 1,
-        '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
+        "& .simplebar-content": {
+          height: 1,
+          display: "flex",
+          flexDirection: "column",
+        },
       }}
     >
-      <Box sx={{ px: 2.5, pb: 2, display: 'inline-flex' }}>
-        <Logo sx={{width: 200}}/>
+      <Box sx={{ px: 2.5, pb: 2, display: "inline-flex" }}>
+        <Logo sx={{ width: 200 }} />
       </Box>
 
       <Box sx={{ mb: 4, mx: 2.5 }}>
         <Link underline="none">
-          <StyledAccount sx={{display: "block", textAlign: "center"}}>
-            <Avatar src={account.avatar} sx={{ width: "180px", height: "180px", margin: "auto" }}  alt="photoURL" />
+          <StyledAccount sx={{ display: "block", textAlign: "center" }}>
+            <Avatar
+              src={account.avatar}
+              sx={{ width: "130px", height: "130px", margin: "auto" }}
+              alt="photoURL"
+            />
 
             <Box sx={{ mt: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "text.primary" }}
+                style={{ fontWeight: "bold", fontSize: "15px" }}
+              >
                 Xin chào, {account.fullName}
               </Typography>
 
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+                style={{ fontWeight: "bold", fontSize: "15px" }}
+              >
                 {account.email}
               </Typography>
             </Box>
@@ -85,21 +101,21 @@ export default function Nav({ openNav, onCloseNav }) {
         boxShadow: "4px 4px 4px #9E9E9E",
       }}
     >
-      {(
+      {
         <Drawer
           open
           variant="permanent"
           PaperProps={{
             sx: {
               width: NAV_WIDTH,
-              bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
+              bgcolor: "background.default",
+              borderRightStyle: "dashed",
             },
           }}
         >
           {renderContent}
         </Drawer>
-      )}
+      }
     </Box>
   );
 }
