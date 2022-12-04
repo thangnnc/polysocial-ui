@@ -29,32 +29,24 @@ const styleAvatar = {
   mb: 4,
 };
 
-export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
-  const [groupEdit, setGroupEdit] = useState([]);
+export const DialogEditGroupDetail = ({ open, setOpen, member, groupId }) => {
+  const [memberEdit, setMemberEdit] = useState([]);
 
   useEffect(() => {
-    setGroupEdit(group);
-  }, [group]);
+    setMemberEdit(member);
+  }, [member]);
 
-  const updateGroup = async () => {
-    const response = await Axios.Groups.updateGroup(groupEdit);
-    if (response) {
-      alert("Update group successfully!");
-      setOpen(false);
-      window.location.reload();
-    } else {
-      alert("Update group failed!");
-    }
-  };
-
-  const deleteGroup = async () => {
-    const response = await Axios.Groups.deleteGroup(groupEdit.groupId);
+  const deleteMember = async () => {
+    const response = await Axios.Groups.deleteStudentGroup(
+      memberEdit.userId,
+      groupId
+    );
     if (response.status === 200) {
-      alert("Delete group successfully!");
+      alert("Delete student successfully!");
       setOpen(false);
       window.location.reload();
     } else {
-      alert("Delete group failed!");
+      alert("Delete student failed!");
     }
   };
 
@@ -65,16 +57,16 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose} maxWidth="1000">
-        <DialogTitle>Chỉnh Sửa Nhóm Học Tập</DialogTitle>
+        <DialogTitle>Chỉnh Sửa Sinh Viên Nhóm Học Tập</DialogTitle>
         <Divider />
         <DialogContent>
           <DialogContentText />
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={5}>
               <label htmlFor="avatar">
-                <Avatar sx={styleAvatar} alt="Remy Sharp" src={group.avatar} />
+                <Avatar sx={styleAvatar} alt="Remy Sharp" src={member.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
-                  Chọn ảnh nhóm học tập
+                  Ảnh sinh viên
                 </Typography>
               </label>
               <TextField
@@ -90,7 +82,7 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
               <TextField
                 name="groupId"
                 label="Mã nhóm học tập"
-                value={groupEdit.groupId}
+                value={groupId}
                 variant="standard"
                 placeholder="Nhập mã nhóm học tập"
                 InputProps={{
@@ -107,14 +99,10 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
               />
 
               <TextField
-                name="name"
-                label="Tên nhóm học tập"
-                value={groupEdit.name}
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, name: e.target.value })
-                }
+                name="fullName"
+                label="Họ và tên"
+                value={memberEdit.fullName}
                 variant="standard"
-                placeholder="Nhập tên nhóm học tập"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -127,13 +115,9 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
               />
 
               <TextField
-                name="totalMember"
-                label="Số lượng thành viên"
-                placeholder="Nhập số lượng thành viên "
-                value={groupEdit.totalMember}
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, totalMember: e.target.value })
-                }
+                name="studentCode"
+                label="Mã số sinh viên"
+                value={memberEdit.studentCode}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -147,13 +131,9 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
               />
 
               <TextField
-                name="description"
-                label="Mô tả nhóm học tập"
-                placeholder="Nhập mô tả nhóm học tập"
-                value={groupEdit.description}
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, description: e.target.value })
-                }
+                name="email"
+                label="Email"
+                value={memberEdit.email}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -168,13 +148,9 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
 
               <TextField
                 name="createdDate"
-                label="Ngày taọ nhóm học tập"
+                label="Ngày vào nhóm học tập"
                 type="datetime-local"
-                placeholder="Chọn ngày tạo nhóm học tập"
-                value={groupEdit.createdDate}
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, createdDate: e.target.value })
-                }
+                value={memberEdit.createdDate}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -190,14 +166,8 @@ export const DialogEditGroupDetail = ({ open, setOpen, group }) => {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: "0 24px 12px 24px" }}>
-          <Button onClick={updateGroup} variant="contained" color="warning">
-            Cập nhật
-          </Button>
-          <Button onClick={deleteGroup} variant="contained" color="error">
+          <Button onClick={deleteMember} variant="contained" color="error">
             Xóa
-          </Button>
-          <Button onClick={handleClose} variant="contained" color="success">
-            Làm mới
           </Button>
           <Button
             onClick={handleClose}

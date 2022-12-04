@@ -45,8 +45,9 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group }) => {
     }
   };
 
-  const handleChange = (e) => {
-    setGroupId(e.target.value);
+  const handleChange = (e, value) => {
+    console.log(value.groupId);
+    setGroupId(value.groupId);
   };
 
   const handleClose = () => {
@@ -66,6 +67,7 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group }) => {
                 name="groupId"
                 options={group}
                 getOptionLabel={(option) => option.name}
+                onChange={handleChange}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -82,7 +84,6 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group }) => {
                         </React.Fragment>
                       ),
                     }}
-                    onChange={handleChange}
                     variant="standard"
                     label="Mã nhóm học tập"
                     placeholder="Chọn mã nhóm học tập"

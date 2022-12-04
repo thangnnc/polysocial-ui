@@ -16,6 +16,8 @@ import {
   Paper,
   Popover,
   MenuItem,
+  Stack,
+  Avatar,
 } from "@mui/material";
 import Title from "../../components/title";
 import { useEffect, useState } from "react";
@@ -29,14 +31,16 @@ import { DialogEditGroupDetail } from "./components/DialogEditGroupDetail";
 import Axios from "./../../utils/Axios/index";
 import { DialogCreateMember } from "./components/DialogCreateMember";
 import { useParams } from "react-router-dom";
+import { fDateTime } from "../../utils/Format/formatTime";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "stt", label: "STT", alignRight: false },
-  { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
   { id: "fullName", label: "Họ Và Tên", alignRight: false },
-  { id: "email", label: "email", alignRight: false },
+  { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
+  { id: "email", label: "Email", alignRight: false },
+  { id: "status", label: "Trạng Thái", alignRight: false },
+  { id: "createdDate", label: "Ngày Tham Gia", alignRight: false },
   { id: "" },
 ];
 
@@ -84,8 +88,6 @@ export default function ManagementGroupDetail() {
 
   const [isCreate, setIsCreate] = useState(false);
 
-  const [group, setGroup] = useState({});
-
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState("asc");
@@ -100,6 +102,8 @@ export default function ManagementGroupDetail() {
 
   const [members, setMembers] = useState([]);
 
+  const [member, setMember] = useState({});
+
   useEffect(() => {
     getAllData(groupId);
   }, [groupId]);
@@ -111,7 +115,7 @@ export default function ManagementGroupDetail() {
 
   const handleOpenMenu = (event, value) => {
     setOpen(event.currentTarget);
-    setGroup(value);
+    setMember(value);
   };
 
   const handleCloseMenu = () => {
@@ -220,7 +224,7 @@ export default function ManagementGroupDetail() {
                     return (
                       <TableRow
                         hover
-                        key={row?.groupId}
+                        key={index}
                         tabIndex={-1}
                         role="checkbox"
                         selected={selectedMember}
@@ -238,9 +242,18 @@ export default function ManagementGroupDetail() {
                           component="th"
                           scope="row"
                           padding="none"
-                          sx={{ width: "15%" }}
+                          sx={{ width: "25%" }}
                         >
-                          {index + 1}
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={2}
+                          >
+                            <Avatar alt={row.fullName} src={row.avatar} />
+                            <Typography variant="subtitle2" noWrap>
+                              {row.fullName}
+                            </Typography>
+                          </Stack>
                         </TableCell>
 
                         <TableCell
@@ -248,16 +261,21 @@ export default function ManagementGroupDetail() {
                           scope="row"
                           padding="none"
                           sx={{ width: "15%" }}
+                          style={{ paddingLeft: 20 }}
                         >
                           {row?.studentCode}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "5%" }}>
-                          {row?.fullName}
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {row?.email}
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "15%" }}>
-                          {row?.email}
+                          {row.active ? "Đang hoạt động" : "Ngừng hoạt động"}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {fDateTime(row.createdDate)}
                         </TableCell>
 
                         <TableCell align="right" sx={{ width: "5%" }}>
@@ -346,9 +364,18 @@ export default function ManagementGroupDetail() {
         </MenuItem>
       </Popover>
 
-      <DialogEditGroupDetail open={isEdit} setOpen={setIsEdit} group={group} />
+      <DialogEditGroupDetail
+        open={isEdit}
+        setOpen={setIsEdit}
+        member={member}
+        groupId={groupId}
+      />
 
-      <DialogCreateMember open={isCreate} setOpen={setIsCreate} />
+      <DialogCreateMember
+        open={isCreate}
+        setOpen={setIsCreate}
+        groupId={groupId}
+      />
 
       <BasicSpeedDial
         handleCreateGroup={handleCreateGroup}

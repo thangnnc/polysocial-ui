@@ -5,35 +5,57 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import {
-  Avatar,
   DialogContentText,
   Divider,
   Grid,
   InputAdornment,
-  Typography,
 } from "@mui/material";
 import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 
 const styleInputFullField = {
   width: "100%",
   mb: 3,
 };
 
-const styleAvatar = {
-  width: 180,
-  height: 180,
-  mx: "auto",
-  mt: 6,
-  mb: 4,
-};
+export const DialogCreateMember = ({ open, setOpen, groupId }) => {
+  const [user, setUser] = useState({});
+  const [idUser, setIdUser] = useState("");
 
-export const DialogCreateMember = ({ open, setOpen }) => {
-  const [groupEdit, setGroupEdit] = useState([]);
+  useEffect(() => {
+    getOneUser();
+  }, []);
 
-  const createGroup = async () => {
-    await Axios.Groups.createGroup(groupEdit);
+  const handleChange = (e) => {
+    getOneUser(e.target.value === "" ? undefined : e.target.value);
+  };
+
+  const getOneUser = async (userId) => {
+    if (userId !== undefined) {
+      const response = await Axios.Accounts.getOneUser(userId);
+      setUser(response);
+      setIdUser(userId);
+    } else {
+      setUser(null);
+    }
+  };
+
+  const createMember = async (e) => {
+    e.preventDefault();
+    const response = await Axios.Groups.createStudentGroup({
+      groupId: groupId,
+      userId: idUser,
+    });
+    console.log(response);
+    if (response) {
+      alert("Create member successfully!");
+      setOpen(false);
+      window.location.reload();
+    } else {
+      alert("Create member failed!");
+    }
   };
 
   const handleClose = () => {
@@ -43,44 +65,24 @@ export const DialogCreateMember = ({ open, setOpen }) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose} maxWidth="1000">
-        <DialogTitle>Tạo Nhóm Học Tập</DialogTitle>
+        <DialogTitle>Thêm Sinh Viên Vào Nhóm Học Tập</DialogTitle>
         <Divider />
         <DialogContent>
           <DialogContentText />
           <Grid container spacing={2} sx={{ width: 800 }}>
-            <Grid item xs={5}>
-              <label htmlFor="avatar">
-                <Avatar
-                  sx={styleAvatar}
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
-                />
-                <Typography width="100%" fontSize={24} textAlign="center">
-                  Chọn ảnh nhóm học tập
-                </Typography>
-              </label>
+            <Grid item xs={12}>
               <TextField
-                id="avatar"
-                name="avatar"
-                label="File"
-                type="file"
-                sx={{ display: "none" }}
-              />
-            </Grid>
-
-            <Grid item xs={7}>
-              <TextField
-                name="name"
-                label="Tên nhóm học tập"
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, name: e.target.value })
-                }
+                name="groupId"
+                label="Mã nhóm học tập"
+                value={groupId}
                 variant="standard"
-                placeholder="Nhập tên nhóm học tập"
+                placeholder="Nhập mã nhóm học tập"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:edit-note-sharp"} />
+                      <Iconify
+                        icon={"material-symbols:qr-code-scanner-rounded"}
+                      />
                     </InputAdornment>
                   ),
                 }}
@@ -89,17 +91,17 @@ export const DialogCreateMember = ({ open, setOpen }) => {
               />
 
               <TextField
-                name="totalMember"
-                label="Số lượng thành viên"
-                placeholder="Nhập số lượng thành viên "
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, totalMember: e.target.value })
-                }
+                name="userId"
+                label="Mã sinh viên"
                 variant="standard"
+                placeholder="Nhập mã sinh viên"
+                onChange={handleChange}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"ic:sharp-groups"} />
+                      <Iconify
+                        icon={"material-symbols:qr-code-scanner-rounded"}
+                      />
                     </InputAdornment>
                   ),
                 }}
@@ -107,50 +109,65 @@ export const DialogCreateMember = ({ open, setOpen }) => {
                 sx={styleInputFullField}
               />
 
-              <TextField
-                name="description"
-                label="Mô tả nhóm học tập"
-                placeholder="Nhập mô tả nhóm học tập"
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, description: e.target.value })
-                }
-                variant="standard"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={"fluent:text-description-20-regular"} />
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="none"
-                sx={styleInputFullField}
-              />
+              {user !== null ? (
+                <React.Fragment>
+                  <TextField
+                    name="fullName"
+                    label="Họ và tên"
+                    value={user.fullName}
+                    variant="standard"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify icon={"material-symbols:edit-note-sharp"} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    autoComplete="none"
+                    sx={styleInputFullField}
+                  />
 
-              <TextField
-                name="createdDate"
-                label="Ngày taọ nhóm học tập"
-                type="datetime-local"
-                placeholder="Chọn ngày tạo nhóm học tập"
-                onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, createdDate: e.target.value })
-                }
-                variant="standard"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:date-range"} />
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="none"
-                sx={styleInputFullField}
-              />
+                  <TextField
+                    name="studentCode"
+                    label="Mã số sinh viên"
+                    value={user.studentCode}
+                    variant="standard"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify icon={"ic:sharp-groups"} />
+                        </InputAdornment>
+                      ),
+                    }}
+                    autoComplete="none"
+                    sx={styleInputFullField}
+                  />
+
+                  <TextField
+                    name="email"
+                    label="Email"
+                    value={user.email}
+                    variant="standard"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify
+                            icon={"fluent:text-description-20-regular"}
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                    autoComplete="none"
+                    sx={styleInputFullField}
+                  />
+                </React.Fragment>
+              ) : null}
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: "0 24px 12px 24px" }}>
-          <Button onClick={createGroup} variant="contained" color="warning">
-            Tạo nhóm
+          <Button onClick={createMember} variant="contained" color="warning">
+            Tạo sinh viên
           </Button>
           <Button
             onClick={handleClose}
