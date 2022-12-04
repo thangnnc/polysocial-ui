@@ -45,7 +45,6 @@ export default function Router() {
         { path: "posts", element: <ManagementContent /> },
         { path: "comments", element: <h2>Quản lý bình luận</h2> },
         { path: "likes", element: <h2>Quản lý lượt yêu thích</h2> },
-        { path: "capacity", element: <h2>Cấp dung lượng người dùng</h2> },
         { path: "activities", element: <h2>Quản lý lịch sử hoạt động</h2> },
       ],
     },

@@ -233,21 +233,11 @@ export default function ManagementGroup() {
         <Title icon={"bxs:dashboard"}>Quản lý nhóm học tập</Title>
 
         <Box sx={{ width: "100%", typography: "body1" }}>
-          <TabContext value={value}>
-            <Box
-              sx={{ borderBottom: 1, borderColor: "divider" }}
-              style={{
-                backgroundColor: "white",
-                margin: " 0 22px",
-                border: "1px solid #e4e4e4",
-                borderRadius: "12px",
-                paddingTop: 10,
-              }}
-            >
-              <TabList
+          <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
+            <TabContext value={value}>
+              <TabList sx={{pt: 1, borderColor: "#252525"}}
                 onChange={handleChange}
                 aria-label="lab API tabs example"
-                style={{ borderRadius: "12px" }}
               >
                 <Tab
                   label="Danh sách nhóm hoạt động"
@@ -266,9 +256,7 @@ export default function ManagementGroup() {
                   }}
                 />
               </TabList>
-            </Box>
-            <TabPanel value="1">
-              <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
+              <TabPanel value="1" sx={{pt: 0}}>
                 <GroupListToolbar
                   numSelected={selected.length}
                   filterName={filterName}
@@ -410,10 +398,8 @@ export default function ManagementGroup() {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-              </Card>
-            </TabPanel>
-            <TabPanel value="2">
-              <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
+              </TabPanel>
+              <TabPanel value="2" sx={{pt: 0}}>
                 <GroupListToolbar
                   numSelected={selected.length}
                   filterName={filterName}
@@ -555,9 +541,9 @@ export default function ManagementGroup() {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-              </Card>
-            </TabPanel>
-          </TabContext>
+              </TabPanel>
+            </TabContext>
+          </Card>
         </Box>
       </Container>
 

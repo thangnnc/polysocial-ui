@@ -101,6 +101,17 @@ const theme = createTheme({
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            borderBottom: "2px solid #f97c2e",
+            color: "#f97c2e",
+            zIndex: 9999
+          }
+        },
+      },
+    }
     // MuiAutocomplete: {
     //   styleOverrides: {
     //     root: {
