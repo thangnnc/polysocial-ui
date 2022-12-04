@@ -31,10 +31,10 @@ const styleAvatar = {
 };
 
 export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
-  const [groupEdit, setGroupEdit] = useState([]);
+  const [groupCreate, setGroupCreate] = useState({});
 
   const createGroup = async () => {
-    const response = await Axios.Groups.createGroup(groupEdit);
+    const response = await Axios.Groups.createGroup(groupCreate);
     if (response) {
       toast.success("Create group successfully!");
       setOpen(false);
@@ -73,15 +73,37 @@ export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
                 label="File"
                 type="file"
                 sx={{ display: "none" }}
+                onChange={(e) =>
+                  setGroupCreate({ ...groupCreate, avatar: null })
+                }
               />
             </Grid>
 
             <Grid item xs={7}>
               <TextField
+                name="adminId"
+                label="Người tạo nhóm học tập"
+                onChange={(e) =>
+                  setGroupCreate({ ...groupCreate, adminId: e.target.value })
+                }
+                variant="standard"
+                placeholder="Nhập tên người tạo nhóm học tập"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={"material-symbols:edit-note-sharp"} />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete="none"
+                sx={styleInputFullField}
+              />
+
+              <TextField
                 name="name"
                 label="Tên nhóm học tập"
                 onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, name: e.target.value })
+                  setGroupCreate({ ...groupCreate, name: e.target.value })
                 }
                 variant="standard"
                 placeholder="Nhập tên nhóm học tập"
@@ -101,7 +123,10 @@ export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
                 label="Số lượng thành viên"
                 placeholder="Nhập số lượng thành viên "
                 onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, totalMember: e.target.value })
+                  setGroupCreate({
+                    ...groupCreate,
+                    totalMember: e.target.value,
+                  })
                 }
                 variant="standard"
                 InputProps={{
@@ -120,7 +145,10 @@ export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
                 label="Mô tả nhóm học tập"
                 placeholder="Nhập mô tả nhóm học tập"
                 onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, description: e.target.value })
+                  setGroupCreate({
+                    ...groupCreate,
+                    description: e.target.value,
+                  })
                 }
                 variant="standard"
                 InputProps={{
@@ -140,7 +168,10 @@ export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
                 type="datetime-local"
                 placeholder="Chọn ngày tạo nhóm học tập"
                 onChange={(e) =>
-                  setGroupEdit({ ...groupEdit, createdDate: e.target.value })
+                  setGroupCreate({
+                    ...groupCreate,
+                    createdDate: e.target.value,
+                  })
                 }
                 variant="standard"
                 InputProps={{

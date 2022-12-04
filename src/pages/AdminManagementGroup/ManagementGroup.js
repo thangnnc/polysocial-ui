@@ -117,6 +117,7 @@ export default function ManagementGroup() {
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroups();
+    console.log(response);
     const responseDelete = await Axios.Groups.getAllGroupsFalse();
     if (response.content) {
       setGroups(response.content);
@@ -293,7 +294,7 @@ export default function ManagementGroup() {
                         )
                         .map((row) => {
                           const selectedGroup =
-                            selected.indexOf(row.name) !== -1;
+                            selected.indexOf(row.groupId) !== -1;
 
                           return (
                             <TableRow

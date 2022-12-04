@@ -36,7 +36,6 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
     const formData = new FormData();
     formData.append("file", selectedFile);
     const response = await Axios.Groups.createGroupExcel(formData, groupId);
-    console.log(response);
     if (response) {
       toast.success("Create group successfully!");
       setOpen(false);
@@ -58,7 +57,7 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose} maxWidth="1000">
-        <DialogTitle>Tạo Nhóm Học Tập Bằng Excel</DialogTitle>
+        <DialogTitle>Thêm Sinh Viên Vào Nhóm Học Tập Bằng Excel</DialogTitle>
         <Divider />
         <DialogContent>
           <DialogContentText />

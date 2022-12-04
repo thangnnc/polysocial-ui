@@ -18,7 +18,7 @@ export default function BasicSpeedDial({
     },
     {
       icon: <Iconify icon="material-symbols:file-present-outline-sharp" />,
-      name: "Tạo nhóm bằng excel",
+      name: "Thêm sinh viên bằng excel",
       onClick: handleCreateGroupExcel,
     },
     {
