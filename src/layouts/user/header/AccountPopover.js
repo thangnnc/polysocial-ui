@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import useLogin from "../../../utils/Login/useLogin";
 import Iconify from "../../../components/iconify";
+import { useNavigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +22,6 @@ const MENU_OPTIONS = [
     label: "Trang chủ",
     path: "/home",
     icon: "ci:home-fill",
-  },
-  {
-    label: "Trang quản lý",
-    path: "/admin",
-    icon: "material-symbols:admin-panel-settings-rounded",
   },
   {
     label: "Thông tin tài khoản",
