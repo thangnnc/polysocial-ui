@@ -6,15 +6,23 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import {
-  Autocomplete,
   Avatar,
   DialogContentText,
   Divider,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
   InputAdornment,
+  Radio,
+  RadioGroup,
   Typography,
 } from "@mui/material";
 import Iconify from "../../../components/iconify";
+import { useState } from "react";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import Axios from "./../../../utils/Axios/index";
 
 const styleInputFullField = {
   width: "100%",
@@ -29,29 +37,24 @@ const styleAvatar = {
   mb: 4,
 };
 
-const LayoutFormTwoField = ({ children }) => {
-  return (
-    <Grid container spacing={2} sx={{ width: "100%" }}>
-      {children}
-    </Grid>
-  );
-};
+export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
+  const [userEdit, setUserEdit] = useState([]);
 
-const genderList = [
-  { title: "Nam", value: true },
-  { title: "Nữ", value: false },
-];
+  useEffect(() => {
+    setUserEdit(user);
+  }, [user]);
 
-const marjorList = [
-  { title: "Ứng Dụng Phần Mềm", value: "Ứng Dụng Phần Mềm" },
-  { title: "Phát Triển Phần Mềm", value: "Phát Triển Phần Mềm" },
-  { title: "Lập Trình Di Động", value: "Lập Trình Di Động" },
-  { title: "Thiết Kế WEB", value: "Thiết Kế WEB" },
-  { title: "Thiết Kế Đồ Họa", value: "Thiết Kế Đồ Họa" },
-  { title: "Tự Động Hóa", value: "Tự Động Hóa" },
-];
+  const updateUser = async () => {
+    const response = await Axios.Accounts.updateUser(userEdit);
+    if (response) {
+      toast.success("Cập nhật người dùng thành công");
+      setOpen(false);
+      onChange(); // set call back update group
+    } else {
+      toast.error("Cập nhật người dùng thất bại!");
+    }
+  };
 
-export const DialogEditUser = ({ open, setOpen, user }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -66,13 +69,9 @@ export const DialogEditUser = ({ open, setOpen, user }) => {
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={5}>
               <label htmlFor="avatar">
-                <Avatar
-                  sx={styleAvatar}
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
-                />
+                <Avatar sx={styleAvatar} alt="Remy Sharp" src={user.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
-                  Chọn ảnh đại diện
+                  Anh đại diện
                 </Typography>
               </label>
               <TextField
@@ -84,7 +83,24 @@ export const DialogEditUser = ({ open, setOpen, user }) => {
               />
             </Grid>
 
-            <Grid item xs={7}>
+            <Grid item xs={7} style={{ marginTop: 17 }}>
+              <TextField
+                name="fullName"
+                label="Họ Và Tên"
+                placeholder="Nhập Họ Và Tên"
+                value={user.fullName}
+                variant="standard"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={"icon-park-solid:edit-name"} />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete="none"
+                sx={styleInputFullField}
+              />
+
               <TextField
                 name="email"
                 label="Email"
@@ -101,146 +117,65 @@ export const DialogEditUser = ({ open, setOpen, user }) => {
                 autoComplete="none"
                 sx={styleInputFullField}
               />
+
               <TextField
-                name="fullName"
-                label="Họ Và Tên"
-                placeholder="Nhập Họ Và Tên"
+                name="studentCode"
+                label="Mã Sinh Viên"
+                placeholder="Nhập Mã Sinh Viên"
+                value={user.studentCode}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"icon-park-solid:edit-name"} />
+                      <Iconify icon={"bxs:id-card"} />
                     </InputAdornment>
                   ),
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
               />
-              <LayoutFormTwoField>
-                <Grid item xs={6}>
-                  <TextField
-                    name="studentCode"
-                    label="Mã Sinh Viên"
-                    placeholder="Nhập Mã Sinh Viên"
-                    variant="standard"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon={"bxs:id-card"} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    autoComplete="none"
-                    sx={styleInputFullField}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    name="course"
-                    label="Khóa Học"
-                    placeholder="Nhập Khóa Học"
-                    variant="standard"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon={"bi:ticket-perforated-fill"} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    autoComplete="none"
-                    sx={styleInputFullField}
-                  />
-                </Grid>
-              </LayoutFormTwoField>
-              <Autocomplete
-                name="major"
-                options={marjorList}
-                getOptionLabel={(option) => option.title}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon={"bx:code-block"} />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <React.Fragment>
-                          {params.InputProps.endAdornment}
-                        </React.Fragment>
-                      ),
-                    }}
-                    variant="standard"
-                    label="Ngành Học"
-                    placeholder="Chọn Ngành Học"
-                    sx={styleInputFullField}
-                  />
-                )}
-              />
-              <LayoutFormTwoField>
-                <Grid item xs={6}>
-                  <TextField
-                    name="birthdate"
-                    label="Ngày Sinh"
-                    type="date"
-                    placeholder="Chọn Ngày Sinh"
-                    variant="standard"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon={"material-symbols:date-range"} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    autoComplete="none"
-                    sx={styleInputFullField}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <Autocomplete
-                    name="course"
-                    options={genderList}
-                    getOptionLabel={(option) => option.title}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        InputProps={{
-                          ...params.InputProps,
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Iconify icon={"ph:gender-intersex-bold"} />
-                            </InputAdornment>
-                          ),
-                          endAdornment: (
-                            <React.Fragment>
-                              {params.InputProps.endAdornment}
-                            </React.Fragment>
-                          ),
-                        }}
-                        variant="standard"
-                        label="Giới Tính"
-                        placeholder="Chọn Giới Tính"
-                        sx={styleInputFullField}
+              <FormControl>
+                <FormLabel id="demo-row-radio-buttons-group-label">
+                  Trạng thái
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={
+                      <Radio
+                        checked={!user.status}
+                        value="true"
+                        name="radio-buttons"
                       />
-                    )}
+                    }
+                    label="Đang hoạt động"
                   />
-                </Grid>
-              </LayoutFormTwoField>
+                  <FormControlLabel
+                    value="false"
+                    control={
+                      <Radio
+                        checked={user.status}
+                        value="false"
+                        name="radio-buttons"
+                      />
+                    }
+                    label="Đã khóa"
+                  />
+                </RadioGroup>
+              </FormControl>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: "0 24px 12px 24px" }}>
-          <Button
-            onClick={handleClose}
-            variant="contained"
-            className="btn-orange"
-          >
-            Tắt Hoạt Động
+          <Button onClick={updateUser} variant="contained" color="warning">
+            Cập nhật
           </Button>
-          <Button onClick={handleClose} variant="contained" className="btn-red">
-            Xóa
+          <Button onClick={handleClose} variant="contained" color="success">
+            Làm mới
           </Button>
           <Button
             onClick={handleClose}

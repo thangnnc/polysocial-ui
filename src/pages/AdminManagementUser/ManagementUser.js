@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet";
-import { filter, sample } from "lodash";
-import { sentenceCase } from "change-case";
+import { filter } from "lodash";
 // @mui
 import {
   Avatar,
@@ -21,46 +20,21 @@ import {
   MenuItem,
 } from "@mui/material";
 import Title from "../../components/title";
-import { faker } from "@faker-js/faker";
-import { useState } from "react";
-import { Label } from "@mui/icons-material";
+import { useState, useEffect } from "react";
 import Iconify from "../../components/iconify";
 import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
-import { fDateTime } from "../../utils/Format/formatTime";
 import BasicSpeedDial from "./components/BasicSpeedDial";
 import { DialogEditUser } from "./components/DialogEditUser";
-
-// ----------------------------------------------------------------------
-// Fake data user
-const users = [...Array(24)].map((_, index) => ({
-  id: faker.datatype.uuid(),
-  avatarUrl: `/logo.png`,
-  fullName: faker.name.fullName(),
-  email: faker.internet.email(),
-  createdDate: faker.date.past(),
-  status: sample(["active", "banned"]),
-  role: sample([
-    "Leader",
-    "Hr Manager",
-    "UI Designer",
-    "UX Designer",
-    "UI/UX Designer",
-    "Project Manager",
-    "Backend Developer",
-    "Full Stack Designer",
-    "Front End Developer",
-    "Full Stack Developer",
-  ]),
-}));
+import Axios from "./../../utils/Axios/index";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "fullName", label: "Họ Và Tên", alignRight: false },
+  { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
-  { id: "role", label: "Chức Vụ", alignRight: false },
   { id: "status", label: "Trạng Thái", alignRight: false },
-  { id: "createdDate", label: "Ngày Tạo", alignRight: false },
   { id: "" },
 ];
 
@@ -106,6 +80,8 @@ export default function ManagementUser() {
 
   const [user, setUser] = useState({});
 
+  const [users, setUsers] = useState([]);
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState("asc");
@@ -117,6 +93,26 @@ export default function ManagementUser() {
   const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  useEffect(() => {
+    getAllUser();
+  }, []);
+
+  const getAllUser = async () => {
+    const response = await Axios.Accounts.getAllUser();
+    console.log(response);
+    if (response) {
+      setUsers(response);
+      toast.success("Lấy dữ liệu thành công");
+    } else {
+      toast.error("Lấy dữ liệu thất bại");
+    }
+  };
+
+  //Call back data
+  const onlDailogChange = () => {
+    getAllUser();
+  };
 
   const handleOpenMenu = (event, value) => {
     setOpen(event.currentTarget);
@@ -185,12 +181,6 @@ export default function ManagementUser() {
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
-  const handleCreateUser = () => {
-    setIsEdit(true);
-    setUser({});
-    console.log("Create user");
-  };
-
   const handleExport = () => {
     console.log("Export list user");
   };
@@ -225,21 +215,12 @@ export default function ManagementUser() {
                 {filteredUsers
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
-                    const {
-                      id,
-                      fullName,
-                      role,
-                      status,
-                      email,
-                      avatarUrl,
-                      createdDate,
-                    } = row;
-                    const selectedUser = selected.indexOf(fullName) !== -1;
+                    const selectedUser = selected.indexOf(row.fullName) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={id}
+                        key={row.studentCode}
                         tabIndex={-1}
                         role="checkbox"
                         selected={selectedUser}
@@ -247,7 +228,9 @@ export default function ManagementUser() {
                         <TableCell padding="checkbox" sx={{ width: "5%" }}>
                           <Checkbox
                             checked={selectedUser}
-                            onChange={(event) => handleClick(event, fullName)}
+                            onChange={(event) =>
+                              handleClick(event, row.fullName)
+                            }
                           />
                         </TableCell>
 
@@ -255,40 +238,30 @@ export default function ManagementUser() {
                           component="th"
                           scope="row"
                           padding="none"
-                          sx={{ width: "25%" }}
+                          sx={{ width: "30%" }}
                         >
                           <Stack
                             direction="row"
                             alignItems="center"
                             spacing={2}
                           >
-                            <Avatar alt={fullName} src={avatarUrl} />
+                            <Avatar alt={row.fullName} src={row.avatar} />
                             <Typography variant="subtitle2" noWrap>
-                              {fullName}
+                              {row.fullName}
                             </Typography>
                           </Stack>
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "20%" }}>
-                          {email}
+                          {row.studentCode}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "25%" }}>
+                          {row.email}
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "15%" }}>
-                          {role}
-                        </TableCell>
-
-                        <TableCell align="left" sx={{ width: "15%" }}>
-                          <Label
-                            color={
-                              (status === "banned" && "error") || "success"
-                            }
-                          >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
-
-                        <TableCell align="left" sx={{ width: "15%" }}>
-                          {fDateTime(createdDate)}
+                          {!row.status ? "Đang hoạt động" : "Đã khóa"}
                         </TableCell>
 
                         <TableCell align="right" sx={{ width: "5%" }}>
@@ -377,12 +350,14 @@ export default function ManagementUser() {
         </MenuItem>
       </Popover>
 
-      <DialogEditUser open={isEdit} setOpen={setIsEdit} user={user} />
-
-      <BasicSpeedDial
-        handleCreateUser={handleCreateUser}
-        handleExport={handleExport}
+      <DialogEditUser
+        onChange={onlDailogChange}
+        open={isEdit}
+        setOpen={setIsEdit}
+        user={user}
       />
+
+      <BasicSpeedDial handleExport={handleExport} />
     </>
   );
 }
