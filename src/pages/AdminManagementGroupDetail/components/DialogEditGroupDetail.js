@@ -15,6 +15,7 @@ import {
 import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
@@ -29,7 +30,13 @@ const styleAvatar = {
   mb: 4,
 };
 
-export const DialogEditGroupDetail = ({ open, setOpen, member, groupId }) => {
+export const DialogEditGroupDetail = ({
+  open,
+  setOpen,
+  member,
+  groupId,
+  onChange,
+}) => {
   const [memberEdit, setMemberEdit] = useState([]);
 
   useEffect(() => {
@@ -42,11 +49,11 @@ export const DialogEditGroupDetail = ({ open, setOpen, member, groupId }) => {
       groupId
     );
     if (response.status === 200) {
-      alert("Delete student successfully!");
+      toast.success("Xoá sinh viên thành công");
       setOpen(false);
-      window.location.reload();
+      onChange();
     } else {
-      alert("Delete student failed!");
+      toast.error("Xoá sinh viên thất bại");
     }
   };
 

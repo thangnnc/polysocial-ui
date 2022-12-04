@@ -15,6 +15,7 @@ import {
 import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
@@ -37,7 +38,7 @@ const LayoutFormTwoField = ({ children }) => {
   );
 };
 
-export const DialogEditContent = ({ open, setOpen, content }) => {
+export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
   const [contentEdit, setContentEdit] = useState([]);
 
   useEffect(() => {
@@ -47,22 +48,22 @@ export const DialogEditContent = ({ open, setOpen, content }) => {
   const updateGroup = async () => {
     const response = await Axios.Groups.updateGroup(contentEdit);
     if (response) {
-      alert("Update group successfully!");
+      toast.success("Cập nhật bài viết thành công");
       setOpen(false);
-      window.location.reload();
+      onChange();
     } else {
-      alert("Update group failed!");
+      toast.error("Cập nhật bài viết thất bại!");
     }
   };
 
   const deleteGroup = async () => {
     const response = await Axios.Groups.deleteGroup(contentEdit.groupId);
     if (response.status === 200) {
-      alert("Delete group successfully!");
+      toast.success("Xoá bài viết thành công");
       setOpen(false);
-      window.location.reload();
+      onChange();
     } else {
-      alert("Delete group failed!");
+      toast.error("Xoá bài viết thất bại!");
     }
   };
 

@@ -32,6 +32,7 @@ import Axios from "./../../utils/Axios/index";
 import { DialogCreateMember } from "./components/DialogCreateMember";
 import { useParams } from "react-router-dom";
 import { fDateTime } from "../../utils/Format/formatTime";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -110,7 +111,17 @@ export default function ManagementGroupDetail() {
 
   const getAllData = async (groupId) => {
     const response = await Axios.Groups.getAllStudentGroup(groupId);
-    setMembers(response);
+    if (response) {
+      setMembers(response);
+      toast.success("Lấy dữ liệu thành công");
+    } else {
+      toast.error("Lấy dữ liệu thất bại");
+    }
+  };
+
+  //Call back data
+  const onlDailogChange = () => {
+    getAllData(groupId);
   };
 
   const handleOpenMenu = (event, value) => {
@@ -365,6 +376,7 @@ export default function ManagementGroupDetail() {
       </Popover>
 
       <DialogEditGroupDetail
+        onChange={onlDailogChange}
         open={isEdit}
         setOpen={setIsEdit}
         member={member}
@@ -372,6 +384,7 @@ export default function ManagementGroupDetail() {
       />
 
       <DialogCreateMember
+        onChange={onlDailogChange}
         open={isCreate}
         setOpen={setIsCreate}
         groupId={groupId}

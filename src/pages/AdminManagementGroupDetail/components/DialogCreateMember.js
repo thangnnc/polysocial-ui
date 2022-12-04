@@ -14,13 +14,14 @@ import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
   mb: 3,
 };
 
-export const DialogCreateMember = ({ open, setOpen, groupId }) => {
+export const DialogCreateMember = ({ open, setOpen, groupId, onChange }) => {
   const [user, setUser] = useState({});
   const [idUser, setIdUser] = useState("");
 
@@ -50,11 +51,11 @@ export const DialogCreateMember = ({ open, setOpen, groupId }) => {
     });
     console.log(response);
     if (response) {
-      alert("Create member successfully!");
+      toast.success("Thêm sinh viên thành công");
       setOpen(false);
-      window.location.reload();
+      onChange();
     } else {
-      alert("Create member failed!");
+      toast.error("Thêm thành viên thất bại!");
     }
   };
 

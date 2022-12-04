@@ -35,6 +35,7 @@ import { DialogCreateGroup } from "./components/DialogCreateGroup";
 import { DialogCreateGroupExcel } from "./components/DialogCreateGroupExcel";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -112,17 +113,23 @@ export default function ManagementGroup() {
 
   useEffect(() => {
     getAllData();
-    getAllDataDelete();
   }, []);
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroups();
-    setGroups(response.content);
+    const responseDelete = await Axios.Groups.getAllGroupsFalse();
+    if (response.content) {
+      setGroups(response.content);
+      setGroupsDelete(responseDelete.content);
+      toast.success("Lấy dữ liệu thành công");
+    } else {
+      toast.error("Lấy dữ liệu thất bại");
+    }
   };
 
-  const getAllDataDelete = async () => {
-    const response = await Axios.Groups.getAllGroupsFalse();
-    setGroupsDelete(response.content);
+  //Call back data
+  const onlDailogChange = () => {
+    getAllData();
   };
 
   const handleOpenMenu = (event, value) => {
@@ -314,22 +321,16 @@ export default function ManagementGroup() {
                                 padding="none"
                                 sx={{ width: "25%" }}
                               >
-                                <Link
-                                  to={`detail/${row.groupId}`}
-                                  underline="none"
-                                  color="inherit"
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  spacing={2}
+                                  style={{ paddingLeft: 20 }}
                                 >
-                                  <Stack
-                                    direction="row"
-                                    alignItems="center"
-                                    spacing={2}
-                                    style={{ paddingLeft: 20 }}
-                                  >
-                                    <Typography variant="subtitle2" noWrap>
-                                      {row.name}
-                                    </Typography>
-                                  </Stack>
-                                </Link>
+                                  <Typography variant="subtitle2" noWrap>
+                                    {row.name}
+                                  </Typography>
+                                </Stack>
                               </TableCell>
 
                               <TableCell align="left" sx={{ width: "25%" }}>
@@ -583,17 +584,37 @@ export default function ManagementGroup() {
           Chỉnh sửa
         </MenuItem>
 
+        <MenuItem>
+          <Iconify icon={"mdi:people"} sx={{ mr: 2 }} />
+          <Link
+            to={`detail/${group.groupId}`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Thành viên
+          </Link>
+        </MenuItem>
+
         <MenuItem sx={{ color: "error.main" }}>
           <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
           Xóa
         </MenuItem>
       </Popover>
 
-      <DialogEditGroup open={isEdit} setOpen={setIsEdit} group={group} />
+      <DialogEditGroup
+        onChange={onlDailogChange} // truyền props từ cha xuống con
+        open={isEdit}
+        setOpen={setIsEdit}
+        group={group}
+      />
 
-      <DialogCreateGroup open={isCreate} setOpen={setIsCreate} />
+      <DialogCreateGroup
+        onChange={onlDailogChange}
+        open={isCreate}
+        setOpen={setIsCreate}
+      />
 
       <DialogCreateGroupExcel
+        onChange={onlDailogChange}
         open={isCreateGroupExcel}
         setOpen={setIsCreateGroupExcel}
         group={filteredGroup}

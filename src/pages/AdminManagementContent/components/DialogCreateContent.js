@@ -14,13 +14,14 @@ import Iconify from "../../../components/iconify";
 import React, { useState } from "react";
 import Axios from "../../../utils/Axios/index";
 import useLogin from "../../../utils/Login/useLogin";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
   mb: 3,
 };
 
-export const DialogCreateContent = ({ open, setOpen, content }) => {
+export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
   const { account } = useLogin();
   const [itemInputPost, setItemInputPost] = useState({
     content: "",
@@ -40,10 +41,10 @@ export const DialogCreateContent = ({ open, setOpen, content }) => {
     const responseCreate = await Axios.Contents.createPost(itemInputPost);
     if (responseCreate) {
       setOpen(false);
-      window.location.reload();
-      alert("Create Post Success");
+      toast.success("Thêm bài viết thành công");
+      onChange();
     } else {
-      alert("Create Post Fail");
+      toast.success("Thêm bài viết thất bại!");
     }
   };
 

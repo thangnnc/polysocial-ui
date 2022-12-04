@@ -14,13 +14,14 @@ import {
 import Iconify from "../../../components/iconify";
 import React, { useState } from "react";
 import Axios from "../../../utils/Axios/index";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
   mb: 3,
 };
 
-export const DialogCreateGroupExcel = ({ open, setOpen, group }) => {
+export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [groupId, setGroupId] = useState("");
@@ -37,11 +38,11 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group }) => {
     const response = await Axios.Groups.createGroupExcel(formData, groupId);
     console.log(response);
     if (response) {
-      alert("Create group successfully!");
+      toast.success("Create group successfully!");
       setOpen(false);
-      window.location.reload();
+      onChange();
     } else {
-      alert("Create group failed!");
+      toast.error("Create group failed!");
     }
   };
 

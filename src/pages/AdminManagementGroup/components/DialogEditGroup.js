@@ -15,6 +15,7 @@ import {
 import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
@@ -29,7 +30,7 @@ const styleAvatar = {
   mb: 4,
 };
 
-export const DialogEditGroup = ({ open, setOpen, group }) => {
+export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
   const [groupEdit, setGroupEdit] = useState([]);
 
   useEffect(() => {
@@ -39,22 +40,22 @@ export const DialogEditGroup = ({ open, setOpen, group }) => {
   const updateGroup = async () => {
     const response = await Axios.Groups.updateGroup(groupEdit);
     if (response) {
-      alert("Update group successfully!");
+      toast.success("Cập nhật nhóm học tập thành công");
       setOpen(false);
-      window.location.reload();
+      onChange(); // set call back update group
     } else {
-      alert("Update group failed!");
+      toast.error("Cập nhật nhóm học tập thất bại!");
     }
   };
 
   const deleteGroup = async () => {
     const response = await Axios.Groups.deleteGroup(groupEdit.groupId);
     if (response.status === 200) {
-      alert("Delete group successfully!");
+      toast.success("Xoá nhóm học tập thành công");
       setOpen(false);
-      window.location.reload();
+      onChange();
     } else {
-      alert("Delete group failed!");
+      toast.error("Xoá nhóm học tập thất bại!");
     }
   };
 

@@ -30,6 +30,7 @@ import BasicSpeedDial from "./components/BasicSpeedDial";
 import { DialogEditContent } from "./components/DialogEditContent";
 import Axios from "./../../utils/Axios/index";
 import { DialogCreateContent } from "./components/DialogCreateContent";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -107,7 +108,17 @@ export default function ManagementContent() {
 
   const getAllData = async () => {
     const response = await Axios.Contents.getAllByAllPost();
-    setContents(response.listPostDTO);
+    if (response.listPostDTO) {
+      setContents(response.listPostDTO);
+      toast.success("Lấy dữ liệu thành công");
+    } else {
+      toast.error("Lấy dữ liệu thất bại");
+    }
+  };
+
+  //Call back data
+  const onlDailogChange = () => {
+    getAllData();
   };
 
   const handleOpenMenu = (event, value) => {
@@ -369,9 +380,18 @@ export default function ManagementContent() {
         </MenuItem>
       </Popover>
 
-      <DialogEditContent open={isEdit} setOpen={setIsEdit} content={content} />
+      <DialogEditContent
+        onChange={onlDailogChange}
+        open={isEdit}
+        setOpen={setIsEdit}
+        content={content}
+      />
 
-      <DialogCreateContent open={isCreate} setOpen={setIsCreate} />
+      <DialogCreateContent
+        onChange={onlDailogChange}
+        open={isCreate}
+        setOpen={setIsCreate}
+      />
 
       <BasicSpeedDial
         handleCreateContent={handleCreateContent}

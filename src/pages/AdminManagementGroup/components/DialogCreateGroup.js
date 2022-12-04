@@ -15,6 +15,7 @@ import {
 import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const styleInputFullField = {
   width: "100%",
@@ -29,11 +30,18 @@ const styleAvatar = {
   mb: 4,
 };
 
-export const DialogCreateGroup = ({ open, setOpen }) => {
+export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
   const [groupEdit, setGroupEdit] = useState([]);
 
   const createGroup = async () => {
-    await Axios.Groups.createGroup(groupEdit);
+    const response = await Axios.Groups.createGroup(groupEdit);
+    if (response) {
+      toast.success("Create group successfully!");
+      setOpen(false);
+      onChange();
+    } else {
+      toast.error("Create group failed!");
+    }
   };
 
   const handleClose = () => {
