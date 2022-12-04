@@ -135,9 +135,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify
-                        icon={"material-symbols:qr-code-scanner-rounded"}
-                      />
+                      <Iconify icon={"icon-park-solid:edit-name"} />
                     </InputAdornment>
                   ),
                 }}
@@ -155,7 +153,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Iconify icon={"bxs:id-card"} />
+                          <Iconify icon={"material-symbols:comment-outline"} />
                         </InputAdornment>
                       ),
                     }}
@@ -172,7 +170,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Iconify icon={"bi:ticket-perforated-fill"} />
+                          <Iconify icon={"bxs:like"} />
                         </InputAdornment>
                       ),
                     }}
@@ -197,7 +195,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:edit-note-sharp"} />
+                      <Iconify icon={"fluent:text-description-20-regular"} />
                     </InputAdornment>
                   ),
                 }}

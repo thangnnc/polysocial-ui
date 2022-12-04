@@ -113,7 +113,7 @@ export const DialogEditGroupDetail = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:edit-note-sharp"} />
+                      <Iconify icon={"icon-park-solid:edit-name"} />
                     </InputAdornment>
                   ),
                 }}
@@ -129,7 +129,7 @@ export const DialogEditGroupDetail = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"ic:sharp-groups"} />
+                      <Iconify icon={"bxs:id-card"} />
                     </InputAdornment>
                   ),
                 }}
@@ -145,7 +145,7 @@ export const DialogEditGroupDetail = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Iconify icon={"fluent:text-description-20-regular"} />
+                      <Iconify icon={"entypo:mail"} />
                     </InputAdornment>
                   ),
                 }}

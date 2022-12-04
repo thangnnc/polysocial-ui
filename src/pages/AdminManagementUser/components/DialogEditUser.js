@@ -71,7 +71,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
               <label htmlFor="avatar">
                 <Avatar sx={styleAvatar} alt="Remy Sharp" src={user.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
-                  Anh đại diện
+                  Ảnh đại diện
                 </Typography>
               </label>
               <TextField
