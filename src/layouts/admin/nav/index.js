@@ -9,7 +9,7 @@ import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
-import navConfig from './config';
+import navAdminConfig from './config';
 import useLogin from '../../../utils/Login/useLogin';
 
 // ----------------------------------------------------------------------
@@ -71,7 +71,7 @@ export default function Nav({ openNav, onCloseNav }) {
         </Link>
       </Box>
 
-      <NavSection data={navConfig} />
+      <NavSection data={navAdminConfig} />
 
     </Scrollbar>
   );

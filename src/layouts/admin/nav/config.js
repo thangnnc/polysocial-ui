@@ -5,7 +5,7 @@ import Iconify from '../../../components/iconify';
 
 const icon = (name) =>  <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
-const navConfig = [
+export const navAdminConfig = [
   {
     title: 'Thông Kê',
     path: '/admin/dashboard',
@@ -43,4 +43,4 @@ const navConfig = [
   },
 ];
 
-export default navConfig;
+export default navAdminConfig;

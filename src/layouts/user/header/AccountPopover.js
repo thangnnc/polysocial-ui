@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom';
 
 const MENU_OPTIONS = [
   {
-    label: 'Trang chủ',
-    path: '/home',
+    label: 'Quản lý',
+    path: '/admin',
     icon: 'ci:home-fill',
   },
   {
