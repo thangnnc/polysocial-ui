@@ -46,7 +46,14 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
   }, [content]);
 
   const updateGroup = async () => {
-    const response = await Axios.Groups.updateGroup(contentEdit);
+    const data = {
+      postId: contentEdit.postId,
+      content: contentEdit.content,
+      createBy: contentEdit.user.userId,
+      groupId: contentEdit.groupId,
+      files: contentEdit.listUrl,
+    };
+    const response = await Axios.Contents.updatePost(data);
     if (response) {
       toast.success("Cập nhật bài viết thành công");
       setOpen(false);
@@ -57,7 +64,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
   };
 
   const deleteGroup = async () => {
-    const response = await Axios.Groups.deleteGroup(contentEdit.groupId);
+    const response = await Axios.Contents.deletePost(contentEdit.postId);
     if (response.status === 200) {
       toast.success("Xoá bài viết thành công");
       setOpen(false);
@@ -180,7 +187,10 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                 label="Nội dung bài viết"
                 value={contentEdit?.content}
                 onChange={(e) =>
-                  setContentEdit({ ...contentEdit, name: e.target.value })
+                  setContentEdit({
+                    ...contentEdit,
+                    content: e.target.value,
+                  })
                 }
                 variant="standard"
                 placeholder="Nhập tên nhóm học tập"

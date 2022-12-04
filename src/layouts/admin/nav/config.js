@@ -37,6 +37,11 @@ const navConfig = [
     icon: icon("bxs:like"),
   },
   {
+    title: "Cấp quyền dung lượng",
+    path: "/admin/capacity",
+    icon: icon("material-symbols:file-present-outline-sharp"),
+  },
+  {
     title: "Lịch Sử Hoạt Động",
     path: "/admin/activities",
     icon: icon("fa:history"),

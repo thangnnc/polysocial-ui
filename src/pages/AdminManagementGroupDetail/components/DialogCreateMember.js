@@ -49,7 +49,6 @@ export const DialogCreateMember = ({ open, setOpen, groupId, onChange }) => {
       groupId: groupId,
       userId: idUser,
     });
-    console.log(response);
     if (response) {
       toast.success("Thêm sinh viên thành công");
       setOpen(false);
