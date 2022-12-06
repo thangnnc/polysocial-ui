@@ -19,11 +19,11 @@ export default function DateTimeOfMessage({ dateTime, style }) {
   result = result.replace(/^a/, "1");
   result = result.replace(/seconds|second/, "giây");
   result = result.replace(/minutes|minute/, "phút");
-  result = result.replace(/hour|hours/, "giờ");
+  result = result.replace(/hours|hour/, "giờ");
   result = result.replace(/days|day/, "ngày");
   result = result.replace(/days|day/, "ngày");
   result = result.replace(/months|month/, "tháng");
-  result = result.replace(/year|years/, "năm");
+  result = result.replace(/years|year/, "năm");
   result = result.replace(/ago/, "trước");
 
   return <DateTime style={style}>{result}</DateTime>;

@@ -14,6 +14,20 @@ import { Box } from "@mui/system";
 import NotificationBox from "./components/NotificationBox";
 // ----------------------------------------------------------------------
 
+const scrollbar = {
+  "::-webkit-scrollbar": {
+    width: "8px",
+  },
+  ":hover::-webkit-scrollbar-thumb": {
+    " -webkit-border-radius": "5px",
+    borderRadius: "5px",
+    background: "#ffa36a",
+  },
+  "::-webkit-scrollbar-thumb:window-inactive": {
+    background: "#ffa36a",
+  },
+};
+
 export default function NotificationPopover({ notifications }) {
   const [open, setOpen] = useState(false);
 
@@ -54,6 +68,8 @@ export default function NotificationPopover({ notifications }) {
               borderRadius: 0.75,
             },
             maxHeight: "80vh",
+            overflow: "auto",
+            ...scrollbar
           },
         }}
       >

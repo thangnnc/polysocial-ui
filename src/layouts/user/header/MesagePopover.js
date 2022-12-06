@@ -14,6 +14,20 @@ import { Box } from "@mui/system";
 import MessageBox from "./components/MessageBox";
 // ----------------------------------------------------------------------
 
+const scrollbar = {
+  "::-webkit-scrollbar": {
+    width: "8px",
+  },
+  ":hover::-webkit-scrollbar-thumb": {
+    " -webkit-border-radius": "5px",
+    borderRadius: "5px",
+    background: "#ffa36a",
+  },
+  "::-webkit-scrollbar-thumb:window-inactive": {
+    background: "#ffa36a",
+  },
+};
+
 export default function MessagesPopover({ messages }) {
   const [open, setOpen] = useState(false);
 
@@ -54,7 +68,7 @@ export default function MessagesPopover({ messages }) {
               typography: "body2",
               borderRadius: 0.75,
             },
-            maxHeight: "80vh",
+            maxHeight: "80vh", overflow: "auto" , ...scrollbar
           },
         }}
       >
@@ -67,7 +81,7 @@ export default function MessagesPopover({ messages }) {
             bgcolor: "#ffffff",
             position: "fixed",
             zIndex: 9999,
-            borderBottom: "1px solid #ed6c02",
+            borderBottom: "1px solid #ed6c02"
           }}
         >
           <ListSubheader
@@ -82,7 +96,7 @@ export default function MessagesPopover({ messages }) {
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
-        <List sx={{ maxWidth: 400, py: 0, top: 48 }}>
+        <List sx={{ maxWidth: 400, py: 0, top: 48}}>
           <Divider />
           {messages.map((roomChat, index) => (
             <MessageBox key={index} roomChat={roomChat} />

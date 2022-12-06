@@ -14,6 +14,7 @@ import {
 import useLogin from "../../../utils/Login/useLogin";
 import Iconify from "../../../components/iconify";
 import { useNavigate } from "react-router-dom";
+import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
 // ----------------------------------------------------------------------
 
@@ -68,9 +69,10 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar
+        <AvatarStatus
+          isActive={true}
           src={account.avatar}
-          sx={{ width: "48px", height: "48px", border: "2px solid #fff" }}
+          sx={{ width: "48px", height: "48px" }}
           alt="photoURL"
         />
       </IconButton>

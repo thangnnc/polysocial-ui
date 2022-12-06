@@ -1,6 +1,7 @@
-import { Avatar, Card, Typography } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import NavUserSection from "../../../components/nav-user-section/NavUserSection";
+import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";
 import navUserConfig from "./config";
 
@@ -18,8 +19,9 @@ export default function NavUser() {
         }}
       >
         <Box sx={{ width: "25%" }}>
-          <Avatar
+          <AvatarStatus
             alt="Avatar"
+            isActive={true}
             src={account.avatar}
             sx={{ width: 54, height: 54 }}
           />
