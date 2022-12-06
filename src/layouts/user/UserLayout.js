@@ -18,6 +18,7 @@ const StyledRoot = styled("div")({
   overflow: "hidden",
   backgroundColor: "#f5f5f5",
   position: "relative",
+  
 });
 
 const BoxNav = styled("div")(({ theme }) => ({
@@ -39,22 +40,22 @@ const BoxFriend = styled("div")(({ theme }) => ({
 }));
 
 const Main = styled("div")(({ theme }) => ({
-  width: "60%",
-  overflow: "auto",
-  minHeight: "200vh",
+  width: "55%",
+  overflowY: "scroll",
+  minHeight: "100%",
   paddingTop: APP_BAR_MOBILE + 36,
   [theme.breakpoints.up("lg")]: {
     paddingTop: APP_BAR_DESKTOP + 36,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-  },
+  }
 }));
 
 // ----------------------------------------------------------------------
 
 export default function UserLayout() {
   return (
-    <StyledRoot>
+    <StyledRoot >
       <Header />
 
       <Box sx={{ display: "flex", width: "100%", pl: 8 }}>

@@ -9,12 +9,12 @@ import {
   ListSubheader,
   Button,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import MailIcon from "@mui/icons-material/Mail";
 import { Box } from "@mui/system";
-import NotificationBox from "./components/NotificationBox";
+import MessageBox from "./components/MessageBox";
 // ----------------------------------------------------------------------
 
-export default function NotificationPopover({ notifications }) {
+export default function MessagesPopover({ messages }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = (event) => {
@@ -30,11 +30,12 @@ export default function NotificationPopover({ notifications }) {
       <Badge
         badgeContent={4}
         color="error"
+        sx={{ mr: 2 }}
         overlap="circular"
         onClick={handleOpen}
       >
         <Avatar sx={{ bgcolor: "#ffa36a" }}>
-          <NotificationsIcon />
+          <MailIcon />
         </Avatar>
       </Badge>
 
@@ -59,7 +60,7 @@ export default function NotificationPopover({ notifications }) {
       >
         <Box
           sx={{
-            width: 500,
+            width: 400,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -74,20 +75,18 @@ export default function NotificationPopover({ notifications }) {
             id="nested-list-subheader"
             sx={{ fontWeight: 700, fontSize: 18 }}
           >
-            Thông báo
+            Tin nhắn
           </ListSubheader>
 
           <Button color="warning" sx={{ mr: 1 }}>
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
-        <List sx={{ width: 500, py: 0, top: 48 }}>
+        <List sx={{ maxWidth: 400, py: 0, top: 48 }}>
           <Divider />
-          {notifications.map(
-            (notification, index) => (
-              <NotificationBox key={index} notification={notification} />
-            )
-          )}
+          {messages.map((roomChat, index) => (
+            <MessageBox key={index} roomChat={roomChat} />
+          ))}
         </List>
       </Popover>
     </>
