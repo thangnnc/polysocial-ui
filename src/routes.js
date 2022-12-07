@@ -10,7 +10,9 @@ import Page404 from "./pages/ErrorPage/Page404";
 // layouts
 import LoginPage from "./pages/LoginPage/LoginPage";
 import MessagePage from "./pages/MessagePage/MessagePage";
+import GroupPage from "./pages/GroupPage/GroupPage";
 import useLogin from "./utils/Login/useLogin";
+import GroupDetailPage from "./pages/GroupDetailPage/GroupDetailPage";
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,14 @@ export default function Router() {
         { path: "home", element: <h2>Home</h2> },
         { path: "message/room/:roomId", element: <MessagePage /> },
       ],
+    },
+    {
+      path: "/groups",
+      element: <GroupPage />,
+    },
+    {
+      path: "/groups/detail/:groupId",
+      element: <GroupDetailPage />,
     },
     {
       path: "/admin",
