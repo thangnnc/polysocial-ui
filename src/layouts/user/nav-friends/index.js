@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Card,
   List,
@@ -10,9 +9,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Iconify from "../../../components/iconify";
+import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
 const styleListFriends = {
-  padding: "12px 12px",
+  padding: "8px 12px",
   width: "100%",
   color: "#515151",
 };
@@ -24,6 +24,7 @@ const listFriends = [
     fullName: "Nguyễn Nhật Cao Thăng",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: true,
   },
   {
     id: "1",
@@ -31,6 +32,7 @@ const listFriends = [
     fullName: "Trần Mậu Phi",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: true,
   },
   {
     id: "1",
@@ -38,6 +40,7 @@ const listFriends = [
     fullName: "Phan Nguyễn Đăng Trường",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: true,
   },
   {
     id: "1",
@@ -45,6 +48,7 @@ const listFriends = [
     fullName: "Đặng Hoàng Duy",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: true,
   },
   {
     id: "1",
@@ -52,6 +56,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: true,
   },
   {
     id: "1",
@@ -59,6 +64,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: false,
   },
   {
     id: "1",
@@ -66,6 +72,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: true,
   },
   {
     id: "1",
@@ -73,6 +80,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: false,
   },
   {
     id: "1",
@@ -80,6 +88,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: false,
   },
   {
     id: "1",
@@ -87,6 +96,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: false,
   },
   {
     id: "1",
@@ -94,6 +104,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: false,
   },
   {
     id: "1",
@@ -101,6 +112,7 @@ const listFriends = [
     fullName: "Nguyễn Quang Nhật",
     avatar:
       "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+    isActive: false,
   },
 ];
 
@@ -119,6 +131,20 @@ const BoxFriend = styled("div")(({ theme }) => ({
     paddingTop: APP_BAR_DESKTOP + 10,
   },
 }));
+
+const scrollbar = {
+  "::-webkit-scrollbar": {
+    width: "8px",
+  },
+  ":hover::-webkit-scrollbar-thumb": {
+    " -webkit-border-radius": "5px",
+    borderRadius: "5px",
+    background: "#ffa36a",
+  },
+  "::-webkit-scrollbar-thumb:window-inactive": {
+    background: "#ffa36a",
+  },
+};
 export default function NavFriend() {
   return (
     <BoxFriend>
@@ -158,21 +184,17 @@ export default function NavFriend() {
           overflow: "auto",
           p: 0,
           bgcolor: "background.paper",
+          ...scrollbar,
         }}
       >
-        {listFriends.map((value) => {
-          const labelId = `checkbox-list-secondary-label-${value}`;
+        {listFriends.map((value, index) => {
           return (
-            <Button color="warning" sx={styleListFriends}>
-              <ListItem key={value}>
+            <Button key={index} color="warning" sx={styleListFriends}>
+              <ListItem>
                 <ListItemAvatar>
-                  <Avatar
-                    alt={value.fullName}
-                    src={value.avatar}
-                    sx={{ width: "52px", height: "52px", mr: 2 }}
-                  />
+                  <AvatarStatus alt={value.fullName} src={value.avatar} isActive={value.isActive} sx={{width: 48, height: 48}} />
                 </ListItemAvatar>
-                <Typography sx={{ fontWeight: "700" }}>
+                <Typography sx={{ fontWeight: "700", ml: 1.5 }}>
                   {value.fullName}
                 </Typography>
               </ListItem>

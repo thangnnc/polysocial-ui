@@ -56,30 +56,12 @@ const theme = createTheme({
                 }
               }
             },
+            "&.rounded .MuiInputBase-root":{
+              borderRadius: 50,
+              paddingRight: 5
+            }
           })
         )})
-        // experimental_sx ({
-        //   "&:hover": {
-        //     "& .MuiInputLabel-root": {
-        //         color: "#f97c2e",
-        //     },
-        //     "& .MuiInputBase-root": {
-        //       "& > fieldset": {
-        //         borderColor: "#f97c2e",
-        //       }
-        //     }
-        //   },
-        //   "& .Mui-focused": {
-        //     "&.MuiInputLabel-root": {
-        //       color: "#f97c2e",
-        //     },
-        //     "&.MuiInputBase-root": {
-        //       "& > fieldset": {
-        //         borderColor: "#f97c2e !important",
-        //       }
-        //     }
-        //   },
-        // }),
       },
     },
     MuiCard: {

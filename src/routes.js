@@ -9,6 +9,7 @@ import ManagementUser from "./pages/AdminManagementUser/ManagementUser";
 import Page404 from "./pages/ErrorPage/Page404";
 // layouts
 import LoginPage from "./pages/LoginPage/LoginPage";
+import MessagePage from "./pages/MessagePage/MessagePage";
 import useLogin from "./utils/Login/useLogin";
 
 // ----------------------------------------------------------------------
@@ -31,6 +32,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/home" />, index: true },
         { path: "home", element: <h2>Home</h2> },
+        { path: "message/room/:roomId", element: <MessagePage /> },
       ],
     },
     {

@@ -16,8 +16,8 @@ import { bgBlur } from "../../../utils/CssStyle/cssStyles";
 import AccountPopover from "./AccountPopover";
 import NotificationPopover from "./NotificationPopover";
 import Logo from "../../../components/logo";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import MessagesPopover from "./MesagePopover";
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +53,7 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: false,
+      dateTime: "12/05/2022, 4:04:33 AM",
     },
     {
       title: "Birthday Gift",
@@ -61,6 +62,7 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: false,
+      dateTime: "12/04/2022, 4:04:33 AM",
     },
     {
       title: "Demo",
@@ -69,6 +71,7 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: true,
+      dateTime: "12/03/2022, 4:04:33 AM",
     },
     {
       title: "Birthday Gift",
@@ -77,6 +80,7 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: false,
+      dateTime: "12/02/2022, 4:04:33 AM",
     },
     {
       title: "Demo",
@@ -85,6 +89,7 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: true,
+      dateTime: "12/01/2022, 4:04:33 AM",
     },
     {
       title: "Birthday Gift",
@@ -93,6 +98,7 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: false,
+      dateTime: "11/05/2022, 4:04:33 AM",
     },
     {
       title: "Demo",
@@ -101,6 +107,87 @@ export default function Header({ onOpenNav }) {
       avatar:
         "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
       isSeen: true,
+      dateTime: "11/05/2022, 4:04:33 AM",
+    },
+  ];
+
+  const messages = [
+    {
+      roomId: 12,
+      fullName: "Brunch this week?",
+      content:
+        "I'll be in the neighbourhood this week. Let's grab a bite to eat",
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: false,
+      isActive: true,
+      lastTimeMessage: "12/06/2022, 11:57:33 PM",
+    },
+    {
+      roomId: 134,
+      fullName: "Birthday Gift",
+      content: `Do you have a suggestion for a good present for John on his work
+        anniversary. I am really confused & would love your thoughts on it.`,
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: false,
+      isActive: false,
+      lastTimeMessage: "12/05/2022, 2:04:33 AM",
+    },
+    {
+      roomId: 12341,
+      fullName: "Demo",
+      content: `Do you have a suggestion for a good present for John on his work
+        anniversary. I am really confused & would love your thoughts on it.`,
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: true,
+      isActive: true,
+      lastTimeMessage: "12/03/2022, 2:04:33 AM",
+    },
+    {
+      roomId: 144,
+      fullName: "Birthday Gift",
+      content: `Do you have a suggestion for a good present for John on his work
+        anniversary. I am really confused & would love your thoughts on it.`,
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: false,
+      isActive: false,
+      lastTimeMessage: "12/03/2022, 1:04:33 AM",
+    },
+    {
+      roomId: 1123,
+      fullName: "Demo",
+      content: `Do you have a suggestion for a good present for John on his work
+        anniversary. I am really confused & would love your thoughts on it.`,
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: true,
+      isActive: true,
+      lastTimeMessage: "11/03/2022, 2:04:33 AM",
+    },
+    {
+      roomId: 13333,
+      fullName: "Birthday Gift",
+      content: `Do you have a suggestion for a good present for John on his work
+        anniversary. I am really confused & would love your thoughts on it.`,
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: false,
+      isActive: false,
+      lastTimeMessage: "10/02/2022, 2:04:33 AM",
+    },
+    {
+      roomId: 1111,
+      fullName: "Demo",
+      content: `Do you have a suggestion for a good present for John on his work
+        anniversary. I am really confused & would love your thoughts on it.`,
+      avatar:
+        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
+      isSeen: true,
+      isActive: false,
+      lastTimeMessage: "12/02/2021, 2:04:33 AM",
     },
   ];
 
@@ -141,16 +228,7 @@ export default function Header({ onOpenNav }) {
                 </Avatar>
               </Badge>
 
-              <Badge
-                badgeContent={4}
-                color="error"
-                overlap="circular"
-                sx={{ mr: 2 }}
-              >
-                <Avatar sx={{ bgcolor: "#ffa36a" }}>
-                  <MailIcon />
-                </Avatar>
-              </Badge>
+              <MessagesPopover messages={messages} />
 
               <NotificationPopover notifications={notifications} />
             </Box>
