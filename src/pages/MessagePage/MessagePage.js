@@ -18,6 +18,7 @@ import MyMessage from "./components/MyMessage";
 import OtherMessage from "./components/OtherMessage";
 import AlertMessage from "./components/AlertMessage";
 import TimeLineMessage from "./components/TimeLineMessage";
+import EnteringMessage from "./components/EnteringMessage";
 
 
 const scrollbar = {
@@ -99,6 +100,7 @@ export default function MessagePage() {
           <AlertMessage
             message={"♥ Gấu Chó ♥ đã chặn bạn."}
           />
+          <EnteringMessage account={friend}/>
         </CardContent>
         <Divider />
         {/* Gửi tin nhắn */}

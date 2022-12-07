@@ -6,7 +6,6 @@ import {
   Stack,
   AppBar,
   Toolbar,
-  TextField,
   Badge,
   Avatar,
 } from "@mui/material";
@@ -18,6 +17,7 @@ import NotificationPopover from "./NotificationPopover";
 import Logo from "../../../components/logo";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MessagesPopover from "./MesagePopover";
+import SearchPopover from "./SearchPopover";
 
 // ----------------------------------------------------------------------
 
@@ -206,7 +206,7 @@ export default function Header({ onOpenNav }) {
             <Logo sx={{ width: 180 }} />
           </Box>
 
-          <TextField placeholder="Tìm kiếm ...." />
+          <SearchPopover />
 
           <Stack
             direction="row"

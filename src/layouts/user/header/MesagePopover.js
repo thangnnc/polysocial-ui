@@ -68,26 +68,24 @@ export default function MessagesPopover({ messages }) {
               typography: "body2",
               borderRadius: 0.75,
             },
-            maxHeight: "80vh", overflow: "auto" , ...scrollbar
+            maxHeight: "48vh",
           },
         }}
       >
         <Box
           sx={{
-            width: 400,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             bgcolor: "#ffffff",
-            position: "fixed",
-            zIndex: 9999,
-            borderBottom: "1px solid #ed6c02"
+            borderBottom: "1px solid #ed6c02",
+            height: 40,
           }}
         >
           <ListSubheader
             component="div"
             id="nested-list-subheader"
-            sx={{ fontWeight: 700, fontSize: 18 }}
+            sx={{ fontWeight: 700, fontSize: 18, height: 40, lineHeight: "40px" }}
           >
             Tin nhắn
           </ListSubheader>
@@ -96,7 +94,15 @@ export default function MessagesPopover({ messages }) {
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
-        <List sx={{ maxWidth: 400, py: 0, top: 48}}>
+        <List
+          disablePadding
+          sx={{
+            maxWidth: 400,
+            maxHeight: "calc(48vh - 41px)",
+            overflow: "auto",
+            ...scrollbar,
+          }}
+        >
           <Divider />
           {messages.map((roomChat, index) => (
             <MessageBox key={index} roomChat={roomChat} />
