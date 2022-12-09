@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Iconify from "../../components/iconify";
@@ -19,7 +19,6 @@ import OtherMessage from "./components/OtherMessage";
 import AlertMessage from "./components/AlertMessage";
 import TimeLineMessage from "./components/TimeLineMessage";
 import EnteringMessage from "./components/EnteringMessage";
-
 
 const scrollbar = {
   "::-webkit-scrollbar": {
@@ -44,7 +43,7 @@ const friend = {
 };
 
 export default function MessagePage() {
-  const { roomId } = useParams();
+  // const { roomId } = useParams();
   return (
     <>
       <Helmet>
@@ -78,7 +77,7 @@ export default function MessagePage() {
             alignContent: "flex-end",
             overflowY: "auto",
             overflowX: "hidden",
-            ...scrollbar
+            ...scrollbar,
           }}
         >
           <AlertMessage
@@ -86,21 +85,23 @@ export default function MessagePage() {
           />
           <TimeLineMessage message={"11:00"} />
           <MyMessage message={"Hi! Em ngon vậy"} />
-          <MyMessage message={"Cho anh làm quen nhé"} showAvatar/>
-          <OtherMessage account={friend} message={"Oke a iu"} showAvatar/>
+          <MyMessage message={"Cho anh làm quen nhé"} showAvatar />
+          <OtherMessage account={friend} message={"Oke a iu"} showAvatar />
           <TimeLineMessage message={"16:00"} />
           <MyMessage message={"Em ăn cơm chưa?"} />
           <MyMessage message={"Em ăn cơm chưa?"} />
           <MyMessage message={"Em ăn cơm chưa?"} />
           <MyMessage message={"Em ăn cơm chưa?"} />
-          <MyMessage message={"Em ăn cơm chưa?"} showAvatar/>
+          <MyMessage message={"Em ăn cơm chưa?"} showAvatar />
           <OtherMessage account={friend} message={"Chưa"} />
-          <OtherMessage account={friend} message={"Anh chở e đi ăn đi <3"} showAvatar/>
-          <MyMessage message={"Méo :V"} showAvatar/>
-          <AlertMessage
-            message={"♥ Gấu Chó ♥ đã chặn bạn."}
+          <OtherMessage
+            account={friend}
+            message={"Anh chở e đi ăn đi <3"}
+            showAvatar
           />
-          <EnteringMessage account={friend}/>
+          <MyMessage message={"Méo :V"} showAvatar />
+          <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} />
+          <EnteringMessage account={friend} />
         </CardContent>
         <Divider />
         {/* Gửi tin nhắn */}

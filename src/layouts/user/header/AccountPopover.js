@@ -7,7 +7,6 @@ import {
   Typography,
   Stack,
   MenuItem,
-  Avatar,
   IconButton,
   Popover,
 } from "@mui/material";
@@ -20,9 +19,9 @@ import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
 const MENU_OPTIONS = [
   {
-    label: 'Quản lý',
-    path: '/admin',
-    icon: 'ci:home-fill',
+    label: "Quản lý",
+    path: "/admin",
+    icon: "ci:home-fill",
   },
   {
     label: "Thông tin tài khoản",

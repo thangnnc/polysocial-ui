@@ -1,4 +1,4 @@
-import { Box, styled, Tooltip, Typography } from "@mui/material";
+import { Box, styled, Tooltip } from "@mui/material";
 import AvatarBlank from "../../../components/avatar-blank/AvatarBlank";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";

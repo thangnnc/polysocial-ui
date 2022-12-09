@@ -83,8 +83,9 @@ export default function GroupDetailPage() {
                 objectFit: "cover",
               }}
               src={
-                "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png"
+                "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
               }
+              alt="avatar group"
             />
           </ImageListItem>
           <Box

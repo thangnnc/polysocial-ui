@@ -81,8 +81,9 @@ export default function GroupPage() {
                   <img
                     style={{ borderRadius: 10, width: 75, height: 75 }}
                     src={
-                      "https://scontent.fsgn5-9.fna.fbcdn.net/v/t1.30497-1/116687302_959241714549285_318408173653384421_n.jpg?stp=cp0_dst-jpg_p60x60&_nc_cat=1&ccb=1-7&_nc_sid=70495d&_nc_ohc=_-YHq5lMCPgAX-DkKFz&_nc_ht=scontent.fsgn5-9.fna&oh=00_AfCvFMwO4H9a-hTvmw8UsMlYJfbFYy2X-R_C__m1CZ5dLw&oe=63B83083"
+                      "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
                     }
+                    alt="avatar group"
                   />
                 </ImageListItem>
                 <Box
