@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 import Iconify from "../../../components/iconify";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
@@ -192,7 +193,12 @@ export default function NavFriend() {
             <Button key={index} color="warning" sx={styleListFriends}>
               <ListItem>
                 <ListItemAvatar>
-                  <AvatarStatus alt={value.fullName} src={value.avatar} isActive={value.isActive} sx={{width: 48, height: 48}} />
+                  <AvatarStatus
+                    alt={value.fullName}
+                    src={value.avatar}
+                    isActive={value.isActive}
+                    sx={{ width: 48, height: 48 }}
+                  />
                 </ListItemAvatar>
                 <Typography sx={{ fontWeight: "700", ml: 1.5 }}>
                   {value.fullName}
