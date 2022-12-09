@@ -19,7 +19,7 @@ const StyledRoot = styled("div")({
 export default function GroupMemberPage() {
   const { groupId } = useParams();
   const [members, setMember] = useState([]);
-  const [teacher, setTeacher] = useState([]);
+  const [teacher, setTeacher] = useState({});
 
   useEffect(() => {
     getAllData(groupId);
@@ -30,8 +30,6 @@ export default function GroupMemberPage() {
     const responseTeacher = await Axios.Groups.getTeacherGroup(groupId);
     setMember(response);
     setTeacher(responseTeacher);
-    console.log(members);
-    console.log(teacher);
   };
 
   return (
