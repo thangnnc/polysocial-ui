@@ -5,14 +5,12 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Iconify from "../../components/iconify";
 import Header from "../../layouts/user/header";
 import SearchBar from "./components/SearchBar";
 import { Link } from "react-router-dom";
 import ListGroupJoin from "./components/ListGroupJoin";
-import Axios from "./../../utils/Axios/index";
-import { toast } from "react-toastify";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -38,22 +36,6 @@ const BoxNav = styled("div")(({ theme }) => ({
 }));
 
 export default function GroupPage() {
-  const [groups, setGroups] = useState([]);
-
-  useEffect(() => {
-    getAllData();
-  }, []);
-
-  const getAllData = async () => {
-    const response = await Axios.Groups.getAllGroupStudent();
-    if (response) {
-      setGroups(response);
-      toast.success("Lấy dữ liệu thành công");
-    } else {
-      toast.error("Lấy dữ liệu thất bại");
-    }
-  };
-
   return (
     <StyledRoot>
       <Header />
@@ -128,9 +110,37 @@ export default function GroupPage() {
               Nhóm do bạn đã tham gia
             </Typography>
             <Box sx={{ height: "570px", overflowY: "scroll" }}>
-              {groups.map((group) => (
-                <ListGroupJoin key={group.groupId} group={group} />
-              ))}
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
+
+              <ListGroupJoin />
             </Box>
           </Box>
         </BoxNav>

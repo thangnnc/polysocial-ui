@@ -7,12 +7,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
-import Axios from "./../../../utils/Axios/index";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -31,26 +27,24 @@ const BoxNav = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function NavGroup() {
-  const { groupId } = useParams();
-  const [group, setGroup] = useState([]);
+export default function NavGroup(props) {
+  console.log(props);
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
   const navGroupConfig = [
     {
       title: "Trang Chủ",
-      path: `/groups/detail/${groupId}`,
+      path: `/groups/detail/${props.groupId}`,
       icon: icon("material-symbols:home-outline-rounded"),
     },
     {
       title: "Xét duyệt thành viên",
-      path: `/groups/detail/add-member/${groupId}`,
-      icon: icon("fluent-mdl2:add-friend"),
-      notiCount: 4,
+      path: `/groups/detail/add-member/${props.groupId}`,
+      icon: icon("material-symbols:home-outline-rounded"),
     },
     {
-      title: "Mọi người",
-      path: `/groups/detail/members/${groupId}`,
+      title: "Thành viên",
+      path: `/groups/detail/members/${props.groupId}`,
       icon: icon("la:user-friends"),
     },
     {
@@ -61,7 +55,7 @@ export default function NavGroup() {
     },
     {
       title: "Bài tập (Quiz)",
-      path: `/groups/detail/exercise/${groupId}`,
+      path: `/groups/detail/exercise/${props.groupId}`,
       icon: icon("material-symbols:nest-clock-farsight-analog-outline"),
       notiCount: 2,
     },
@@ -71,20 +65,6 @@ export default function NavGroup() {
       icon: icon("ic:round-log-out"),
     },
   ];
-
-  useEffect(() => {
-    getAllData(groupId);
-  }, [groupId]);
-
-  const getAllData = async (groupId) => {
-    const response = await Axios.Groups.getOneGroup(groupId);
-    if (response) {
-      setGroup(response);
-      toast.success("Lấy dữ liệu thành công");
-    } else {
-      toast.error("Lấy dữ liệu thất bại");
-    }
-  };
 
   return (
     <BoxNav>
@@ -114,7 +94,7 @@ export default function NavGroup() {
       >
         <Box>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            Nhóm {group.name} - {group.description}
+            Nhóm Lập Trình WEB - IT6307_3
           </Typography>
           <Box
             sx={{
@@ -127,7 +107,7 @@ export default function NavGroup() {
               variant="subtitle2"
               sx={{ color: "#9b9b9b", paddingLeft: 1, paddingTop: 0.5 }}
             >
-              Nhóm công khai - {group.totalMember} thành viên
+              Nhóm công khai - 31 thành viên
             </Typography>
           </Box>
         </Box>
