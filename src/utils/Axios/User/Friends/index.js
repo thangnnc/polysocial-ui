@@ -11,12 +11,9 @@ class Friends {
   static acceptFriend = async (data) => Axios.post("/user/accept-friend", data);
   // Post add friend
   static addFriend = async (data) => Axios.post("/user/add-friend", data);
-  // Search user by name
-  static searchUserByName = async (name) =>
-    Axios.get(`/user/search-by-name?name=${name}`);
-  // Search user by email
-  static searchUserByEmail = async (email) =>
-    Axios.get(`/user/search-by-email?email=${email}`);
+  // Search user by kework
+  static searchUserByKeywork = async (keyword) =>
+    Axios.get(`/user/search-keyword?keyword=${keyword}`);
   // Get all friend
   static getAllFriend = async () => Axios.get("/user/get-all-friend");
   // Get one friend
