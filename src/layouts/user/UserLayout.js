@@ -41,7 +41,6 @@ const BoxFriend = styled("div")(({ theme }) => ({
 
 const Main = styled("div")(({ theme }) => ({
   width: "55%",
-  overflowY: "scroll",
   minHeight: "100%",
   paddingTop: APP_BAR_MOBILE + 36,
   [theme.breakpoints.up("lg")]: {

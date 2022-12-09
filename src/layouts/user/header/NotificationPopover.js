@@ -67,9 +67,7 @@ export default function NotificationPopover({ notifications }) {
               typography: "body2",
               borderRadius: 0.75,
             },
-            maxHeight: "80vh",
-            overflow: "auto",
-            ...scrollbar
+            maxHeight: "52vh",
           },
         }}
       >
@@ -80,15 +78,15 @@ export default function NotificationPopover({ notifications }) {
             justifyContent: "space-between",
             alignItems: "center",
             bgcolor: "#ffffff",
-            position: "fixed",
-            zIndex: 9999,
             borderBottom: "1px solid #ed6c02",
+            height: 40
           }}
         >
           <ListSubheader
             component="div"
             id="nested-list-subheader"
-            sx={{ fontWeight: 700, fontSize: 18 }}
+            sx={{ fontWeight: 700, fontSize: 18,
+              height: 40, lineHeight: "40px" }}
           >
             Thông báo
           </ListSubheader>
@@ -97,13 +95,13 @@ export default function NotificationPopover({ notifications }) {
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
-        <List sx={{ width: 500, py: 0, top: 48 }}>
+        <List disablePadding
+          sx={{ width: 500, maxHeight: "calc(52vh - 41px)", overflow: "auto", ...scrollbar }}
+        >
           <Divider />
-          {notifications.map(
-            (notification, index) => (
-              <NotificationBox key={index} notification={notification} />
-            )
-          )}
+          {notifications.map((notification, index) => (
+            <NotificationBox key={index} notification={notification} />
+          ))}
         </List>
       </Popover>
     </>
