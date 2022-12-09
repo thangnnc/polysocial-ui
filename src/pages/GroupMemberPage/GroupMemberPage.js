@@ -1,8 +1,9 @@
-import { Box, styled } from "@mui/material";
+import styled from "@emotion/styled";
+import { Box } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../layouts/user/header";
-import NavGroup from "./../../layouts/user/nav-group";
+import NavGroup from "../../layouts/user/nav-group";
 
 const StyledRoot = styled("div")({
   display: "flex",
@@ -12,7 +13,7 @@ const StyledRoot = styled("div")({
   position: "relative",
 });
 
-export default function GroupDetailPage() {
+export default function GroupMemberPage() {
   const { groupId } = useParams();
   console.log(groupId);
 
@@ -22,7 +23,7 @@ export default function GroupDetailPage() {
       <Box sx={{ display: "flex", width: "100%" }}>
         <NavGroup groupId={groupId} />
         <Box sx={{ width: "75%", marginLeft: "25%" }}>
-          <h1 style={{ marginTop: 100 }}>Group Page</h1>
+          <h1 style={{ marginTop: 100 }}>Group Member Page</h1>
         </Box>
       </Box>
     </StyledRoot>

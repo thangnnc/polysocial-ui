@@ -13,6 +13,7 @@ import MessagePage from "./pages/MessagePage/MessagePage";
 import GroupPage from "./pages/GroupPage/GroupPage";
 import useLogin from "./utils/Login/useLogin";
 import GroupDetailPage from "./pages/GroupDetailPage/GroupDetailPage";
+import GroupMemberPage from "./pages/GroupMemberPage/GroupMemberPage";
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,10 @@ export default function Router() {
     {
       path: "/groups/detail/:groupId",
       element: <GroupDetailPage />,
+    },
+    {
+      path: "/groups/detail/members/:groupId",
+      element: <GroupMemberPage />,
     },
     {
       path: "/admin",
