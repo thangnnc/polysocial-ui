@@ -1,8 +1,15 @@
 import { Avatar, Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import Axios from "./../../../../utils/Axios/index";
 
 export default function FriendSearchBox({ searchData }) {
   const { avatar, fullName, email, isFriend } = searchData;
+
+  const handleAddFriend = async () => {
+    console.log(1);
+    const response = await Axios.Friends.addFriend(searchData);
+    console.log(response);
+  };
 
   return (
     <>
@@ -34,6 +41,7 @@ export default function FriendSearchBox({ searchData }) {
             className="btn-orange"
             variant="contained"
             sx={{ borderRadius: 50 }}
+            onClick={handleAddFriend}
           >
             Kết Bạn
           </Button>

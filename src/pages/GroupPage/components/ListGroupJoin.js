@@ -1,10 +1,10 @@
 import { Box, ImageListItem, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function ListGroupJoin() {
+export default function ListGroupJoin(props) {
   return (
     <Link
-      to={"/groups/detail/1"}
+      to={`/groups/detail/${props.group.groupId}`}
       style={{
         color: "inherit",
         textDecoration: "none",
@@ -33,10 +33,10 @@ export default function ListGroupJoin() {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 19 }}>
-            Nhóm Lập trình WEB
+            Nhóm {props.group.groupName}
           </Typography>
           <Typography variant="subtitle2" sx={{ color: "#9b9b9b" }}>
-            Nhóm công khai - 31 thành viên
+            Nhóm công khai - {props.group.totalMember} thành viên
           </Typography>
         </Box>
       </Box>
