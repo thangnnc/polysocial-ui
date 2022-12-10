@@ -10,11 +10,13 @@ import {
   Divider,
   Grid,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import Iconify from "../../../components/iconify";
 import React, { useState } from "react";
 import Axios from "../../../utils/Axios/index";
 import { toast } from "react-toastify";
+import { Box } from "@mui/system";
 
 const styleInputFullField = {
   width: "100%",
@@ -109,17 +111,17 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
                 sx={styleInputFullField}
               />
               {isSelected ? (
-                <div>
-                  <p>Filename: {selectedFile.name}</p>
-                  <p>Filetype: {selectedFile.type}</p>
-                  <p>Size in bytes: {selectedFile.size}</p>
-                  <p>
-                    lastModifiedDate:{" "}
+                <Box>
+                  <Typography>Tên tệp: {selectedFile.name}</Typography>
+                  <Typography>Loại tệp: {selectedFile.type}</Typography>
+                  <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
+                  <Typography>
+                    Ngày sửa đổi cuối cùng:
                     {selectedFile.lastModifiedDate.toLocaleDateString()}
-                  </p>
-                </div>
+                  </Typography>
+                </Box>
               ) : (
-                <p>Bạn chưa chọn file nào?</p>
+                <Typography>Bạn chưa chọn file nào?</Typography>
               )}
             </Grid>
           </Grid>

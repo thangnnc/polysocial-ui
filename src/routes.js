@@ -14,6 +14,10 @@ import GroupPage from "./pages/GroupPage/GroupPage";
 import useLogin from "./utils/Login/useLogin";
 import GroupDetailPage from "./pages/GroupDetailPage/GroupDetailPage";
 import GroupMemberPage from "./pages/GroupMemberPage/GroupMemberPage";
+import GroupLayout from "./layouts/user/GroupLayout";
+import GroupExercisePage from "./pages/GroupExercisePage/GroupExercisePage";
+import GroupFeedbackPage from "./pages/GroupFeedbackPage/GroupFeedbackPage";
+import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerciseDetailPage";
 
 // ----------------------------------------------------------------------
 
@@ -40,15 +44,39 @@ export default function Router() {
     },
     {
       path: "/groups",
-      element: <GroupPage />,
+      element: !account ? <Navigate to="/login" /> : <GroupPage />,
     },
     {
-      path: "/groups/detail/:groupId",
-      element: <GroupDetailPage />,
-    },
-    {
-      path: "/groups/detail/members/:groupId",
-      element: <GroupMemberPage />,
+      path: "/",
+      element: !account ? <Navigate to="/login" /> : <GroupLayout />,
+      children: [
+        { element: <Navigate to="/home" />, index: true },
+        { path: "/groups/detail/:groupId", element: <GroupDetailPage /> },
+        {
+          path: "/groups/detail/add-members/:groupId",
+          element: <h1>Lời mời vô nhóm </h1>,
+        },
+        {
+          path: "/groups/detail/members/:groupId",
+          element: <GroupMemberPage />,
+        },
+        {
+          path: "/groups/detail/feedback/:groupId",
+          element: <GroupFeedbackPage />,
+        },
+        {
+          path: "/groups/detail/exercise/:groupId",
+          element: <GroupExercisePage />,
+        },
+        {
+          path: "/groups/detail/exercise/detail/:groupId",
+          element: <GroupExerciseDetailPage />,
+        },
+        {
+          path: "/groups/detail/leave/:groupId",
+          element: <h1>Rời nhóm </h1>,
+        },
+      ],
     },
     {
       path: "/admin",

@@ -44,7 +44,7 @@ export default function NavGroup() {
     },
     {
       title: "Xét duyệt thành viên",
-      path: `/groups/detail/add-member/${groupId}`,
+      path: `/groups/detail/add-members/${groupId}`,
       icon: icon("fluent-mdl2:add-friend"),
       notiCount: 4,
     },
@@ -55,7 +55,7 @@ export default function NavGroup() {
     },
     {
       title: "Phản hồi",
-      path: "/groups/detail/feedback",
+      path: `/groups/detail/feedback/${groupId}`,
       icon: icon("mdi:feedback-outline"),
       notiCount: 4,
     },
@@ -67,7 +67,7 @@ export default function NavGroup() {
     },
     {
       title: "Rời nhóm",
-      path: "/groups/detail/leave",
+      path: `/groups/detail/leave/${groupId}`,
       icon: icon("ic:round-log-out"),
     },
   ];
@@ -197,7 +197,7 @@ export default function NavGroup() {
           </Typography>
         </Button>
       </Stack>
-      <Box sx={{ paddingTop: 4 }}>
+      <Box sx={{ paddingTop: 3 }}>
         <NavGroupSection data={navGroupConfig} />
       </Box>
     </BoxNav>
