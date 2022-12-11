@@ -6,6 +6,7 @@ import Comments from "./User/Comments";
 import Likes from "./User/Likes";
 import Friends from "./User/Friends";
 import Message from "./User/Message";
+import Exersice from "./User/Exercise";
 
 const Axios = {
   Accounts,
@@ -16,6 +17,7 @@ const Axios = {
   Likes,
   Friends,
   Message,
+  Exersice,
 };
 
 export default Axios;

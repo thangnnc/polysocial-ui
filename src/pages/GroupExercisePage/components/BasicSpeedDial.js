@@ -5,12 +5,12 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import Iconify from "../../../components/iconify";
 
-export default function BasicSpeedDial({ handleCreate }) {
+export default function BasicSpeedDial({ handleCreateExercise }) {
   const actions = [
     {
       icon: <Iconify icon="el:file-new" />,
       name: "Tạo bài tập",
-      onClick: handleCreate,
+      onClick: handleCreateExercise,
     },
   ];
 

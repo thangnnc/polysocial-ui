@@ -39,11 +39,11 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
     formData.append("file", selectedFile);
     const response = await Axios.Groups.createGroupExcel(formData, groupId);
     if (response) {
-      toast.success("Create group successfully!");
+      toast.success("Thêm thành viên thành công");
       setOpen(false);
       onChange();
     } else {
-      toast.error("Create group failed!");
+      toast.error("Thêm thành viên thất bại!");
     }
   };
 

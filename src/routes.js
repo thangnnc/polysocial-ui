@@ -69,7 +69,7 @@ export default function Router() {
           element: <GroupExercisePage />,
         },
         {
-          path: "/groups/detail/exercise/detail/:groupId",
+          path: "/groups/detail/exercise/detail/:groupId/:exerciseId",
           element: <GroupExerciseDetailPage />,
         },
         {

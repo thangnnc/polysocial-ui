@@ -9,124 +9,163 @@ import {
   Collapse,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import BasicSpeedDial from "../GroupExercisePage/components/BasicSpeedDial";
 import useLogin from "./../../utils/Login/useLogin";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Link, useParams } from "react-router-dom";
+import { DialogCreateExercise } from "./components/DialogCreateExercise";
+import Axios from "./../../utils/Axios/index";
+import { toast } from "react-toastify";
 
 export default function GroupExercisePage() {
   const { account } = useLogin();
   const { groupId } = useParams();
   const [expanded, setExpanded] = useState(false);
+  const [isCreateExercise, setIsCreateExercise] = useState(false);
+  const [exercises, setExercises] = useState([]);
+
+  useEffect(() => {
+    getAllData(groupId);
+  }, [groupId]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handleCreate = () => {
-    console.log("Create exercise");
+  const getAllData = async (groupId) => {
+    const response = await Axios.Exersice.getAllExercise(groupId);
+    if (response) {
+      setExercises(response);
+      toast.success("Lấy dữ liệu bài tập thành công");
+    } else {
+      toast.error("Lấy dữ liệu bài tập thất bại!");
+    }
+  };
+
+  //Call back data
+  const onlDailogChange = () => {
+    getAllData(groupId);
+  };
+
+  const handleCreateExercise = () => {
+    setIsCreateExercise(true);
   };
 
   return (
     <Box sx={{ display: "flex", mt: 15 }}>
       <Box sx={{ width: "70%", py: 5 }}>
-        <Card>
-          <CardHeader
-            avatar={
-              <AvatarStatus
-                alt={account.fullName}
-                src={account.avatar}
-                isActive={true}
-                sx={{ width: 54, height: 54 }}
-              />
-            }
-            action={
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-                sx={{ mt: 2 }}
-              >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            }
-            title={
-              <Typography
-                variant="subtitle2"
-                sx={{ fontWeight: "bold" }}
-                noWrap
-                fontSize={16}
-              >
-                {account.fullName} đã tạo mới một bài tập: Lab 1
-              </Typography>
-            }
-            subheader={
-              <Typography
-                variant="body2"
-                sx={{ color: "text.secondary" }}
-                noWrap
-              >
-                Thứ 2, 28/09/2022 - 9:00 AM
-              </Typography>
-            }
-          />
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+        {exercises?.map((exercise, index) => (
+          <Card key={index} sx={{ mb: 3 }}>
+            <CardHeader
+              avatar={
+                <AvatarStatus
+                  alt={account.fullName}
+                  src={account.avatar}
+                  isActive={true}
+                  sx={{ width: 54, height: 54 }}
+                />
+              }
+              action={
+                <Box>
+                  <ExpandMore
+                    expand={expanded ? exercise.exId : undefined}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded ? exercise.exId : undefined}
+                    aria-label="show"
+                    sx={{ mt: 2 }}
+                  >
+                    <ExpandMoreIcon />
+                  </ExpandMore>
+                </Box>
+              }
+              title={
+                <Typography
+                  variant="subtitle2"
+                  sx={{ fontWeight: "bold" }}
+                  noWrap
+                  fontSize={16}
+                >
+                  {account.fullName} đã tạo mới một bài tập: {exercise?.content}
+                </Typography>
+              }
+              subheader={
+                <Typography
+                  variant="body2"
+                  sx={{ color: "text.secondary" }}
+                  noWrap
+                >
+                  {exercise?.endDate}
+                </Typography>
+              }
+            />
+            <Collapse
+              key={exercise.exId}
+              in={expanded}
+              timeout="auto"
+              unmountOnExit
             >
-              <Typography
-                paragraph
-                sx={{ fontSize: 20, fontWeight: "bold", width: "50%" }}
-              >
-                Số bài đã nộp
-              </Typography>
-              <Box
+              <CardContent
                 sx={{
                   display: "flex",
+                  justifyContent: "space-between",
                   alignItems: "center",
-                  justifyContent: "space-around",
-                  width: "50%",
                 }}
               >
                 <Typography
-                  variant="body2"
                   paragraph
-                  sx={{ textAlign: "center", fontSize: 18 }}
+                  sx={{ fontSize: 20, fontWeight: "bold", width: "50%" }}
                 >
-                  <Box style={{ fontSize: 25, fontWeight: 700 }}>0</Box>
-                  Đã nộp
+                  Số bài đã nộp
                 </Typography>
-                <Typography
-                  variant="body2"
-                  paragraph
-                  sx={{ textAlign: "center", fontSize: 18 }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    width: "50%",
+                  }}
                 >
-                  <Box style={{ fontSize: 25, fontWeight: 700 }}>0</Box>
-                  Chưa nộp
-                </Typography>
-              </Box>
-            </CardContent>
-          </Collapse>
-          <CardActions disableSpacing sx={{ borderTop: "1px solid #afafb6" }}>
-            <Button aria-label="add to detail" sx={{ color: "#ff7b29" }}>
-              <Link
-                to={`/groups/detail/exercise/detail/${groupId}`}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <Typography variant="body2" sx={{ fontSize: 18 }}>
-                  Xem chi tiết
-                </Typography>
-              </Link>
-            </Button>
-          </CardActions>
-        </Card>
+                  <Box sx={{ textAlign: "center" }}>
+                    <Typography
+                      component={"p"}
+                      style={{ fontSize: 25, fontWeight: 700 }}
+                    >
+                      0
+                    </Typography>
+                    <Typography variant="body2" paragraph sx={{ fontSize: 18 }}>
+                      Đã nộp
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: "center" }}>
+                    <Typography
+                      component={"p"}
+                      style={{ fontSize: 25, fontWeight: 700 }}
+                    >
+                      0
+                    </Typography>
+                    <Typography variant="body2" paragraph sx={{ fontSize: 18 }}>
+                      Chưa nộp
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Collapse>
+            <CardActions disableSpacing sx={{ borderTop: "1px solid #afafb6" }}>
+              <Button aria-label="add to detail" sx={{ color: "#ff7b29" }}>
+                <Link
+                  to={`/groups/detail/exercise/detail/${groupId}/${exercise.exId}`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <Typography variant="body2" sx={{ fontSize: 18 }}>
+                    Xem chi tiết
+                  </Typography>
+                </Link>
+              </Button>
+            </CardActions>
+          </Card>
+        ))}
       </Box>
       <Box sx={{ width: "30%", p: 5 }}>
         <Card sx={{ p: 3 }}>
@@ -202,7 +241,14 @@ export default function GroupExercisePage() {
           </Button>
         </Card>
 
-        <BasicSpeedDial handleCreate={handleCreate} />
+        <DialogCreateExercise
+          onChange={onlDailogChange}
+          open={isCreateExercise}
+          setOpen={setIsCreateExercise}
+          groupId={groupId}
+        />
+
+        <BasicSpeedDial handleCreateExercise={handleCreateExercise} />
       </Box>
     </Box>
   );

@@ -36,11 +36,11 @@ export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
   const createGroup = async () => {
     const response = await Axios.Groups.createGroup(groupCreate);
     if (response) {
-      toast.success("Create group successfully!");
+      toast.success("Tạo nhóm học tập thành công");
       setOpen(false);
       onChange();
     } else {
-      toast.error("Create group failed!");
+      toast.error("Tạo nhóm học tập thất bại!");
     }
   };
 
