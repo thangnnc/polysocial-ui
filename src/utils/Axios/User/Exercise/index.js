@@ -20,6 +20,12 @@ class Exercise {
   // API upload file quiz
   static uploadFileExercise = async (data) =>
     Axios.postFile("/task-file/create", data);
+  // API update file quiz
+  static updateFileExercise = async (data) =>
+    Axios.putFile("/task-file/update", data);
+  // API delete file quiz
+  static deleteFileExercise = async (data) =>
+    Axios.delete("/task-file/delete", data);
 }
 
 export default Exercise;

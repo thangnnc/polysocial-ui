@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
@@ -13,9 +14,15 @@ import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "../../utils/Axios/index";
 import useLogin from "./../../utils/Login/useLogin";
+import Iconify from "../../components/iconify";
 
 const styleInputFullField = {
   display: "none",
+};
+
+const styleInputField = {
+  width: "100%",
+  my: 2,
 };
 
 export default function GroupExerciseDetailPage() {
@@ -31,6 +38,13 @@ export default function GroupExerciseDetailPage() {
     groupId: groupId,
   });
   const [exercise, setExercise] = useState({});
+
+  const [updateExercise, setUpdateExercise] = useState({
+    file: "",
+    exId: exerciseId,
+    groupId: groupId,
+    userId: "2",
+  });
 
   useEffect(() => {
     getAllData(exerciseId, groupId);
@@ -66,6 +80,7 @@ export default function GroupExerciseDetailPage() {
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setUpload({ ...upload, file: event.target.files[0] });
+    setUpdateExercise({ ...updateExercise, file: event.target.files[0] });
     setIsSelected(true);
   };
 
@@ -84,20 +99,26 @@ export default function GroupExerciseDetailPage() {
   const updateHandler = async () => {
     const formData = new FormData();
     formData.append("file", selectedFile);
-    const response = await Axios.Exersice.updateExercise(exercise);
+    const response = await Axios.Exersice.updateFileExercise(updateExercise);
     if (response) {
-      toast.success("Nộp bài tập thành công");
+      toast.success("Cập nhật nộp bài tập thành công");
     } else {
-      toast.error("Nộp bài tập thất bại");
+      toast.error("Cập nhật nộp bài tập thất bại");
     }
   };
 
   const deleteHandler = async () => {
-    const response = await Axios.Exersice.deleteExercise(exercise);
-    if (response) {
-      toast.success("Nộp bài tập thành công");
+    var obj = {
+      taskFileId: "",
+      url: "",
+      taskId: "",
+      type: "",
+    };
+    const response = await Axios.Exersice.deleteFileExercise(obj);
+    if (response.status === 200) {
+      toast.success("Xoá bài tập đã nộp thành công");
     } else {
-      toast.error("Nộp bài tập thất bại");
+      toast.error("Xoá bài tập đã nộp thất bại");
     }
   };
 
@@ -161,79 +182,87 @@ export default function GroupExerciseDetailPage() {
               </Typography>
             }
           />
-
-          {isSelected ? (
+          {exercise.isSubmit ? (
             <CardContent>
-              <Typography>Tên tệp: {selectedFile.name}</Typography>
-              <Typography>Loại tệp: {selectedFile.type}</Typography>
-              <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
-              <Typography>
-                Ngày sửa đổi cuối cùng:
-                {selectedFile.lastModifiedDate.toLocaleDateString()}
-              </Typography>
-              <Button
-                variant="contained"
-                sx={{
-                  background: "#ff7b29",
-                  width: "100%",
-                  mt: 3,
-                  borderRadius: 2,
-                }}
-                onClick={submitHandler}
-              >
-                Nộp bài
-              </Button>
+              {isSelected ? (
+                <CardContent>
+                  <Typography>Tên tệp: {selectedFile.name}</Typography>
+                  <Typography>Loại tệp: {selectedFile.type}</Typography>
+                  <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
+                  <Typography>
+                    Ngày sửa đổi cuối cùng:
+                    {selectedFile.lastModifiedDate.toLocaleDateString()}
+                  </Typography>
+                </CardContent>
+              ) : (
+                ""
+              )}
+              <Typography>Đường dẫn file nộp bài: {exercise.url}</Typography>
+              {!exercise.isSubmit ? (
+                <Button
+                  variant="contained"
+                  sx={{
+                    background: "#ff7b29",
+                    width: "100%",
+                    mt: 3,
+                    borderRadius: 2,
+                  }}
+                  onClick={submitHandler}
+                >
+                  Nộp bài
+                </Button>
+              ) : (
+                <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      background: "#ff7b29",
+                      width: "40%",
+                      mt: 3,
+                      borderRadius: 2,
+                    }}
+                    onClick={updateHandler}
+                  >
+                    Cập nhật
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      background: "#ff7b29",
+                      width: "40%",
+                      mt: 3,
+                      borderRadius: 2,
+                    }}
+                    onClick={deleteHandler}
+                  >
+                    Xoá
+                  </Button>
+                </Box>
+              )}
             </CardContent>
           ) : (
             <React.Fragment>
-              {exercise.isSubmit ? (
+              {isSelected ? (
                 <CardContent>
+                  <Typography>Tên tệp: {selectedFile.name}</Typography>
+                  <Typography>Loại tệp: {selectedFile.type}</Typography>
+                  <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
                   <Typography>
-                    Đường dẫn file nộp bài: {exercise.url}
+                    Ngày sửa đổi cuối cùng:
+                    {selectedFile.lastModifiedDate.toLocaleDateString()}
                   </Typography>
-                  {!exercise.isSubmit ? (
-                    <Button
-                      variant="contained"
-                      sx={{
-                        background: "#ff7b29",
-                        width: "100%",
-                        mt: 3,
-                        borderRadius: 2,
-                      }}
-                      onClick={submitHandler}
-                    >
-                      Nộp bài
-                    </Button>
-                  ) : (
-                    <Box
-                      sx={{ display: "flex", justifyContent: "space-around" }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{
-                          background: "#ff7b29",
-                          width: "40%",
-                          mt: 3,
-                          borderRadius: 2,
-                        }}
-                        onClick={updateHandler}
-                      >
-                        Cập nhật
-                      </Button>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          background: "#ff7b29",
-                          width: "40%",
-                          mt: 3,
-                          borderRadius: 2,
-                        }}
-                        onClick={deleteHandler}
-                      >
-                        Xoá
-                      </Button>
-                    </Box>
-                  )}
+                  <Button
+                    variant="contained"
+                    sx={{
+                      background: "#ff7b29",
+                      width: "100%",
+                      mt: 3,
+                      borderRadius: 2,
+                    }}
+                    onClick={submitHandler}
+                  >
+                    Nộp bài
+                  </Button>
                 </CardContent>
               ) : (
                 ""
@@ -287,7 +316,7 @@ export default function GroupExerciseDetailPage() {
                   noWrap
                   fontSize={16}
                 >
-                  {item.fullName} đã nộp bài tập: Lab {item.exId}
+                  {item.fullName} đã nộp bài tập: {item.content}
                 </Typography>
               }
               subheader={
@@ -296,13 +325,37 @@ export default function GroupExerciseDetailPage() {
                   sx={{ color: "text.secondary" }}
                   noWrap
                 >
-                  Thứ 2, 28/09/2022 - 9:00 AM
+                  {item.endDate}
                 </Typography>
               }
             />
+
             {!item.isSubmit ? (
               <CardContent>
-                <Typography>Đường dẫn file nộp bài: {item.url}</Typography>
+                <Typography>Ngày nộp bài: {item.createdDate}</Typography>
+                <Typography>Đường dẫn file nộp bài: {item?.url}</Typography>
+                <TextField
+                  type="number"
+                  name="mark"
+                  label="Điểm bài tập"
+                  placeholder="Nhập điểm bài tập"
+                  variant="standard"
+                  InputProps={{
+                    inputProps: {
+                      max: 10,
+                      min: 0,
+                      fontSize: 18,
+                    },
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon={"ph:bookmarks-bold"} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  autoComplete="none"
+                  sx={styleInputField}
+                  InputLabelProps={{ style: { fontSize: 18 } }}
+                />
                 <Button
                   variant="contained"
                   sx={{

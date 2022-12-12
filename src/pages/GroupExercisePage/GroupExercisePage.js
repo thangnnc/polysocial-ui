@@ -1,4 +1,3 @@
-import { ExpandMore } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -7,24 +6,31 @@ import {
   CardContent,
   CardHeader,
   Collapse,
+  IconButton,
+  MenuItem,
+  Popover,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import BasicSpeedDial from "../GroupExercisePage/components/BasicSpeedDial";
 import useLogin from "./../../utils/Login/useLogin";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Link, useParams } from "react-router-dom";
 import { DialogCreateExercise } from "./components/DialogCreateExercise";
 import Axios from "./../../utils/Axios/index";
 import { toast } from "react-toastify";
+import Iconify from "../../components/iconify/Iconify";
+import { DialogEditExercise } from "./components/DialogEditExercise";
 
 export default function GroupExercisePage() {
+  const [open, setOpen] = useState(null);
   const { account } = useLogin();
   const { groupId } = useParams();
   const [expanded, setExpanded] = useState(false);
   const [isCreateExercise, setIsCreateExercise] = useState(false);
   const [exercises, setExercises] = useState([]);
+  const [exercise, setExercise] = useState({});
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     getAllData(groupId);
@@ -36,6 +42,7 @@ export default function GroupExercisePage() {
 
   const getAllData = async (groupId) => {
     const response = await Axios.Exersice.getAllExercise(groupId);
+    console.log(response);
     if (response) {
       setExercises(response);
       toast.success("Lấy dữ liệu bài tập thành công");
@@ -53,6 +60,17 @@ export default function GroupExercisePage() {
     setIsCreateExercise(true);
   };
 
+  const handleOpenMenu = (event, value) => {
+    setIsCreateExercise(false);
+    setOpen(event.currentTarget);
+    setExercise(value);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+    setIsCreateExercise(false);
+  };
+
   return (
     <Box sx={{ display: "flex", mt: 15 }}>
       <Box sx={{ width: "70%", py: 5 }}>
@@ -68,17 +86,13 @@ export default function GroupExercisePage() {
                 />
               }
               action={
-                <Box>
-                  <ExpandMore
-                    expand={expanded ? exercise.exId : undefined}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded ? exercise.exId : undefined}
-                    aria-label="show"
-                    sx={{ mt: 2 }}
-                  >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
-                </Box>
+                <IconButton
+                  size="large"
+                  color="inherit"
+                  onClick={(e) => handleOpenMenu(e, exercise)}
+                >
+                  <Iconify icon={"eva:more-vertical-fill"} />
+                </IconButton>
               }
               title={
                 <Typography
@@ -86,6 +100,10 @@ export default function GroupExercisePage() {
                   sx={{ fontWeight: "bold" }}
                   noWrap
                   fontSize={16}
+                  expand={expanded ? exercise.exId : undefined}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded ? exercise.exId : undefined}
+                  aria-label="show"
                 >
                   {account.fullName} đã tạo mới một bài tập: {exercise?.content}
                 </Typography>
@@ -151,19 +169,24 @@ export default function GroupExercisePage() {
                   </Box>
                 </Box>
               </CardContent>
+              <CardActions
+                disableSpacing
+                sx={{
+                  borderTop: "1px solid #afafb6",
+                }}
+              >
+                <Button aria-label="add to detail" sx={{ color: "#ff7b29" }}>
+                  <Link
+                    to={`/groups/detail/exercise/detail/${groupId}/${exercise.exId}`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <Typography variant="body2" sx={{ fontSize: 18 }}>
+                      Xem chi tiết
+                    </Typography>
+                  </Link>
+                </Button>
+              </CardActions>
             </Collapse>
-            <CardActions disableSpacing sx={{ borderTop: "1px solid #afafb6" }}>
-              <Button aria-label="add to detail" sx={{ color: "#ff7b29" }}>
-                <Link
-                  to={`/groups/detail/exercise/detail/${groupId}/${exercise.exId}`}
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <Typography variant="body2" sx={{ fontSize: 18 }}>
-                    Xem chi tiết
-                  </Typography>
-                </Link>
-              </Button>
-            </CardActions>
           </Card>
         ))}
       </Box>
@@ -241,11 +264,47 @@ export default function GroupExercisePage() {
           </Button>
         </Card>
 
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          PaperProps={{
+            sx: {
+              p: 1,
+              width: 140,
+              "& .MuiMenuItem-root": {
+                px: 1,
+                typography: "body2",
+                borderRadius: 0.75,
+              },
+            },
+          }}
+        >
+          <MenuItem onClick={() => setIsEdit(true)}>
+            <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
+            Chỉnh sửa
+          </MenuItem>
+
+          <MenuItem sx={{ color: "error.main" }}>
+            <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
+            Xóa
+          </MenuItem>
+        </Popover>
+
         <DialogCreateExercise
           onChange={onlDailogChange}
           open={isCreateExercise}
           setOpen={setIsCreateExercise}
           groupId={groupId}
+        />
+
+        <DialogEditExercise
+          onChange={onlDailogChange} // truyền props từ cha xuống con
+          open={isEdit}
+          setOpen={setIsEdit}
+          exercise={exercise}
         />
 
         <BasicSpeedDial handleCreateExercise={handleCreateExercise} />
