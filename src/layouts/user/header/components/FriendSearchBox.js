@@ -1,14 +1,18 @@
 import { Avatar, Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { toast } from "react-toastify";
 import Axios from "./../../../../utils/Axios/index";
 
 export default function FriendSearchBox({ searchData }) {
   const { avatar, fullName, email, isFriend } = searchData;
 
   const handleAddFriend = async () => {
-    console.log(1);
     const response = await Axios.Friends.addFriend(searchData);
-    console.log(response);
+    if (response.status === 200) {
+      toast.success("Gửi lời mời kết bạn thành công");
+    } else {
+      toast.error("Gửi lời mời kết bạn thất bại");
+    }
   };
 
   return (

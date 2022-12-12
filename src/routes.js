@@ -18,6 +18,7 @@ import GroupLayout from "./layouts/user/GroupLayout";
 import GroupExercisePage from "./pages/GroupExercisePage/GroupExercisePage";
 import GroupFeedbackPage from "./pages/GroupFeedbackPage/GroupFeedbackPage";
 import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerciseDetailPage";
+import AddFriendPage from "./pages/AddFriendPage/AddFriendPage";
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/home" />, index: true },
         { path: "home", element: <h2>Home</h2> },
+        { path: "friends-requests", element: <AddFriendPage /> },
         { path: "message/room/:roomId", element: <MessagePage /> },
       ],
     },
