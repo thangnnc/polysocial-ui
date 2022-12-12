@@ -21,7 +21,10 @@ const styleInputFullField = {
 };
 
 export const DialogEditExercise = ({ open, setOpen, exercise, onChange }) => {
-  const [exerciseEdit, setExerciseEdit] = useState([]);
+  const [exerciseEdit, setExerciseEdit] = useState({
+    content: "",
+    deadline: "",
+  });
 
   useEffect(() => {
     setExerciseEdit(exercise);
@@ -30,17 +33,19 @@ export const DialogEditExercise = ({ open, setOpen, exercise, onChange }) => {
   const updateHandler = async () => {
     const response = await Axios.Exersice.updateExercise(exerciseEdit);
     if (response) {
-      toast.success("Cập nhập bài tập thành công");
       onChange();
+      setOpen(false);
+      toast.success("Cập nhập bài tập thành công");
     } else {
       toast.error("Cập nhật bài tập thất bại");
     }
   };
 
-  const deleteHandler = async () => {
-    const response = await Axios.Exersice.deleteExercise(exerciseEdit);
+  const deleteHandler = async (exId) => {
+    const response = await Axios.Exersice.deleteExercise(exId);
     if (response.status === 200) {
       toast.success("Xoá bài tập thành công");
+      setOpen(false);
     } else {
       toast.error("Xoá bài tập thất bại");
     }
@@ -86,7 +91,7 @@ export const DialogEditExercise = ({ open, setOpen, exercise, onChange }) => {
                 onChange={(e) =>
                   setExerciseEdit({
                     ...exerciseEdit,
-                    description: e.target.value,
+                    content: e.target.value,
                   })
                 }
                 variant="standard"
@@ -110,7 +115,7 @@ export const DialogEditExercise = ({ open, setOpen, exercise, onChange }) => {
                 onChange={(e) =>
                   setExerciseEdit({
                     ...exerciseEdit,
-                    createdDate: e.target.value,
+                    deadline: e.target.value,
                   })
                 }
                 variant="standard"
@@ -131,7 +136,11 @@ export const DialogEditExercise = ({ open, setOpen, exercise, onChange }) => {
           <Button onClick={updateHandler} variant="contained" color="warning">
             Cập nhật
           </Button>
-          <Button onClick={deleteHandler} variant="contained" color="error">
+          <Button
+            onClick={() => deleteHandler(exerciseEdit.exId)}
+            variant="contained"
+            color="error"
+          >
             Xóa
           </Button>
           <Button

@@ -102,21 +102,17 @@ export default function GroupExerciseDetailPage() {
     const response = await Axios.Exersice.updateFileExercise(updateExercise);
     if (response) {
       toast.success("Cập nhật nộp bài tập thành công");
+      getAllData(exerciseId, groupId);
     } else {
       toast.error("Cập nhật nộp bài tập thất bại");
     }
   };
 
-  const deleteHandler = async () => {
-    var obj = {
-      taskFileId: "",
-      url: "",
-      taskId: "",
-      type: "",
-    };
-    const response = await Axios.Exersice.deleteFileExercise(obj);
+  const deleteHandler = async (taskFileId) => {
+    const response = await Axios.Exersice.deleteFileExercise(taskFileId);
     if (response.status === 200) {
       toast.success("Xoá bài tập đã nộp thành công");
+      getAllData(exerciseId, groupId);
     } else {
       toast.error("Xoá bài tập đã nộp thất bại");
     }
@@ -233,7 +229,7 @@ export default function GroupExerciseDetailPage() {
                       mt: 3,
                       borderRadius: 2,
                     }}
-                    onClick={deleteHandler}
+                    onClick={() => deleteHandler(exercise.taskFileId)}
                   >
                     Xoá
                   </Button>
