@@ -156,7 +156,7 @@ export default function Header({ onOpenNav }) {
   }
   );
 
-  useEffect(() => {
+  useEffect(() => { 
     socket.on("seen", function () {
       // for (let index = 0; index < 4; index++) {
       getNameGroupDESC();
