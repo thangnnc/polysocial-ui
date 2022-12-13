@@ -23,6 +23,7 @@ import { useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import Asios from "../../utils/Axios";
 import useLogin from "../../utils/Login/useLogin";
+import { toast } from "react-toastify";
 
 // import { io } from "socket.io-client";
 
@@ -38,7 +39,6 @@ const scrollbar = {
   "::-webkit-scrollbar-thumb:window-inactive": {
     background: "#ffa36a",
   },
-  
 };
 
 const friend = {
@@ -48,7 +48,6 @@ const friend = {
   email: "gaucho@gmail.com",
   isActive: true,
 };
-
 
 export default function MessagePage() {
   const { roomId } = useParams();
@@ -60,9 +59,7 @@ export default function MessagePage() {
   const [prevPage, setPrevPage] = useState(1);
   const [lastList, setLastList] = useState(false);
   const [limit, setLimit] = useState(15);
-  // const [totalMembers, setotalMembers] = useState([]);
-  // const [listContact, setListContact] = useState([]);
-  const { account,socket } = useLogin();
+  const { account, socket } = useLogin();
   const [messageList, setMessageList] = useState([{}]);
   const [listcontactId, setListcontactId] = useState([]);
   const [contactId, setcontactId] = useState([]);
@@ -77,7 +74,6 @@ export default function MessagePage() {
 
   useEffect(() => {
     setUserTyping("");
-    // socket = io(CONNECTTION_PORT);
     setRoom(roomId);
 
     try {
@@ -93,7 +89,7 @@ export default function MessagePage() {
       var objectStudentCode = {};
       for (let index = 0; index < group.listContacts.length; index++) {
         const element = group.listContacts[index];
-        var objectStudentCode = element;
+        objectStudentCode = element;
         listStudentCode.push(objectStudentCode);
       }
 
@@ -103,28 +99,7 @@ export default function MessagePage() {
 
   useEffect(() => {
     getMessage();
-    // if (messageRef.current) {
-    //   messageRef.current.scrollIntoView(
-    //     {
-    //       behavior: 'smooth',
-    //       block: 'end',
-    //       inline: 'nearest'
-    //     })
-    // }
   }, [roomId]);
-
-  
-  
-  // useEffect(()=>{
-  //   if (messageRef.current) {
-  //     messageRef.current.scrollIntoView(
-  //       {
-  //         behavior: 'smooth',
-  //         block: 'end',
-  //         inline: 'nearest'
-  //       })
-  //   }
-  // },[])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -143,7 +118,6 @@ export default function MessagePage() {
       for (let index = 0; index < response.data.length; index++) {
         const listContentObject = {};
         const element = response.data[index];
-        // console.log("el---",element)
         listContentObject.isAdmin = element.isAdmin;
         listContentObject.avatar = element.avatar;
         listContentObject.content = fromBinary(element.content);
@@ -154,26 +128,21 @@ export default function MessagePage() {
         listContentObject.email = element.email;
         listContent.push(listContentObject);
       }
-      setMessageList([...listContent.reverse(),...messageList]);
-
+      setMessageList([...listContent.reverse(), ...messageList]);
     };
     if (!lastList && prevPage !== currPage) {
       fetchData();
     }
   }, [currPage, lastList, prevPage, messageList]);
 
-
-
   useEffect(() => {
     socket.on("recevie_message", (data) => {
       setMessageList([...messageList, data]);
     });
-
   }, [messageList]);
 
   const getMessage = async () => {
     try {
-      console.log("roomId,,,,", roomId);
       setRoom(roomId);
       socket.emit("join_room", roomId);
       const data = {
@@ -183,7 +152,6 @@ export default function MessagePage() {
       };
       const response = await Asios.Messages.getMessage(data);
       setRoom(roomId);
-      console.log("reponse messs",response.data)
       const arr = [];
       for (let index = 0; index < group.listContacts.length; index++) {
         const element = group.listContacts[index];
@@ -202,15 +170,14 @@ export default function MessagePage() {
           arr.push(element[0]);
         }
       }
+
       setListcontactId(arr);
-      // console.log("listtttt", arr);
 
       try {
         const listContent = [];
         for (let index = 0; index < response.data.length; index++) {
           const listContentObject = {};
           const element = response.data[index];
-          // console.log("el---",element)
           listContentObject.isAdmin = element.isAdmin;
           listContentObject.avatar = element.avatar;
           listContentObject.content = fromBinary(element.content);
@@ -219,19 +186,15 @@ export default function MessagePage() {
           listContentObject.statusCreated = element.statusCreated;
           listContentObject.studentCode = element.studentCode;
           listContentObject.email = element.email;
-          listContentObject.messageRecall = element.messageRecall
+          listContentObject.messageRecall = element.messageRecall;
           listContent.push(listContentObject);
         }
         setMessageList(listContent.reverse());
       } catch (error) {}
-      // console.log("resp", response);
     } catch (error) {
-      console.log("Failed to fetch post list: ", error);
+      toast.error("Failed to fetch post list: ", error);
     }
   };
-  // useEffect(() => {
-   
-  // })
 
   function fromBinary(encoded) {
     const binary = atob(encoded);
@@ -244,7 +207,6 @@ export default function MessagePage() {
 
   useEffect(() => {
     socket.on(room + "user-typing", (account, data) => {
-      // setStuCode(stuCode);
       setUserTyping(data);
       setAccountTyping(account);
     });
@@ -273,7 +235,7 @@ export default function MessagePage() {
           content: message,
           avatar: account.avatar,
           fullName: account.fullName,
-          statusCreated:true,
+          statusCreated: true,
         },
       };
       createMessage();
@@ -294,8 +256,6 @@ export default function MessagePage() {
     if (response) {
       // await getNameGroupDESC();
     }
-
-    // setStatus(true);
   };
 
   function toBinary(string) {
@@ -309,14 +269,12 @@ export default function MessagePage() {
   const onScroll = () => {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-      if (scrollTop===0) {
+      if (scrollTop === 0) {
         setCurrPage(currPage + 1);
       }
     }
   };
 
-
-  // const { roomId } = useParams();
   return (
     <>
       <Helmet>
@@ -354,54 +312,40 @@ export default function MessagePage() {
           onScroll={onScroll}
           ref={listInnerRef}
         >
-
-              {messageList.map((value, key) => {
-                return (
-                  <div ref={messageRef}>
-                    <AlertMessage
-                    message={value.statusCreated?'':value.content}
-                  />
-
-                    {/* <TimeLineMessage message={"11:00"} />
-                  <MyMessage message={"Hi! Em ngon vậy"} /> */}
-                    <MyMessage
-                      message={
-                        value.statusCreated?(value.studentCode === account.studentCode
-                          ? value.content
-                          : ""):''
-                        
-                      }
-                      showAvatar
-                      createdDate={value.createdDate}
-                    />
-                    <OtherMessage
-                      account={value.fullName + " (" + value.email + ")"}
-                      avatar={value.avatar}
-                      message={
-                        value.statusCreated?(value.studentCode !== account.studentCode
-                          ? value.content
-                          : ""):''
-                       
-                      }
-                      showAvatar
-                      createdDate={value.createdDate}
-                    />
-                    {/* <TimeLineMessage message={"16:00"} /> */}
-                    {/* <MyMessage message={"Em ăn cơm chưa?"} /> */}
-                    {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}
-                    {/* <OtherMessage account={friend} message={"Chưa"} /> */}
-                    {/* <OtherMessage
-                    account={friend}
-                    message={"Anh chở e đi ăn đi <3"}
-                    showAvatar
-                  /> */}
-                    {/* <MyMessage message={"Méo :V"} showAvatar /> */}
-                    {/* <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} /> */}
-                  </div>
-                );
-              })}
+          {messageList.map((value, key) => {
+            return (
+              <div ref={messageRef}>
+                <AlertMessage
+                  message={value.statusCreated ? "" : value.content}
+                />
+                <MyMessage
+                  message={
+                    value.statusCreated
+                      ? value.studentCode === account.studentCode
+                        ? value.content
+                        : ""
+                      : ""
+                  }
+                  showAvatar
+                  createdDate={value.createdDate}
+                />
+                <OtherMessage
+                  account={value.fullName + " (" + value.email + ")"}
+                  avatar={value.avatar}
+                  message={
+                    value.statusCreated
+                      ? value.studentCode !== account.studentCode
+                        ? value.content
+                        : ""
+                      : ""
+                  }
+                  showAvatar
+                  createdDate={value.createdDate}
+                />
+              </div>
+            );
+          })}
         </CardContent>
-        {/* <EnteringMessage account={friend} /> */}
         <span>
           {userTyping ? <EnteringMessage account={accountTyping} /> : ""}
         </span>

@@ -28,8 +28,6 @@ export default function useLogin() {
     window.location = "/login";
   };
 
-  // console.log("socket",sockets);
-
   return {
     account,
     setAccount: saveAccount,

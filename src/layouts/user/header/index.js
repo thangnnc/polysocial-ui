@@ -51,13 +51,8 @@ export default function Header({ onOpenNav }) {
     socket.emit("client-user-connect", account);
   }, []);
 
-  // useEffect(() => {
-  //   getNameGroupDESC();
-  // }, []);
-
   useEffect(() => {
     socket.on("get_one_message", function () {
-      console.log("reset");
       for (let index = 0; index < 4; index++) {
         getNameGroupDESC();
       }
@@ -66,7 +61,6 @@ export default function Header({ onOpenNav }) {
 
   useEffect(() => {
     socket.on("server-send-danhsach-users", function (data) {
-      // getNameGroupDESC();
       setOnline(data);
       const data1 = {
         userId: 1,
@@ -77,7 +71,6 @@ export default function Header({ onOpenNav }) {
         for (let index = 0; index < response.data.length; index++) {
           const listNameGr = {};
           const element = response.data[index];
-          // console.log("data-element-", element);
           const names = element.name.split(",");
           const n = account.fullName;
           const getName = names.filter((name) => name !== n);
@@ -119,7 +112,6 @@ export default function Header({ onOpenNav }) {
           listContentObject.listContacts = element.listContacts;
 
           const mySetOnline = new Set();
-          console.log("online SET--> ", data);
           for (let index = 0; index < element.listContacts.length; index++) {
             const element2 = element.listContacts[index];
             mySetOnline.add(element2.at(1));
@@ -132,7 +124,6 @@ export default function Header({ onOpenNav }) {
 
               break;
             } else {
-
               listContentObject.isActive = true;
             }
           }
@@ -146,35 +137,29 @@ export default function Header({ onOpenNav }) {
             setCount(count + 1);
           }
         }
-
-        // console.log("arrr----", listContent);
-        // const listContentIsActive = [];
         setGroupList(listContent);
       };
       fetDataDESC();
     });
-  }
-  );
+  });
 
-  useEffect(() => { 
+  useEffect(() => {
     socket.on("seen", function () {
       // for (let index = 0; index < 4; index++) {
       getNameGroupDESC();
       // }
     });
-  },[]);
+  }, []);
 
   const getNameGroupDESC = async () => {
     const data = {
       userId: 1,
     };
     const response = await Asios.Messages.getNameGroupDESC(data);
-    // console.log("data- DESC -", response.data);
     const arr = [];
     for (let index = 0; index < response.data.length; index++) {
       const listNameGr = {};
       const element = response.data[index];
-      // console.log("data-element-", element);
       const names = element.name.split(",");
       const n = account.fullName;
       const getName = names.filter((name) => name !== n);
@@ -216,38 +201,31 @@ export default function Header({ onOpenNav }) {
       listContentObject.lastUpDateDate = element.lastUpDateDate;
       listContentObject.listContacts = element.listContacts;
 
-
       const mySetOnline = new Set();
-          for (let index = 0; index < element.listContacts.length; index++) {
-            const element2 = element.listContacts[index];
-            mySetOnline.add(element2.at(1));
-          }
+      for (let index = 0; index < element.listContacts.length; index++) {
+        const element2 = element.listContacts[index];
+        mySetOnline.add(element2.at(1));
+      }
 
-          for (let index = 0; index < online.length; index++) {
-            mySetOnline.delete(account.studentCode);
-            if (mySetOnline.has(online[index])) {
-              listContentObject.isActive = false;
-              break;
-            } else {
-              listContentObject.isActive = true;
-            }
-          }
-
-
+      for (let index = 0; index < online.length; index++) {
+        mySetOnline.delete(account.studentCode);
+        if (mySetOnline.has(online[index])) {
+          listContentObject.isActive = false;
+          break;
+        } else {
+          listContentObject.isActive = true;
+        }
+      }
 
       listContentObject.name = element.name;
       listContentObject.roomId = element.roomId;
       listContentObject.status = element.status;
       listContentObject.totalMember = element.totalMember;
-      // listContentObject.messageRecall = element.messageRecall;
       listContent.push(listContentObject);
       if (element.status === false) {
         setCount(count + 1);
       }
     }
-    // console.log("count---> "+count)
-
-    // console.log("arrr----", listContent);
     setGroupList(listContent);
   };
 
