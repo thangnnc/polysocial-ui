@@ -45,8 +45,6 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
     setContentEdit(content);
   }, [content]);
 
-  console.log(contentEdit);
-
   const updateGroup = async () => {
     const data = {
       postId: contentEdit.postId,
@@ -55,6 +53,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
       groupId: contentEdit.groupId,
       files: contentEdit.listUrl,
     };
+    console.log(data);
     const response = await Axios.Contents.updatePost(data);
     if (response) {
       toast.success("Cập nhật bài viết thành công");
