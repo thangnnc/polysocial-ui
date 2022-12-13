@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { io } from "socket.io-client";
 
 const CONNECTTION_PORT = "localhost:3002";
-let socket  = io(CONNECTTION_PORT);
+let socket = io(CONNECTTION_PORT);
 
 export default function useLogin() {
-
   const getAccount = () => {
-    
     const accountString = sessionStorage.getItem("account");
     const account = JSON.parse(accountString);
     return account;
@@ -25,7 +23,7 @@ export default function useLogin() {
   };
 
   const logout = () => {
-    socket.emit("logout",account);
+    socket.emit("logout", account);
     sessionStorage.removeItem("account");
     window.location = "/login";
   };
