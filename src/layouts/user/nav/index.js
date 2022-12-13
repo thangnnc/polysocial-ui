@@ -7,7 +7,7 @@ import navUserConfig from "./config";
 
 export default function NavUser() {
   const { account } = useLogin();
-
+  
   return (
     <Box sx={{width: "18%",position: "fixed"}}>
       <Card

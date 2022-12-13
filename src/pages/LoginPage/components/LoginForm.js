@@ -14,7 +14,6 @@ import { RegisterDialog } from "../components/RegisterDialog";
 
 const clientId = '42163288513-umf3io4r9hoab89kvqm5bu4tafmsqtqv.apps.googleusercontent.com';
 
-
 export const LoginForm = (props) => {
   const {setAccount} = useLogin();
   const {validate} = useValidator();
@@ -45,6 +44,7 @@ export const LoginForm = (props) => {
     status: "success",
     message: ""
   });
+  
 
   useEffect(() => {
     function start() {

@@ -24,14 +24,13 @@ const Message = styled("span")(() => ({
   wordWrap: "break-word",
 }));
 
-export default function MyMessage({ message, showAvatar }) {
+export default function MyMessage({ message, showAvatar,createdDate }) {
   const { account } = useLogin();
-
   return (
     <>
       {message && (
         <MessageLine>
-          <Tooltip title="06/12/2022 11:00:00 PM">
+          <Tooltip title={createdDate}>
             <Message>{message}</Message>
           </Tooltip>
           {showAvatar ? (
