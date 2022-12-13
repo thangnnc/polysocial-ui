@@ -7,6 +7,7 @@ import ManagementGroup from "./pages/AdminManagementGroup/ManagementGroup";
 import ManagementGroupDetail from "./pages/AdminManagementGroupDetail/ManagementGroupDetail";
 import ManagementUser from "./pages/AdminManagementUser/ManagementUser";
 import Page404 from "./pages/ErrorPage/Page404";
+import HomePage from "./pages/HomePage/HomePage";
 // layouts
 import LoginPage from "./pages/LoginPage/LoginPage";
 import MessagePage from "./pages/MessagePage/MessagePage";
@@ -39,9 +40,9 @@ export default function Router() {
       element: !account ? <Navigate to="/login" /> : <UserLayout />,
       children: [
         { element: <Navigate to="/home" />, index: true },
-        { path: "home", element: <h2>Home</h2> },
-        { path: "friends-requests", element: <AddFriendPage /> },
+        { path: "home", element: <HomePage /> },
         { path: "message/room/:roomId", element: <MessagePage /> },
+        { path: "friends-requests", element: <AddFriendPage /> },
       ],
     },
     {
