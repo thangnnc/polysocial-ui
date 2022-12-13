@@ -68,7 +68,6 @@ export const DialogCreateGroupExcel = ({ open, setOpen, groups, onChange }) => {
                 name="groupId"
                 options={groups}
                 getOptionLabel={(option) => option?.name}
-                key={groups.groupId}
                 onChange={handleChange}
                 renderInput={(params) => (
                   <TextField
