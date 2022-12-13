@@ -7,7 +7,8 @@ class Accounts {
   static getOneUser = async (userId) =>
     Axios.get(`/user/get-one?userId=${userId}`);
   // API update user
-  static updateUser = async (user) => Axios.put("/user/update", user);
+  static updateUser = async (user) =>
+    Axios.put("/user/update-user-detail", user);
 }
 
 export default Accounts;

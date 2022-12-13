@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Iconify from "../../components/iconify";
@@ -19,10 +19,11 @@ import OtherMessage from "./components/OtherMessage";
 import AlertMessage from "./components/AlertMessage";
 import TimeLineMessage from "./components/TimeLineMessage";
 import EnteringMessage from "./components/EnteringMessage";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import Asios from "../../utils/Axios";
 import useLogin from "../../utils/Login/useLogin";
+
 // import { io } from "socket.io-client";
 
 const scrollbar = {
@@ -315,6 +316,7 @@ export default function MessagePage() {
   };
 
 
+  // const { roomId } = useParams();
   return (
     <>
       <Helmet>
@@ -352,6 +354,7 @@ export default function MessagePage() {
           onScroll={onScroll}
           ref={listInnerRef}
         >
+
               {messageList.map((value, key) => {
                 return (
                   <div ref={messageRef}>

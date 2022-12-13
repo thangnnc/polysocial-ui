@@ -6,9 +6,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FriendSearchBox from "./components/FriendSearchBox";
 import SearchInput from "./components/SearchInput";
+import Axios from "./../../../utils/Axios/index";
 
 const scrollbar = {
   "::-webkit-scrollbar": {
@@ -24,42 +25,19 @@ const scrollbar = {
   },
 };
 
-const searchList = [
-  {
-    avatar: "https://mcdn.coolmate.me/image/October2021/do-mixi-6.jpg",
-    fullName: "Độ Phùng",
-    email: "domixi@fpt.edu.vn",
-    isFriend: true,
-  },
-  {
-    avatar: "https://mcdn.coolmate.me/image/October2021/do-mixi-6.jpg",
-    fullName: "Độ Phùng",
-    email: "domixi@fpt.edu.vn",
-    isFriend: true,
-  },
-  {
-    avatar: "https://mcdn.coolmate.me/image/October2021/do-mixi-6.jpg",
-    fullName: "Độ Phùng",
-    email: "domixi@fpt.edu.vn",
-    isFriend: false,
-  },
-  {
-    avatar: "https://mcdn.coolmate.me/image/October2021/do-mixi-6.jpg",
-    fullName: "Độ Phùng",
-    email: "domixi@fpt.edu.vn",
-    isFriend: false,
-  },
-  {
-    avatar: "https://mcdn.coolmate.me/image/October2021/do-mixi-6.jpg",
-    fullName: "Độ Phùng",
-    email: "domixi@fpt.edu.vn",
-    isFriend: false,
-  },
-];
-
 export default function SearchPopover() {
   const [open, setOpen] = useState(false);
   const [isFocusPopup, setFocusPopup] = useState(false);
+  const [searchList, setSearchList] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const response = await Axios.Friends.searchUserByKeywork("");
+    setSearchList(response);
+  };
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -80,9 +58,14 @@ export default function SearchPopover() {
     }
   };
 
+  const handleSearch = async (e) => {
+    const response = await Axios.Friends.searchUserByKeywork(e.target.value);
+    setSearchList(response);
+  };
+
   return (
     <Box onFocus={handleOpen} onBlur={handleClose}>
-      <SearchInput />
+      <SearchInput onChange={handleSearch} />
       <Card
         hidden={!open}
         sx={{

@@ -10,7 +10,15 @@ import Page404 from "./pages/ErrorPage/Page404";
 // layouts
 import LoginPage from "./pages/LoginPage/LoginPage";
 import MessagePage from "./pages/MessagePage/MessagePage";
+import GroupPage from "./pages/GroupPage/GroupPage";
 import useLogin from "./utils/Login/useLogin";
+import GroupDetailPage from "./pages/GroupDetailPage/GroupDetailPage";
+import GroupMemberPage from "./pages/GroupMemberPage/GroupMemberPage";
+import GroupLayout from "./layouts/user/GroupLayout";
+import GroupExercisePage from "./pages/GroupExercisePage/GroupExercisePage";
+import GroupFeedbackPage from "./pages/GroupFeedbackPage/GroupFeedbackPage";
+import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerciseDetailPage";
+import AddFriendPage from "./pages/AddFriendPage/AddFriendPage";
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +40,44 @@ export default function Router() {
       children: [
         { element: <Navigate to="/home" />, index: true },
         { path: "home", element: <h2>Home</h2> },
+        { path: "friends-requests", element: <AddFriendPage /> },
         { path: "message/room/:roomId", element: <MessagePage /> },
+      ],
+    },
+    {
+      path: "/groups",
+      element: !account ? <Navigate to="/login" /> : <GroupPage />,
+    },
+    {
+      path: "/",
+      element: !account ? <Navigate to="/login" /> : <GroupLayout />,
+      children: [
+        { element: <Navigate to="/home" />, index: true },
+        { path: "/groups/detail/:groupId", element: <GroupDetailPage /> },
+        {
+          path: "/groups/detail/add-members/:groupId",
+          element: <h1>Lời mời vô nhóm </h1>,
+        },
+        {
+          path: "/groups/detail/members/:groupId",
+          element: <GroupMemberPage />,
+        },
+        {
+          path: "/groups/detail/feedback/:groupId",
+          element: <GroupFeedbackPage />,
+        },
+        {
+          path: "/groups/detail/exercise/:groupId",
+          element: <GroupExercisePage />,
+        },
+        {
+          path: "/groups/detail/exercise/detail/:groupId/:exerciseId",
+          element: <GroupExerciseDetailPage />,
+        },
+        {
+          path: "/groups/detail/leave/:groupId",
+          element: <h1>Rời nhóm </h1>,
+        },
       ],
     },
     {

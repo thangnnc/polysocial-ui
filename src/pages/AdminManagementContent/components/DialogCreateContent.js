@@ -131,7 +131,9 @@ export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
                 onChange={imageUpload}
                 label="Hãy chọn ảnh của bạn."
                 accept="image/jpeg, image/png, image/jpg"
-                multiple
+                multipleinputProps={{
+                  multiple: true,
+                }}
                 variant="standard"
                 InputProps={{
                   startAdornment: (

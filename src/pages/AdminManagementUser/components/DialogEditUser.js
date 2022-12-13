@@ -89,6 +89,9 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 label="Họ Và Tên"
                 placeholder="Nhập Họ Và Tên"
                 value={user.fullName}
+                onChange={(e) => {
+                  setUserEdit({ ...userEdit, fullName: e.target.value });
+                }}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -105,6 +108,9 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 name="email"
                 label="Email"
                 value={user.email}
+                onChange={(e) => {
+                  setUserEdit({ ...userEdit, email: e.target.value });
+                }}
                 variant="standard"
                 placeholder="Nhập email"
                 InputProps={{
@@ -123,6 +129,9 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 label="Mã Sinh Viên"
                 placeholder="Nhập Mã Sinh Viên"
                 value={user.studentCode}
+                onChange={(e) => {
+                  setUserEdit({ ...userEdit, studentCode: e.target.value });
+                }}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
