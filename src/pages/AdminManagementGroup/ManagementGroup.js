@@ -35,7 +35,7 @@ import { DialogCreateGroup } from "./components/DialogCreateGroup";
 import { DialogCreateGroupExcel } from "./components/DialogCreateGroupExcel";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -121,9 +121,9 @@ export default function ManagementGroup() {
     if (response.content) {
       setGroups(response.content);
       setGroupsDelete(responseDelete.content);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 

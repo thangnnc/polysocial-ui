@@ -18,7 +18,7 @@ import useLogin from "./../../utils/Login/useLogin";
 import { Link, useParams } from "react-router-dom";
 import { DialogCreateExercise } from "./components/DialogCreateExercise";
 import Axios from "./../../utils/Axios/index";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import Iconify from "../../components/iconify/Iconify";
 import { DialogEditExercise } from "./components/DialogEditExercise";
 
@@ -44,9 +44,9 @@ export default function GroupExercisePage() {
     const response = await Axios.Exersice.getAllExercise(groupId);
     if (response) {
       setExercises(response);
-      toast.success("Lấy dữ liệu bài tập thành công");
+      // toast.success("Lấy dữ liệu bài tập thành công");
     } else {
-      toast.error("Lấy dữ liệu bài tập thất bại!");
+      // toast.error("Lấy dữ liệu bài tập thất bại!");
     }
   };
 

@@ -38,13 +38,13 @@ export default function GroupExerciseDetailPage() {
     groupId: groupId,
   });
   const [exercise, setExercise] = useState({});
-
   const [updateExercise, setUpdateExercise] = useState({
     file: "",
     exId: exerciseId,
     groupId: groupId,
     userId: "2",
   });
+  const [createMark, setCreateMark] = useState(0);
 
   useEffect(() => {
     getAllData(exerciseId, groupId);
@@ -55,11 +55,12 @@ export default function GroupExerciseDetailPage() {
       exerciseId,
       groupId
     );
+    console.log(response);
     if (response) {
       setData(response);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
@@ -71,9 +72,9 @@ export default function GroupExerciseDetailPage() {
     const response = await Axios.Exersice.getOneExercise(exerciseId);
     if (response) {
       setExercise(response);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
@@ -115,6 +116,23 @@ export default function GroupExerciseDetailPage() {
       getAllData(exerciseId, groupId);
     } else {
       toast.error("Xoá bài tập đã nộp thất bại");
+    }
+  };
+
+  const submitMarkHandler = async (uId, tkId) => {
+    const data = {
+      userId: uId,
+      exId: exerciseId,
+      groupId: groupId,
+      mark: createMark,
+      taskId: tkId,
+    };
+    const response = await Axios.Exersice.createMarks(data);
+    if (response.status === 200) {
+      toast.success("Chấm điểm bài tập thành công");
+      getAllData(exerciseId, groupId);
+    } else {
+      toast.error("Chấm điểm bài tập thất bại");
     }
   };
 
@@ -335,6 +353,7 @@ export default function GroupExerciseDetailPage() {
                   name="mark"
                   label="Điểm bài tập"
                   placeholder="Nhập điểm bài tập"
+                  onChange={(e) => setCreateMark(e.target.value)}
                   variant="standard"
                   InputProps={{
                     inputProps: {
@@ -360,7 +379,7 @@ export default function GroupExerciseDetailPage() {
                     mt: 3,
                     borderRadius: 2,
                   }}
-                  onClick={submitHandler}
+                  onClick={() => submitMarkHandler(item.userId, item.taskId)}
                 >
                   Chấm điểm
                 </Button>

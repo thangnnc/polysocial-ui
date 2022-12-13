@@ -12,7 +12,7 @@ import SearchBar from "./components/SearchBar";
 import { Link } from "react-router-dom";
 import ListGroupJoin from "./components/ListGroupJoin";
 import Axios from "./../../utils/Axios/index";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -48,9 +48,9 @@ export default function GroupPage() {
     const response = await Axios.Groups.getAllGroupStudent();
     if (response) {
       setGroups(response);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
