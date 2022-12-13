@@ -3,7 +3,7 @@ import Axios from "../../Axios";
 class Groups {
   //API get all groups
   static getAllGroups = async () =>
-    Axios.get("/group/api/get/all?page=0&limit=16");
+    Axios.get("/group/api/get/all?page=0&limit=50");
 
   //API get all groups false
   static getAllGroupsFalse = async () =>

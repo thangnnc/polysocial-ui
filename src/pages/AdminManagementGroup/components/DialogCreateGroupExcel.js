@@ -47,9 +47,8 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
     }
   };
 
-  const handleChange = (e, value) => {
-    console.log(value.groupId);
-    setGroupId(value.groupId);
+  const handleChange = (e) => {
+    setGroupId(e.target.value);
   };
 
   const handleClose = () => {
@@ -65,10 +64,10 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
           <DialogContentText />
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={12}>
-              <Autocomplete
+              {/* <Autocomplete
                 name="groupId"
                 options={group}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option?.name}
                 onChange={handleChange}
                 renderInput={(params) => (
                   <TextField
@@ -92,6 +91,23 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
                     sx={styleInputFullField}
                   />
                 )}
+              /> */}
+
+              <TextField
+                name="groupId"
+                onChange={handleChange}
+                label="Nhập mã nhóm học tập"
+                variant="standard"
+                placeholder="Nhập mã nhóm học tập"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={"material-symbols:attach-file-add"} />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete="none"
+                sx={styleInputFullField}
               />
 
               <TextField

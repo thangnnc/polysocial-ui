@@ -76,7 +76,7 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_group) => _group.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_group) => _group?.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
