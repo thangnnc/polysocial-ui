@@ -100,7 +100,6 @@ export default function ManagementUser() {
 
   const getAllUser = async () => {
     const response = await Axios.Accounts.getAllUser();
-    console.log(response);
     if (response) {
       setUsers(response);
       toast.success("Lấy dữ liệu thành công");

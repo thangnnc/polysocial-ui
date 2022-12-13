@@ -23,17 +23,23 @@ const Message = styled("span")(() => ({
   wordWrap: "break-word",
 }));
 
-export default function OtherMessage({ message, account, showAvatar }) {
+export default function OtherMessage({
+  message,
+  account,
+  avatar,
+  showAvatar,
+  createdDate,
+}) {
   return (
     <>
       {message && (
         <MessageLine>
           {showAvatar ? (
-            <Tooltip title={account.fullName + " (" + account.email + ")"}>
+            <Tooltip title={account}>
               <span>
                 <AvatarStatus
-                  src={account.avatar}
-                  isActive={account.isActive}
+                  src={avatar}
+                  // isActive={account.isActive}
                 />
               </span>
             </Tooltip>
@@ -41,7 +47,7 @@ export default function OtherMessage({ message, account, showAvatar }) {
             <AvatarBlank sx={{ width: 44, height: 44 }} />
           )}
 
-          <Tooltip title="06/12/2022 11:00:00 PM">
+          <Tooltip title={createdDate}>
             <Message>{message}</Message>
           </Tooltip>
         </MessageLine>

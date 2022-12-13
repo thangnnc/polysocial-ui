@@ -8,113 +8,16 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 import Iconify from "../../../components/iconify";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
+import Axios from "./../../../utils/Axios/index";
 
 const styleListFriends = {
   padding: "8px 12px",
   width: "100%",
   color: "#515151",
 };
-
-const listFriends = [
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Nhật Cao Thăng",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: true,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Trần Mậu Phi",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: true,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Phan Nguyễn Đăng Trường",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: true,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Đặng Hoàng Duy",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: true,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: true,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: false,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: true,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: false,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: false,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: false,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: false,
-  },
-  {
-    id: "1",
-    roomId: "1",
-    fullName: "Nguyễn Quang Nhật",
-    avatar:
-      "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-    isActive: false,
-  },
-];
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -146,6 +49,17 @@ const scrollbar = {
   },
 };
 export default function NavFriend() {
+  const [listFriends, setListFriend] = useState([]);
+
+  useEffect(() => {
+    getAllFriend();
+  }, []);
+
+  const getAllFriend = async () => {
+    const response = await Axios.Friends.getAllFriend();
+    setListFriend(response);
+  };
+
   return (
     <BoxFriend>
       <Card
@@ -192,10 +106,15 @@ export default function NavFriend() {
             <Button key={index} color="warning" sx={styleListFriends}>
               <ListItem>
                 <ListItemAvatar>
-                  <AvatarStatus alt={value.fullName} src={value.avatar} isActive={value.isActive} sx={{width: 48, height: 48}} />
+                  <AvatarStatus
+                    alt={value.friendName}
+                    src={value.friendAvatar}
+                    isActive={value.status}
+                    sx={{ width: 48, height: 48 }}
+                  />
                 </ListItemAvatar>
                 <Typography sx={{ fontWeight: "700", ml: 1.5 }}>
-                  {value.fullName}
+                  {value.friendName}
                 </Typography>
               </ListItem>
             </Button>

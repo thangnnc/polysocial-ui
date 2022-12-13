@@ -73,7 +73,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={5}>
               <label htmlFor="avatar">
-                <Avatar sx={styleAvatar} alt="Remy Sharp" src={group.avatar} />
+                <Avatar sx={styleAvatar} alt="Remy Sharp" src={group?.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
                   Chọn ảnh nhóm học tập
                 </Typography>
@@ -91,7 +91,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
               <TextField
                 name="groupId"
                 label="Mã nhóm học tập"
-                value={groupEdit.groupId}
+                value={groupEdit.groupId === null ? "" : groupEdit.groupId}
                 variant="standard"
                 placeholder="Nhập mã nhóm học tập"
                 InputProps={{
@@ -110,7 +110,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
               <TextField
                 name="name"
                 label="Tên nhóm học tập"
-                value={groupEdit.name}
+                value={groupEdit.name === null ? "" : groupEdit.name}
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, name: e.target.value })
                 }
@@ -131,7 +131,9 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 name="totalMember"
                 label="Số lượng thành viên"
                 placeholder="Nhập số lượng thành viên "
-                value={groupEdit.totalMember}
+                value={
+                  groupEdit.totalMember === null ? "" : groupEdit.totalMember
+                }
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, totalMember: e.target.value })
                 }
@@ -151,7 +153,9 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 name="description"
                 label="Mô tả nhóm học tập"
                 placeholder="Nhập mô tả nhóm học tập"
-                value={groupEdit.description}
+                value={
+                  groupEdit.description === null ? "" : groupEdit.description
+                }
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, description: e.target.value })
                 }
@@ -172,7 +176,9 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 label="Ngày taọ nhóm học tập"
                 type="datetime-local"
                 placeholder="Chọn ngày tạo nhóm học tập"
-                value={groupEdit.createdDate}
+                value={
+                  groupEdit.createdDate === null ? "" : groupEdit.createdDate
+                }
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, createdDate: e.target.value })
                 }

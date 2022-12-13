@@ -76,7 +76,7 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_group) => _group.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_group) => _group?.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
@@ -235,7 +235,8 @@ export default function ManagementGroup() {
         <Box sx={{ width: "100%", typography: "body1" }}>
           <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
             <TabContext value={value}>
-              <TabList sx={{pt: 1, borderColor: "#252525"}}
+              <TabList
+                sx={{ pt: 1, borderColor: "#252525" }}
                 onChange={handleChange}
                 aria-label="lab API tabs example"
               >
@@ -256,7 +257,7 @@ export default function ManagementGroup() {
                   }}
                 />
               </TabList>
-              <TabPanel value="1" sx={{pt: 0}}>
+              <TabPanel value="1" sx={{ pt: 0 }}>
                 <GroupListToolbar
                   numSelected={selected.length}
                   filterName={filterName}
@@ -399,7 +400,7 @@ export default function ManagementGroup() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TabPanel>
-              <TabPanel value="2" sx={{pt: 0}}>
+              <TabPanel value="2" sx={{ pt: 0 }}>
                 <GroupListToolbar
                   numSelected={selected.length}
                   filterName={filterName}
@@ -602,8 +603,8 @@ export default function ManagementGroup() {
       <DialogCreateGroupExcel
         onChange={onlDailogChange}
         open={isCreateGroupExcel}
+        groups={groups}
         setOpen={setIsCreateGroupExcel}
-        group={filteredGroup}
       />
 
       <BasicSpeedDial

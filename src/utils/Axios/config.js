@@ -7,6 +7,8 @@ const CONFIG = {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: dataToken.token,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
   },
 };
 

@@ -5,34 +5,59 @@ import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMes
 
 export default function MessageBox({ roomChat }) {
   const navigate = useNavigate();
-  const { roomId, avatar, fullName, content, lastTimeMessage, isActive, isSeen } =
-    roomChat;
+  const {
+    roomId,
+    avatar,
+    name,
+    lastMessage,
+    lastUpDateDate,
+    isActive,
+    isSeen,
+    listContacts,
+    status,
+    totalMember,
+  } = roomChat;
   const pathMessage = "/message/room/";
 
-  const handleOnClick = () => {
-    navigate(pathMessage + roomId);
+  const handleOnClick = async (e, listContacts, avatar, name) => {
+    let group = {};
+    group.listContacts = listContacts;
+    group.name = name;
+    group.avatar = avatar;
+    navigate(pathMessage + roomId, {
+      state: {
+        listContacts: listContacts,
+        avatar: avatar,
+        group: group,
+      },
+    });
   };
+
   return (
-    <ListItem 
+    <ListItem
       button
-      alignItems="flex-start" sx=
-      {!isSeen
-        ? {
-            bgcolor: "#ff61003b",
-            borderBottom: "1px solid #ed6c02",
-            py: 1.5,
-          }
-        : { borderBottom: "1px solid #ed6c02", py: 1.5 }}
-        onClick={handleOnClick}
-      >
+      alignItems="flex-start"
+      sx={
+        !status
+          ? {
+              bgcolor: "#ff61003b",
+              borderBottom: "1px solid #ed6c02",
+              py: 1.5,
+            }
+          : { borderBottom: "1px solid #ed6c02", py: 1.5 }
+      }
+      onClick={(e) => {
+        handleOnClick(e, listContacts, avatar, name);
+      }}
+    >
       <ListItemAvatar sx={{ mt: 0 }}>
-        <AvatarStatus alt={fullName} src={avatar} isActive={isActive} />
+        <AvatarStatus alt={name} src={avatar} isActive={!isActive} />
       </ListItemAvatar>
       <Box width={400} display="block">
         <Typography variant="subtitle2" noWrap>
-          <b>{fullName}</b>
+          <b>{name}</b>
           {" - "}
-          <DateTimeOfMessage dateTime={lastTimeMessage} />
+          <DateTimeOfMessage dateTime={lastUpDateDate} />
         </Typography>
         <Typography
           variant="body2"
@@ -41,9 +66,8 @@ export default function MessageBox({ roomChat }) {
           noWrap
           textOverflow="ellipsis"
         >
-          {content}
+          {lastMessage}
         </Typography>
-        
       </Box>
     </ListItem>
   );

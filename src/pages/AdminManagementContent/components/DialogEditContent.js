@@ -129,7 +129,11 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
               <TextField
                 name="fullName"
                 label="Người đăng"
-                value={contentEdit.user?.fullName}
+                value={
+                  contentEdit.user.fullName === null
+                    ? ""
+                    : contentEdit.user.fullName
+                }
                 variant="standard"
                 placeholder="Nhập người đăng bài viết"
                 InputProps={{
@@ -149,7 +153,11 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                     name="countComment"
                     label="Tổng số bình luận"
                     variant="standard"
-                    value={contentEdit?.countComment}
+                    value={
+                      contentEdit.countComment === null
+                        ? 0
+                        : contentEdit.countComment
+                    }
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -166,7 +174,9 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                     name="countLike"
                     label="Tổng số lượt thích"
                     variant="standard"
-                    value={contentEdit?.countLike}
+                    value={
+                      contentEdit.countLike === null ? 0 : contentEdit.countLike
+                    }
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -183,7 +193,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
               <TextField
                 name="content"
                 label="Nội dung bài viết"
-                value={contentEdit?.content}
+                value={contentEdit.content === null ? "" : contentEdit.content}
                 onChange={(e) =>
                   setContentEdit({
                     ...contentEdit,

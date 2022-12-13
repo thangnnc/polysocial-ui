@@ -1,8 +1,19 @@
 import { Avatar, Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { toast } from "react-toastify";
+import Axios from "./../../../../utils/Axios/index";
 
 export default function FriendSearchBox({ searchData }) {
   const { avatar, fullName, email, isFriend } = searchData;
+
+  const handleAddFriend = async () => {
+    const response = await Axios.Friends.addFriend(searchData);
+    if (response.status === 200) {
+      toast.success("Gửi lời mời kết bạn thành công");
+    } else {
+      toast.error("Gửi lời mời kết bạn thất bại");
+    }
+  };
 
   return (
     <>
@@ -34,6 +45,7 @@ export default function FriendSearchBox({ searchData }) {
             className="btn-orange"
             variant="contained"
             sx={{ borderRadius: 50 }}
+            onClick={handleAddFriend}
           >
             Kết Bạn
           </Button>

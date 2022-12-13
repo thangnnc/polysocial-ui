@@ -1,4 +1,4 @@
-import { Box, styled, Tooltip, Typography } from "@mui/material";
+import { Box, styled, Tooltip } from "@mui/material";
 import AvatarBlank from "../../../components/avatar-blank/AvatarBlank";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";
@@ -24,14 +24,13 @@ const Message = styled("span")(() => ({
   wordWrap: "break-word",
 }));
 
-export default function MyMessage({ message, showAvatar }) {
+export default function MyMessage({ message, showAvatar,createdDate }) {
   const { account } = useLogin();
-
   return (
     <>
       {message && (
         <MessageLine>
-          <Tooltip title="06/12/2022 11:00:00 PM">
+          <Tooltip title={createdDate}>
             <Message>{message}</Message>
           </Tooltip>
           {showAvatar ? (

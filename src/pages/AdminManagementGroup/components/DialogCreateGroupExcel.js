@@ -10,18 +10,20 @@ import {
   Divider,
   Grid,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import Iconify from "../../../components/iconify";
 import React, { useState } from "react";
 import Axios from "../../../utils/Axios/index";
 import { toast } from "react-toastify";
+import { Box } from "@mui/system";
 
 const styleInputFullField = {
   width: "100%",
   mb: 3,
 };
 
-export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
+export const DialogCreateGroupExcel = ({ open, setOpen, groups, onChange }) => {
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [groupId, setGroupId] = useState("");
@@ -37,16 +39,15 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
     formData.append("file", selectedFile);
     const response = await Axios.Groups.createGroupExcel(formData, groupId);
     if (response) {
-      toast.success("Create group successfully!");
+      toast.success("Thêm thành viên thành công");
       setOpen(false);
       onChange();
     } else {
-      toast.error("Create group failed!");
+      toast.error("Thêm thành viên thất bại!");
     }
   };
 
   const handleChange = (e, value) => {
-    console.log(value.groupId);
     setGroupId(value.groupId);
   };
 
@@ -65,8 +66,8 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
             <Grid item xs={12}>
               <Autocomplete
                 name="groupId"
-                options={group}
-                getOptionLabel={(option) => option.name}
+                options={groups}
+                getOptionLabel={(option) => option?.name}
                 onChange={handleChange}
                 renderInput={(params) => (
                   <TextField
@@ -109,17 +110,17 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
                 sx={styleInputFullField}
               />
               {isSelected ? (
-                <div>
-                  <p>Filename: {selectedFile.name}</p>
-                  <p>Filetype: {selectedFile.type}</p>
-                  <p>Size in bytes: {selectedFile.size}</p>
-                  <p>
-                    lastModifiedDate:{" "}
+                <Box>
+                  <Typography>Tên tệp: {selectedFile.name}</Typography>
+                  <Typography>Loại tệp: {selectedFile.type}</Typography>
+                  <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
+                  <Typography>
+                    Ngày sửa đổi cuối cùng:
                     {selectedFile.lastModifiedDate.toLocaleDateString()}
-                  </p>
-                </div>
+                  </Typography>
+                </Box>
               ) : (
-                <p>Bạn chưa chọn file nào?</p>
+                <Typography>Bạn chưa chọn file nào?</Typography>
               )}
             </Grid>
           </Grid>

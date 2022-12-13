@@ -28,7 +28,7 @@ const scrollbar = {
   },
 };
 
-export default function MessagesPopover({ messages }) {
+export default function MessagesPopover({ groupList,count }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = (event) => {
@@ -42,7 +42,7 @@ export default function MessagesPopover({ messages }) {
   return (
     <>
       <Badge
-        badgeContent={4}
+        badgeContent={count}
         color="error"
         sx={{ mr: 2 }}
         overlap="circular"
@@ -104,7 +104,7 @@ export default function MessagesPopover({ messages }) {
           }}
         >
           <Divider />
-          {messages.map((roomChat, index) => (
+          {groupList.map((roomChat, index) => (
             <MessageBox key={index} roomChat={roomChat} />
           ))}
         </List>
