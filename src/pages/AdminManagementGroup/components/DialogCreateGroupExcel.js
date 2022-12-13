@@ -23,7 +23,7 @@ const styleInputFullField = {
   mb: 3,
 };
 
-export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
+export const DialogCreateGroupExcel = ({ open, setOpen, groups, onChange }) => {
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [groupId, setGroupId] = useState("");
@@ -47,8 +47,8 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
     }
   };
 
-  const handleChange = (e) => {
-    setGroupId(e.target.value);
+  const handleChange = (e, value) => {
+    setGroupId(value.groupId);
   };
 
   const handleClose = () => {
@@ -64,10 +64,11 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
           <DialogContentText />
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={12}>
-              {/* <Autocomplete
+              <Autocomplete
                 name="groupId"
-                options={group}
+                options={groups}
                 getOptionLabel={(option) => option?.name}
+                key={groups.groupId}
                 onChange={handleChange}
                 renderInput={(params) => (
                   <TextField
@@ -91,23 +92,6 @@ export const DialogCreateGroupExcel = ({ open, setOpen, group, onChange }) => {
                     sx={styleInputFullField}
                   />
                 )}
-              /> */}
-
-              <TextField
-                name="groupId"
-                onChange={handleChange}
-                label="Nhập mã nhóm học tập"
-                variant="standard"
-                placeholder="Nhập mã nhóm học tập"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:attach-file-add"} />
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="none"
-                sx={styleInputFullField}
               />
 
               <TextField

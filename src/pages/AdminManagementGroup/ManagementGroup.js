@@ -603,6 +603,7 @@ export default function ManagementGroup() {
       <DialogCreateGroupExcel
         onChange={onlDailogChange}
         open={isCreateGroupExcel}
+        groups={groups}
         setOpen={setIsCreateGroupExcel}
       />
 
