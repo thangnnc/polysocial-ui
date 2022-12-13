@@ -55,7 +55,6 @@ export default function GroupExerciseDetailPage() {
       exerciseId,
       groupId
     );
-    console.log(response);
     if (response) {
       setData(response);
       // toast.success("Lấy dữ liệu thành công");
@@ -343,7 +342,6 @@ export default function GroupExerciseDetailPage() {
                 </Typography>
               }
             />
-
             {!item.isSubmit ? (
               <CardContent>
                 <Typography>Ngày nộp bài: {item.createdDate}</Typography>
@@ -353,6 +351,7 @@ export default function GroupExerciseDetailPage() {
                   name="mark"
                   label="Điểm bài tập"
                   placeholder="Nhập điểm bài tập"
+                  value={item.mark === null ? 0 : item.mark}
                   onChange={(e) => setCreateMark(e.target.value)}
                   variant="standard"
                   InputProps={{
