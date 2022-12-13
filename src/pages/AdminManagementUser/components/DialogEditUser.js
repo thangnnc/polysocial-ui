@@ -69,7 +69,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={5}>
               <label htmlFor="avatar">
-                <Avatar sx={styleAvatar} alt="Remy Sharp" src={user.avatar} />
+                <Avatar sx={styleAvatar} alt="Remy Sharp" src={user?.avatar} />
                 <Typography width="100%" fontSize={24} textAlign="center">
                   Ảnh đại diện
                 </Typography>
@@ -88,7 +88,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 name="fullName"
                 label="Họ Và Tên"
                 placeholder="Nhập Họ Và Tên"
-                value={user.fullName}
+                value={user.fullName === null ? "" : user.fullName}
                 onChange={(e) => {
                   setUserEdit({ ...userEdit, fullName: e.target.value });
                 }}
@@ -107,7 +107,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
               <TextField
                 name="email"
                 label="Email"
-                value={user.email}
+                value={user.email === null ? "" : user.email}
                 onChange={(e) => {
                   setUserEdit({ ...userEdit, email: e.target.value });
                 }}
@@ -128,7 +128,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 name="studentCode"
                 label="Mã Sinh Viên"
                 placeholder="Nhập Mã Sinh Viên"
-                value={user.studentCode}
+                value={user.studentCode === null ? "" : user.studentCode}
                 onChange={(e) => {
                   setUserEdit({ ...userEdit, studentCode: e.target.value });
                 }}
