@@ -28,6 +28,7 @@ export default function UpPost() {
             <AvatarStatus
               src={account.avatar}
               alt={account.fullName}
+              isActive={true}
               sx={{ width: 54, height: 54 }}
             />
             <TextField
