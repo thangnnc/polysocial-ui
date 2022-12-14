@@ -20,6 +20,7 @@ import GroupExercisePage from "./pages/GroupExercisePage/GroupExercisePage";
 import GroupFeedbackPage from "./pages/GroupFeedbackPage/GroupFeedbackPage";
 import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerciseDetailPage";
 import AddFriendPage from "./pages/AddFriendPage/AddFriendPage";
+import GroupAddMemberPage from "./pages/GroupAddMemberPage/GroupAddMemberPage";
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +58,12 @@ export default function Router() {
         { path: "/groups/detail/:groupId", element: <GroupDetailPage /> },
         {
           path: "/groups/detail/add-members/:groupId",
-          element: <h1>Lời mời vô nhóm </h1>,
+          element:
+            account?.role !== "Sinh viên" ? (
+              <GroupAddMemberPage />
+            ) : (
+              <Navigate to="/home" />
+            ),
         },
         {
           path: "/groups/detail/members/:groupId",
@@ -83,7 +89,13 @@ export default function Router() {
     },
     {
       path: "/admin",
-      element: !account ? <Navigate to="/login" /> : <AdminLayout />,
+      element: !account ? (
+        <Navigate to="/login" />
+      ) : account.role !== "Đào tạo" ? (
+        <Navigate to="/home" />
+      ) : (
+        <AdminLayout />
+      ),
       children: [
         { element: <Navigate to="/admin/dashboard" />, index: true },
         { path: "dashboard", element: <AdminDashboard /> },

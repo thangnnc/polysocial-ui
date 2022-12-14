@@ -306,7 +306,9 @@ export default function GroupExercisePage() {
           exercise={exercise}
         />
 
-        <BasicSpeedDial handleCreateExercise={handleCreateExercise} />
+        {account.role !== "Sinh viên" && (
+          <BasicSpeedDial handleCreateExercise={handleCreateExercise} />
+        )}
       </Box>
     </Box>
   );

@@ -17,7 +17,6 @@ import Iconify from "../../components/iconify";
 import MyMessage from "./components/MyMessage";
 import OtherMessage from "./components/OtherMessage";
 import AlertMessage from "./components/AlertMessage";
-import TimeLineMessage from "./components/TimeLineMessage";
 import EnteringMessage from "./components/EnteringMessage";
 import { useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
@@ -186,21 +185,18 @@ export default function MessagePage() {
           listContentObject.statusCreated = element.statusCreated;
           listContentObject.studentCode = element.studentCode;
           listContentObject.email = element.email;
-          listContentObject.messageRecall = element.messageRecall
-          if(element.statusCreated===false){
-            if(element.studentCode===account.studentCode){
-              listContentObject.content ="";
-            }else{
-            listContentObject.content = element.content;
+          listContentObject.messageRecall = element.messageRecall;
+          if (element.statusCreated === false) {
+            if (element.studentCode === account.studentCode) {
+              listContentObject.content = "";
+            } else {
+              listContentObject.content = element.content;
             }
-            // console.log('runnn')
-          }else{
+          } else {
             listContentObject.content = element.content;
-
           }
           listContent.push(listContentObject);
         }
-      console.log("listContent",listContent)
 
         setMessageList(listContent.reverse());
       } catch (error) {}
@@ -262,10 +258,9 @@ export default function MessagePage() {
     }
   };
 
-
   const onScroll = () => {
     if (listInnerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+      const { scrollTop } = listInnerRef.current;
       if (scrollTop === 0) {
         setCurrPage(currPage + 1);
       }

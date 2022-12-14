@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 // import { toast } from "react-toastify";
 import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
+import useLogin from "../../../utils/Login/useLogin";
 import Axios from "./../../../utils/Axios/index";
 
 const APP_BAR_MOBILE = 64;
@@ -33,21 +34,27 @@ const BoxNav = styled("div")(({ theme }) => ({
 
 export default function NavGroup() {
   const { groupId } = useParams();
+  const { account } = useLogin();
   const [group, setGroup] = useState([]);
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
-  const navGroupConfig = [
+  let navGroupConfig = [
     {
       title: "Trang Chủ",
       path: `/groups/detail/${groupId}`,
       icon: icon("material-symbols:home-outline-rounded"),
     },
-    {
+  ];
+  if (account.role !== "Sinh viên") {
+    navGroupConfig.push({
       title: "Xét duyệt thành viên",
       path: `/groups/detail/add-members/${groupId}`,
       icon: icon("fluent-mdl2:add-friend"),
-      notiCount: 4,
-    },
+    });
+  }
+
+  navGroupConfig = [
+    ...navGroupConfig,
     {
       title: "Mọi người",
       path: `/groups/detail/members/${groupId}`,
@@ -57,13 +64,11 @@ export default function NavGroup() {
       title: "Phản hồi",
       path: `/groups/detail/feedback/${groupId}`,
       icon: icon("mdi:feedback-outline"),
-      notiCount: 4,
     },
     {
       title: "Bài tập (Quiz)",
       path: `/groups/detail/exercise/${groupId}`,
       icon: icon("material-symbols:nest-clock-farsight-analog-outline"),
-      notiCount: 2,
     },
     {
       title: "Rời nhóm",
@@ -96,7 +101,7 @@ export default function NavGroup() {
             objectFit: "cover",
           }}
           src={
-            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
+            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670978828/groups-default-cover-photo-2x_igy9tq.png"
           }
           alt="avatar group"
         />
