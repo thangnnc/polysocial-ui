@@ -1,18 +1,12 @@
-import {
-  Box,
-  IconButton,
-  ImageListItem,
-  styled,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, styled, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Iconify from "../../components/iconify";
 import Header from "../../layouts/user/header";
 import SearchBar from "./components/SearchBar";
-import { Link } from "react-router-dom";
 import ListGroupJoin from "./components/ListGroupJoin";
+import ListGroupTeacherJoin from "./components/ListGroupTeacherJoin";
 import Axios from "./../../utils/Axios/index";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -39,6 +33,7 @@ const BoxNav = styled("div")(({ theme }) => ({
 
 export default function GroupPage() {
   const [groups, setGroups] = useState([]);
+  const [groupsTeacher, setGroupsTeacher] = useState([]);
 
   useEffect(() => {
     getAllData();
@@ -46,11 +41,13 @@ export default function GroupPage() {
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroupStudent();
+    const responseTeacher = await Axios.Groups.getAllGroupTeacher();
     if (response) {
       setGroups(response);
-      toast.success("Lấy dữ liệu thành công");
+      setGroupsTeacher(responseTeacher);
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
@@ -84,43 +81,14 @@ export default function GroupPage() {
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Nhóm do bạn quản lý
             </Typography>
-            <Link
-              to={"/home"}
-              style={{ color: "inherit", textDecoration: "none" }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  mt: 0.5,
-                }}
-              >
-                <ImageListItem>
-                  <img
-                    style={{ borderRadius: 10, width: 75, height: 75 }}
-                    src={
-                      "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
-                    }
-                    alt="avatar group"
-                  />
-                </ImageListItem>
-                <Box
-                  sx={{
-                    ml: 2,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", fontSize: 19 }}
-                  >
-                    Nhóm Lập trình WEB
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ color: "#9b9b9b" }}>
-                    Nhóm công khai - 31 thành viên
-                  </Typography>
-                </Box>
-              </Box>
-            </Link>
+            <Box sx={{ height: "570px", overflowY: "scroll" }}>
+              {groupsTeacher.map((groupTeacher) => (
+                <ListGroupTeacherJoin
+                  key={groupTeacher.groupId}
+                  group={groupTeacher}
+                />
+              ))}
+            </Box>
           </Box>
 
           <Box sx={{ mt: 3 }}>

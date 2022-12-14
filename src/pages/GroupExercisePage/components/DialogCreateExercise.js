@@ -30,7 +30,6 @@ export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
   });
 
   const createExercise = async () => {
-    console.log(exerciseCreate);
     const response = await Axios.Exersice.createExercise(exerciseCreate);
     if (response) {
       toast.success("Tạo bài tập thành công");

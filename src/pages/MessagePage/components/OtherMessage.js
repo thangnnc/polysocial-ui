@@ -1,5 +1,4 @@
 import { Box, styled, Tooltip } from "@mui/material";
-import { useState } from "react";
 import AvatarBlank from "../../../components/avatar-blank/AvatarBlank";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
@@ -24,8 +23,13 @@ const Message = styled("span")(() => ({
   wordWrap: "break-word",
 }));
 
-export default function OtherMessage({ message, account,avatar, showAvatar,createdDate }) {
-
+export default function OtherMessage({
+  message,
+  account,
+  avatar,
+  showAvatar,
+  createdDate,
+}) {
   return (
     <>
       {message && (

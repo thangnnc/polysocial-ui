@@ -13,7 +13,6 @@ export default function AddFriendPage() {
 
   const getRequestFriend = async () => {
     const response = await Axios.Friends.getAllRequestAddFriend();
-    console.log(response);
     setShowRequestFriend(response);
   };
 

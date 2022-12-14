@@ -9,7 +9,7 @@ import {
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
 import Axios from "./../../../utils/Axios/index";
@@ -80,9 +80,9 @@ export default function NavGroup() {
     const response = await Axios.Groups.getOneGroup(groupId);
     if (response) {
       setGroup(response);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 

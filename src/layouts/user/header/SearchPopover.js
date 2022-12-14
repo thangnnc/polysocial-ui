@@ -65,7 +65,7 @@ export default function SearchPopover() {
 
   return (
     <Box onFocus={handleOpen} onBlur={handleClose}>
-      <SearchInput onChange={handleSearch} />
+      <SearchInput onInput={handleSearch} />
       <Card
         hidden={!open}
         sx={{

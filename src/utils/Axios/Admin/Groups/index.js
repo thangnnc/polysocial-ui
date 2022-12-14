@@ -52,11 +52,15 @@ class Groups {
     );
 
   //API get all group by student
-  static getAllGroupStudent = async () => Axios.get(`/group/api/get-all/user`);
+  static getAllGroupStudent = async () =>
+    Axios.get(`/group/api/get-all/student`);
+
+  //API get all group by student
+  static getAllGroupUser = async () => Axios.get(`/group/api/get-all/user`);
 
   //API get all group by teacher
   static getAllGroupTeacher = async () =>
-    Axios.get(`/group/api/get-all/group/teacher`);
+    Axios.get(`/group/api/get-all/teacher`);
 
   //API find group by keywork
   static findGroup = async (keyword) =>

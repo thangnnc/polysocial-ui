@@ -30,7 +30,7 @@ import BasicSpeedDial from "./components/BasicSpeedDial";
 import { DialogEditContent } from "./components/DialogEditContent";
 import Axios from "./../../utils/Axios/index";
 import { DialogCreateContent } from "./components/DialogCreateContent";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -110,9 +110,9 @@ export default function ManagementContent() {
     const response = await Axios.Contents.getAllByAllPost();
     if (response.listPostDTO) {
       setContents(response.listPostDTO);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 

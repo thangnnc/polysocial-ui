@@ -32,7 +32,7 @@ import Axios from "./../../utils/Axios/index";
 import { DialogCreateMember } from "./components/DialogCreateMember";
 import { useParams } from "react-router-dom";
 import { fDateTime } from "../../utils/Format/formatTime";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -113,9 +113,9 @@ export default function ManagementGroupDetail() {
     const response = await Axios.Groups.getAllStudentGroup(groupId);
     if (response) {
       setMembers(response);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
