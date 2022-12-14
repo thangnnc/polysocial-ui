@@ -1,9 +1,15 @@
 import { Box, Button, ImageListItem, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
+import Axios from "./../../../utils/Axios/index";
 
 export default function ListGroupSearch(props) {
-  const handleJoinGroup = () => {
-    console.log("Join group");
+  const handleJoinGroup = async (groupId) => {
+    const response = await Axios.Groups.requestJoinGroup(groupId);
+    if (response) {
+      alert("Gửi lời tham gia nhóm thành công");
+    } else {
+      alert("Gửi lời tham gia nhóm thất bại");
+    }
   };
 
   return (
@@ -39,7 +45,7 @@ export default function ListGroupSearch(props) {
       <Button
         variant="contained"
         sx={{ background: "#ff7b29", width: "5%", ml: 2 }}
-        onClick={handleJoinGroup}
+        onClick={() => handleJoinGroup(props.group.groupId)}
       >
         <LoginIcon />
       </Button>

@@ -65,6 +65,24 @@ class Groups {
   //API find group by keywork
   static findGroupByKeyWord = async (keyword) =>
     Axios.get(`/group/api/find-group?keywork=${keyword}`);
+
+  //API get member join group
+  static getMemberJoinGroup = async (groupId) =>
+    Axios.get(`/group/member-join-group-false?groupId=${groupId}`);
+
+  //API request join group
+  static requestJoinGroup = async (groupId) =>
+    Axios.post(`/group/member-join-group?groupId=${groupId}`);
+
+  //API add member join group
+  static addMemberJoinGroup = async (groupId, userId) =>
+    Axios.post(
+      `/group/confirm-member-group?groupId=${groupId}&userId=${userId}`
+    );
+
+  //API member out group
+  static memberOutGroup = async (groupId) =>
+    Axios.delete(`/group/leave-group?groupId=${groupId}`);
 }
 
 export default Groups;
