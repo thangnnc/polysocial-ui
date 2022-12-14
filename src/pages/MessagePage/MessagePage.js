@@ -120,7 +120,7 @@ export default function MessagePage() {
         const element = response.data[index];
         listContentObject.isAdmin = element.isAdmin;
         listContentObject.avatar = element.avatar;
-        listContentObject.content = fromBinary(element.content);
+        listContentObject.content = element.content;
         listContentObject.createdDate = element.createdDate;
         listContentObject.fullName = element.fullName;
         listContentObject.statusCreated = element.statusCreated;
@@ -180,30 +180,33 @@ export default function MessagePage() {
           const element = response.data[index];
           listContentObject.isAdmin = element.isAdmin;
           listContentObject.avatar = element.avatar;
-          listContentObject.content = fromBinary(element.content);
           listContentObject.createdDate = element.createdDate;
           listContentObject.fullName = element.fullName;
           listContentObject.statusCreated = element.statusCreated;
           listContentObject.studentCode = element.studentCode;
           listContentObject.email = element.email;
-          listContentObject.messageRecall = element.messageRecall;
+          listContentObject.messageRecall = element.messageRecall
+          if(element.statusCreated===false){
+            if(element.studentCode===account.studentCode){
+              listContentObject.content ="";
+            }else{
+            listContentObject.content = element.content;
+            }
+            // console.log('runnn')
+          }else{
+            listContentObject.content = element.content;
+
+          }
           listContent.push(listContentObject);
         }
+      console.log("listContent",listContent)
+
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {
       toast.error("Failed to fetch post list: ", error);
     }
   };
-
-  function fromBinary(encoded) {
-    const binary = atob(encoded);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < bytes.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-    return String.fromCharCode(...new Uint16Array(bytes.buffer));
-  }
 
   useEffect(() => {
     socket.on(room + "user-typing", (account, data) => {
@@ -247,7 +250,7 @@ export default function MessagePage() {
 
   const createMessage = async () => {
     const data = {
-      content: toBinary(message),
+      content: message,
       contactId: contactId,
       roomId: room,
       listcontactId: listcontactId,
@@ -258,13 +261,6 @@ export default function MessagePage() {
     }
   };
 
-  function toBinary(string) {
-    const codeUnits = new Uint16Array(string.length);
-    for (let i = 0; i < codeUnits.length; i++) {
-      codeUnits[i] = string.charCodeAt(i);
-    }
-    return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
-  }
 
   const onScroll = () => {
     if (listInnerRef.current) {
@@ -312,39 +308,52 @@ export default function MessagePage() {
           onScroll={onScroll}
           ref={listInnerRef}
         >
-          {messageList.map((value, key) => {
-            return (
-              <div ref={messageRef}>
-                <AlertMessage
-                  message={value.statusCreated ? "" : value.content}
-                />
-                <MyMessage
-                  message={
-                    value.statusCreated
-                      ? value.studentCode === account.studentCode
-                        ? value.content
-                        : ""
-                      : ""
-                  }
-                  showAvatar
-                  createdDate={value.createdDate}
-                />
-                <OtherMessage
-                  account={value.fullName + " (" + value.email + ")"}
-                  avatar={value.avatar}
-                  message={
-                    value.statusCreated
-                      ? value.studentCode !== account.studentCode
-                        ? value.content
-                        : ""
-                      : ""
-                  }
-                  showAvatar
-                  createdDate={value.createdDate}
-                />
-              </div>
-            );
-          })}
+
+              {messageList.map((value, key) => {
+                return (
+                  <div ref={messageRef}>
+                    <AlertMessage
+                    message={value.statusCreated?'':value.content}
+                  />
+                    {/* <TimeLineMessage message={"11:00"} />
+                  <MyMessage message={"Hi! Em ngon vậy"} /> */}
+                    <MyMessage
+                      message={
+                        value.statusCreated?(value.studentCode === account.studentCode
+                          ? value.content
+                          : ""):''
+                        
+                      }
+                      showAvatar
+                      createdDate={value.createdDate}
+                    />
+                    <OtherMessage
+                      account={value.fullName + " (" + value.email + ")"}
+                      avatar={value.avatar}
+                      message={
+                        value.statusCreated?(value.studentCode !== account.studentCode
+                          ? value.content
+                          : ""):''
+                       
+                      }
+                      showAvatar
+                      createdDate={value.createdDate}
+                    />
+                    {/* <TimeLineMessage message={"16:00"} /> */}
+                    {/* <MyMessage message={"Em ăn cơm chưa?"} /> */}
+                    {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}
+                    {/* <OtherMessage account={friend} message={"Chưa"} /> */}
+                    {/* <OtherMessage
+                    account={friend}
+                    message={"Anh chở e đi ăn đi <3"}
+                    showAvatar
+                  /> */}
+                    {/* <MyMessage message={"Méo :V"} showAvatar /> */}
+                    {/* <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} /> */}
+                  </div>
+                );
+              })}
+
         </CardContent>
         <span>
           {userTyping ? <EnteringMessage account={accountTyping} /> : ""}
