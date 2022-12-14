@@ -46,7 +46,6 @@ export default function NavGroup() {
       title: "Xét duyệt thành viên",
       path: `/groups/detail/add-members/${groupId}`,
       icon: icon("fluent-mdl2:add-friend"),
-      notiCount: 4,
     },
     {
       title: "Mọi người",
@@ -57,13 +56,11 @@ export default function NavGroup() {
       title: "Phản hồi",
       path: `/groups/detail/feedback/${groupId}`,
       icon: icon("mdi:feedback-outline"),
-      notiCount: 4,
     },
     {
       title: "Bài tập (Quiz)",
       path: `/groups/detail/exercise/${groupId}`,
       icon: icon("material-symbols:nest-clock-farsight-analog-outline"),
-      notiCount: 2,
     },
     {
       title: "Rời nhóm",
@@ -96,7 +93,7 @@ export default function NavGroup() {
             objectFit: "cover",
           }}
           src={
-            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
+            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670978828/groups-default-cover-photo-2x_igy9tq.png"
           }
           alt="avatar group"
         />

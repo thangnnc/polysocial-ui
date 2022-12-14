@@ -17,7 +17,6 @@ import Iconify from "../../components/iconify";
 import MyMessage from "./components/MyMessage";
 import OtherMessage from "./components/OtherMessage";
 import AlertMessage from "./components/AlertMessage";
-import TimeLineMessage from "./components/TimeLineMessage";
 import EnteringMessage from "./components/EnteringMessage";
 import { useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
@@ -185,21 +184,18 @@ export default function MessagePage() {
           listContentObject.statusCreated = element.statusCreated;
           listContentObject.studentCode = element.studentCode;
           listContentObject.email = element.email;
-          listContentObject.messageRecall = element.messageRecall
-          if(element.statusCreated===false){
-            if(element.studentCode===account.studentCode){
-              listContentObject.content ="";
-            }else{
-            listContentObject.content = element.content;
+          listContentObject.messageRecall = element.messageRecall;
+          if (element.statusCreated === false) {
+            if (element.studentCode === account.studentCode) {
+              listContentObject.content = "";
+            } else {
+              listContentObject.content = element.content;
             }
-            // console.log('runnn')
-          }else{
+          } else {
             listContentObject.content = element.content;
-
           }
           listContent.push(listContentObject);
         }
-      console.log("listContent",listContent)
 
         setMessageList(listContent.reverse());
       } catch (error) {}
@@ -261,10 +257,9 @@ export default function MessagePage() {
     }
   };
 
-
   const onScroll = () => {
     if (listInnerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+      const { scrollTop } = listInnerRef.current;
       if (scrollTop === 0) {
         setCurrPage(currPage + 1);
       }
@@ -308,52 +303,39 @@ export default function MessagePage() {
           onScroll={onScroll}
           ref={listInnerRef}
         >
-
-              {messageList.map((value, key) => {
-                return (
-                  <div ref={messageRef}>
-                    <AlertMessage
-                    message={value.statusCreated?'':value.content}
-                  />
-                    {/* <TimeLineMessage message={"11:00"} />
-                  <MyMessage message={"Hi! Em ngon vậy"} /> */}
-                    <MyMessage
-                      message={
-                        value.statusCreated?(value.studentCode === account.studentCode
-                          ? value.content
-                          : ""):''
-                        
-                      }
-                      showAvatar
-                      createdDate={value.createdDate}
-                    />
-                    <OtherMessage
-                      account={value.fullName + " (" + value.email + ")"}
-                      avatar={value.avatar}
-                      message={
-                        value.statusCreated?(value.studentCode !== account.studentCode
-                          ? value.content
-                          : ""):''
-                       
-                      }
-                      showAvatar
-                      createdDate={value.createdDate}
-                    />
-                    {/* <TimeLineMessage message={"16:00"} /> */}
-                    {/* <MyMessage message={"Em ăn cơm chưa?"} /> */}
-                    {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}
-                    {/* <OtherMessage account={friend} message={"Chưa"} /> */}
-                    {/* <OtherMessage
-                    account={friend}
-                    message={"Anh chở e đi ăn đi <3"}
-                    showAvatar
-                  /> */}
-                    {/* <MyMessage message={"Méo :V"} showAvatar /> */}
-                    {/* <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} /> */}
-                  </div>
-                );
-              })}
-
+          {messageList.map((value, key) => {
+            return (
+              <div ref={messageRef}>
+                <AlertMessage
+                  message={value.statusCreated ? "" : value.content}
+                />
+                <MyMessage
+                  message={
+                    value.statusCreated
+                      ? value.studentCode === account.studentCode
+                        ? value.content
+                        : ""
+                      : ""
+                  }
+                  showAvatar
+                  createdDate={value.createdDate}
+                />
+                <OtherMessage
+                  account={value.fullName + " (" + value.email + ")"}
+                  avatar={value.avatar}
+                  message={
+                    value.statusCreated
+                      ? value.studentCode !== account.studentCode
+                        ? value.content
+                        : ""
+                      : ""
+                  }
+                  showAvatar
+                  createdDate={value.createdDate}
+                />
+              </div>
+            );
+          })}
         </CardContent>
         <span>
           {userTyping ? <EnteringMessage account={accountTyping} /> : ""}

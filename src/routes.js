@@ -20,6 +20,7 @@ import GroupExercisePage from "./pages/GroupExercisePage/GroupExercisePage";
 import GroupFeedbackPage from "./pages/GroupFeedbackPage/GroupFeedbackPage";
 import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerciseDetailPage";
 import AddFriendPage from "./pages/AddFriendPage/AddFriendPage";
+import GroupAddMemberPage from "./pages/GroupAddMemberPage/GroupAddMemberPage";
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +58,7 @@ export default function Router() {
         { path: "/groups/detail/:groupId", element: <GroupDetailPage /> },
         {
           path: "/groups/detail/add-members/:groupId",
-          element: <h1>Lời mời vô nhóm </h1>,
+          element: <GroupAddMemberPage />,
         },
         {
           path: "/groups/detail/members/:groupId",

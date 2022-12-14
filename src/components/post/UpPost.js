@@ -1,10 +1,10 @@
-import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Box, Card, CardContent, TextField } from "@mui/material";
 import { useState } from "react";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../utils/Login/useLogin";
 import DialogUpPost from "./DialogUpPost";
 
-export default function UpPost() {
+export default function UpPost({ onChange }) {
   const { account } = useLogin();
   const [open, setOpen] = useState(false);
 
@@ -17,14 +17,22 @@ export default function UpPost() {
   };
 
   return (
-    <Box sx={{ p: 0, display: "flex", justifyContent: "center", mb: 4 }}>
+    <Box
+      sx={{
+        p: 0,
+        display: "flex",
+        justifyContent: "center",
+        mb: 4,
+      }}
+    >
       <Card
         sx={{
-          width: "80%",
+          width: "68%",
+          ml: "-0.85%",
         }}
       >
         <CardContent sx={{ p: 3, display: "flex", alignItems: "center" }}>
-          <Box sx={{ display: "flex", alignItems: "flex-end", width: "100%" }}>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <AvatarStatus
               src={account.avatar}
               alt={account.fullName}
@@ -44,7 +52,7 @@ export default function UpPost() {
           </Box>
         </CardContent>
       </Card>
-      <DialogUpPost open={open} handleClose={handleClose} />
+      <DialogUpPost open={open} handleClose={handleClose} onChange={onChange} />
     </Box>
   );
 }

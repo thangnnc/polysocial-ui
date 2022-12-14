@@ -14,7 +14,6 @@ export default function GroupDetailPage() {
 
   const fetchData = async (groupId) => {
     const response = await Axios.Posts.getAllByAllPostGroup(groupId);
-    console.log(response);
     if (response) {
       setListPost(response.listPostDTO);
     }

@@ -75,7 +75,7 @@ export default function Post({ posts, onChange }) {
               avatar={
                 <AvatarCmt
                   alt={user.fullName}
-                  src={user.Avatar}
+                  src={user.avatar}
                   sx={{ width: 54, height: 54 }}
                 />
               }
