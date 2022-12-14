@@ -18,6 +18,7 @@ import DateTimeOfMessage from "../../utils/DateTimeOfMessage/DateTimeOfMessage";
 import styled from "styled-components";
 import { useState } from "react";
 import CommentBox from "./CommentBox";
+import Axios from "./../../utils/Axios/index";
 
 const AvatarCmt = styled(Avatar)(() => ({
   border: "2px solid #ff7f30",
@@ -33,17 +34,27 @@ const ButtonNormal = styled(Button)(() => ({
   color: "#a2a2a2 !important",
 }));
 
-export default function Post({ posts }) {
+export default function Post({ posts, onChange }) {
   const [isShowCmt, setShowCmt] = useState(false);
 
   const handleShowCmt = () => {
     setShowCmt(true);
   };
 
+  const likeUnLike = async (postId) => {
+    const data = {
+      postId: postId,
+    };
+    const response = await Axios.Likes.likeUnLike(data);
+    if (response.status === 200) {
+      onChange();
+    }
+  };
+
   return (
     <List
       disablePadding
-      sx={{ p: 0, display: "flex", justifyContent: "center", mb: 4 }}
+      sx={{ p: 0, display: "block", justifyContent: "center", mb: 4, ml: 20 }}
     >
       {posts.map(
         (
@@ -59,7 +70,7 @@ export default function Post({ posts }) {
           },
           index
         ) => (
-          <Card key={index} sx={{ width: "80%" }}>
+          <Card key={index} sx={{ width: "80%", my: 3 }}>
             <CardHeader
               avatar={
                 <AvatarCmt
@@ -144,12 +155,12 @@ export default function Post({ posts }) {
                 }}
               >
                 {true ? (
-                  <ButtonLiked size="large">
+                  <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích
                   </ButtonLiked>
                 ) : (
-                  <ButtonNormal size="large">
+                  <ButtonNormal size="large" onClick={() => likeUnLike(postId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Thích
                   </ButtonNormal>
@@ -160,7 +171,13 @@ export default function Post({ posts }) {
                 </ButtonNormal>
               </Box>
 
-              <CommentBox show={isShowCmt} comments={listComment} />
+              <CommentBox
+                key={index}
+                show={isShowCmt}
+                comments={listComment}
+                postId={postId}
+                onChange={onChange}
+              />
             </CardActions>
           </Card>
         )
