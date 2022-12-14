@@ -79,9 +79,7 @@ class Axios {
           ...{ "Content-Type": "multipart/form-data" },
         },
       })
-      .catch((e) => {
-        throw Error(e.response.data.message);
-      });
+      .catch((error) => error.response);
     return response.data;
   }
 

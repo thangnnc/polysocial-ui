@@ -26,6 +26,11 @@ class Exercise {
   // API delete file quiz
   static deleteFileExercise = async (taskFileId) =>
     Axios.delete(`/task-file/delete-file?taskFileId=${taskFileId}`);
+  // API create marks
+  static createMarks = async (data) => Axios.post("/task/create-mark", data);
+  // API get adll task exercise
+  static getAllTaskExercise = async (exId) =>
+    Axios.get(`/task/get-task-by-ex?exId=${exId}`);
 }
 
 export default Exercise;

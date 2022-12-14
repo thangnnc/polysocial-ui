@@ -39,7 +39,7 @@ const LayoutFormTwoField = ({ children }) => {
 };
 
 export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
-  const [contentEdit, setContentEdit] = useState([]);
+  const [contentEdit, setContentEdit] = useState({});
 
   useEffect(() => {
     setContentEdit(content);
@@ -53,6 +53,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
       groupId: contentEdit.groupId,
       files: contentEdit.listUrl,
     };
+    console.log(data);
     const response = await Axios.Contents.updatePost(data);
     if (response) {
       toast.success("Cập nhật bài viết thành công");
@@ -130,9 +131,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                 name="fullName"
                 label="Người đăng"
                 value={
-                  contentEdit.user.fullName === null
-                    ? ""
-                    : contentEdit.user.fullName
+                  !contentEdit.user?.fullName ? "" : contentEdit.user.fullName
                 }
                 variant="standard"
                 placeholder="Nhập người đăng bài viết"
@@ -154,9 +153,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                     label="Tổng số bình luận"
                     variant="standard"
                     value={
-                      contentEdit.countComment === null
-                        ? 0
-                        : contentEdit.countComment
+                      !contentEdit.countComment ? 0 : contentEdit.countComment
                     }
                     InputProps={{
                       startAdornment: (
@@ -174,9 +171,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                     name="countLike"
                     label="Tổng số lượt thích"
                     variant="standard"
-                    value={
-                      contentEdit.countLike === null ? 0 : contentEdit.countLike
-                    }
+                    value={!contentEdit.countLike ? 0 : contentEdit.countLike}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -193,7 +188,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
               <TextField
                 name="content"
                 label="Nội dung bài viết"
-                value={contentEdit.content === null ? "" : contentEdit.content}
+                value={!contentEdit.content ? "" : contentEdit.content}
                 onChange={(e) =>
                   setContentEdit({
                     ...contentEdit,
@@ -218,7 +213,7 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
                 label="Ngày taọ bài viết"
                 type="datetime-local"
                 placeholder="Chọn ngày tạo bài viết"
-                value={contentEdit?.createdDate}
+                value={!contentEdit?.createdDate ? "" : contentEdit.createdDate}
                 onChange={(e) =>
                   setContentEdit({
                     ...contentEdit,

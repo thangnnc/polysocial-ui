@@ -108,7 +108,7 @@ export const DialogEditGroupDetail = ({
               <TextField
                 name="fullName"
                 label="Họ và tên"
-                value={memberEdit.fullName}
+                value={!memberEdit.fullName ? "" : memberEdit.fullName}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -124,7 +124,7 @@ export const DialogEditGroupDetail = ({
               <TextField
                 name="studentCode"
                 label="Mã số sinh viên"
-                value={memberEdit.studentCode}
+                value={!memberEdit.studentCode ? "" : memberEdit.studentCode}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -140,7 +140,7 @@ export const DialogEditGroupDetail = ({
               <TextField
                 name="email"
                 label="Email"
-                value={memberEdit.email}
+                value={!memberEdit.email ? "" : memberEdit.email}
                 variant="standard"
                 InputProps={{
                   startAdornment: (
@@ -157,7 +157,7 @@ export const DialogEditGroupDetail = ({
                 name="createdDate"
                 label="Ngày vào nhóm học tập"
                 type="datetime-local"
-                value={memberEdit.createdDate}
+                value={!memberEdit.createdDate ? "" : memberEdit.createdDate}
                 variant="standard"
                 InputProps={{
                   startAdornment: (

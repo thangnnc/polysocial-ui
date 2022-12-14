@@ -91,7 +91,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
               <TextField
                 name="groupId"
                 label="Mã nhóm học tập"
-                value={groupEdit.groupId === null ? "" : groupEdit.groupId}
+                value={!groupEdit.groupId ? "" : groupEdit.groupId}
                 variant="standard"
                 placeholder="Nhập mã nhóm học tập"
                 InputProps={{
@@ -110,7 +110,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
               <TextField
                 name="name"
                 label="Tên nhóm học tập"
-                value={groupEdit.name === null ? "" : groupEdit.name}
+                value={!groupEdit.name ? "" : groupEdit.name}
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, name: e.target.value })
                 }
@@ -131,9 +131,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 name="totalMember"
                 label="Số lượng thành viên"
                 placeholder="Nhập số lượng thành viên "
-                value={
-                  groupEdit.totalMember === null ? "" : groupEdit.totalMember
-                }
+                value={!groupEdit.totalMember ? "" : groupEdit.totalMember}
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, totalMember: e.target.value })
                 }
@@ -153,9 +151,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 name="description"
                 label="Mô tả nhóm học tập"
                 placeholder="Nhập mô tả nhóm học tập"
-                value={
-                  groupEdit.description === null ? "" : groupEdit.description
-                }
+                value={!groupEdit.description ? "" : groupEdit.description}
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, description: e.target.value })
                 }
@@ -176,9 +172,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 label="Ngày taọ nhóm học tập"
                 type="datetime-local"
                 placeholder="Chọn ngày tạo nhóm học tập"
-                value={
-                  groupEdit.createdDate === null ? "" : groupEdit.createdDate
-                }
+                value={!groupEdit.createdDate ? "" : groupEdit.createdDate}
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, createdDate: e.target.value })
                 }

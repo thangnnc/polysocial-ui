@@ -88,7 +88,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 name="fullName"
                 label="Họ Và Tên"
                 placeholder="Nhập Họ Và Tên"
-                value={user.fullName === null ? "" : user.fullName}
+                value={!user.fullName ? "" : user.fullName}
                 onChange={(e) => {
                   setUserEdit({ ...userEdit, fullName: e.target.value });
                 }}
@@ -107,7 +107,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
               <TextField
                 name="email"
                 label="Email"
-                value={user.email === null ? "" : user.email}
+                value={!user.email ? "" : user.email}
                 onChange={(e) => {
                   setUserEdit({ ...userEdit, email: e.target.value });
                 }}
@@ -128,7 +128,7 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                 name="studentCode"
                 label="Mã Sinh Viên"
                 placeholder="Nhập Mã Sinh Viên"
-                value={user.studentCode === null ? "" : user.studentCode}
+                value={!user.studentCode ? "" : user.studentCode}
                 onChange={(e) => {
                   setUserEdit({ ...userEdit, studentCode: e.target.value });
                 }}

@@ -26,7 +26,7 @@ import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
 import BasicSpeedDial from "./components/BasicSpeedDial";
 import { DialogEditUser } from "./components/DialogEditUser";
 import Axios from "./../../utils/Axios/index";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -102,9 +102,9 @@ export default function ManagementUser() {
     const response = await Axios.Accounts.getAllUser();
     if (response) {
       setUsers(response);
-      toast.success("Lấy dữ liệu thành công");
+      // toast.success("Lấy dữ liệu thành công");
     } else {
-      toast.error("Lấy dữ liệu thất bại");
+      // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
