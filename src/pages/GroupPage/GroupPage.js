@@ -6,6 +6,7 @@ import SearchBar from "./components/SearchBar";
 import ListGroupJoin from "./components/ListGroupJoin";
 import ListGroupTeacherJoin from "./components/ListGroupTeacherJoin";
 import Axios from "./../../utils/Axios/index";
+import useLogin from "../../utils/Login/useLogin";
 // import { toast } from "react-toastify";
 
 const APP_BAR_MOBILE = 64;
@@ -32,6 +33,7 @@ const BoxNav = styled("div")(({ theme }) => ({
 }));
 
 export default function GroupPage() {
+  const { account } = useLogin();
   const [groups, setGroups] = useState([]);
   const [groupsTeacher, setGroupsTeacher] = useState([]);
 
@@ -77,30 +79,34 @@ export default function GroupPage() {
 
           <SearchBar />
 
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Nhóm do bạn quản lý
-            </Typography>
-            <Box sx={{ height: "570px", overflowY: "scroll" }}>
-              {groupsTeacher.map((groupTeacher) => (
-                <ListGroupTeacherJoin
-                  key={groupTeacher.groupId}
-                  group={groupTeacher}
-                />
-              ))}
+          {account.role === "Giảng viên" && (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                Nhóm do bạn quản lý
+              </Typography>
+              <Box sx={{ height: "570px", overflowY: "scroll" }}>
+                {groupsTeacher.map((groupTeacher) => (
+                  <ListGroupTeacherJoin
+                    key={groupTeacher.groupId}
+                    group={groupTeacher}
+                  />
+                ))}
+              </Box>
             </Box>
-          </Box>
+          )}
 
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Nhóm do bạn đã tham gia
-            </Typography>
-            <Box sx={{ height: "570px", overflowY: "scroll" }}>
-              {groups.map((group) => (
-                <ListGroupJoin key={group.groupId} group={group} />
-              ))}
+          {account.role === "Sinh viên" && (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                Nhóm do bạn đã tham gia
+              </Typography>
+              <Box sx={{ height: "570px", overflowY: "scroll" }}>
+                {groups.map((group) => (
+                  <ListGroupJoin key={group.groupId} group={group} />
+                ))}
+              </Box>
             </Box>
-          </Box>
+          )}
         </BoxNav>
         <Box sx={{ width: "78%", mt: 10 }}>
           <h1 style={{ padding: 20 }}>Group Page</h1>
