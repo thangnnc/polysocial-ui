@@ -19,6 +19,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import CommentBox from "./CommentBox";
 import Axios from "./../../utils/Axios/index";
+import useLogin from "../../utils/Login/useLogin";
 
 const AvatarCmt = styled(Avatar)(() => ({
   border: "2px solid #ff7f30",
@@ -36,6 +37,13 @@ const ButtonNormal = styled(Button)(() => ({
 
 export default function Post({ posts, onChange }) {
   const [isShowCmt, setShowCmt] = useState(false);
+  const { account, socket } = useLogin();
+  const statusLike = false;
+  // const [statusLike, setStatusLike] = useState(false);
+
+  const mySetStatusLike = new Set();
+
+  // const [statusLike, setStatusLike] = useState(false);
 
   const handleShowCmt = () => {
     setShowCmt(true);
@@ -48,6 +56,7 @@ export default function Post({ posts, onChange }) {
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
       onChange();
+      socket.emit("Client-request-like");
     }
   };
 
@@ -67,6 +76,7 @@ export default function Post({ posts, onChange }) {
             countComment,
             listUrl,
             listComment,
+            listLike,
           },
           index
         ) => (
@@ -154,7 +164,11 @@ export default function Post({ posts, onChange }) {
                   borderRight: 0,
                 }}
               >
-                {true ? (
+                {listLike.map((element, index) => {
+                  mySetStatusLike.add(element.studentCode)
+                })}
+
+                {(mySetStatusLike.has(account.studentCode)) ? (
                   <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích

@@ -3,8 +3,11 @@ import CommentLoading from "./CommentLoading";
 import CommentLine from "./CommentLine";
 import Axios from "./../../utils/Axios/index";
 import { useState } from "react";
+import useLogin from "../../utils/Login/useLogin";
 
 export default function CommentBox({ show, comments, postId, onChange }) {
+  const { account, socket } = useLogin();
+
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
     content: "",
@@ -14,6 +17,8 @@ export default function CommentBox({ show, comments, postId, onChange }) {
     const response = await Axios.Comments.createComment(itemInputComment);
     if (response.status === 200) {
       onChange();
+      socket.emit("Client-request-comment");
+
     }
   };
   return (

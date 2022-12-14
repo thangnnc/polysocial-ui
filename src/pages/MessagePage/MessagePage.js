@@ -141,6 +141,7 @@ export default function MessagePage() {
     });
   }, [messageList]);
 
+
   const getMessage = async () => {
     try {
       setRoom(roomId);
@@ -308,15 +309,14 @@ export default function MessagePage() {
           onScroll={onScroll}
           ref={listInnerRef}
         >
-
               {messageList.map((value, key) => {
                 return (
                   <div ref={messageRef}>
                     <AlertMessage
                     message={value.statusCreated?'':value.content}
                   />
-                    {/* <TimeLineMessage message={"11:00"} />
-                  <MyMessage message={"Hi! Em ngon vậy"} /> */}
+                    {/* <TimeLineMessage message={"11:00"} /> */}
+                  {/* <MyMessage message={"Hi! Em ngon vậy"} /> */}
                     <MyMessage
                       message={
                         value.statusCreated?(value.studentCode === account.studentCode
@@ -351,6 +351,7 @@ export default function MessagePage() {
                     {/* <MyMessage message={"Méo :V"} showAvatar /> */}
                     {/* <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} /> */}
                   </div>
+
                 );
               })}
 
