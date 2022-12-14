@@ -34,7 +34,7 @@ class Axios {
         headers: {
           ...headers,
           ...Config.HEADERS,
-          ...{ "Content-Type": "multipart/form-data" },
+          ...{ "Content-Type": " multipart/form-data" },
         },
       })
       .catch((e) => {
