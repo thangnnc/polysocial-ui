@@ -11,6 +11,7 @@ import Friends from "./User/Friends";
 // import Message from "./User/Message";
 import Exersice from "./User/Exercise";
 import Posts from "./User/Posts";
+import Notifications from "./User/Notifications";
 
 const Axios = {
   Accounts,
@@ -23,6 +24,7 @@ const Axios = {
   Exersice,
   Messages,
   Posts,
+  Notifications,
 };
 
 export default Axios;

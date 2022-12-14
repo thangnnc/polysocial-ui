@@ -46,6 +46,7 @@ export default function Header({ onOpenNav }) {
   const [groupList, setGroupList] = useState([]);
   const [count, setCount] = useState(0);
   const [online, setOnline] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     socket.emit("client-user-connect", account);
@@ -67,7 +68,6 @@ export default function Header({ onOpenNav }) {
       };
       const fetDataDESC = async () => {
         const response = await Asios.Messages.getNameGroupDESC(data1);
-        console.log("element--> ", response);
 
         const arr = [];
         for (let index = 0; index < response.data.length; index++) {
@@ -232,71 +232,14 @@ export default function Header({ onOpenNav }) {
     setGroupList(listContent);
   };
 
-  const notifications = [
-    {
-      title: "Brunch this week?",
-      content:
-        "I'll be in the neighbourhood this week. Let's grab a bite to eat",
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: false,
-      dateTime: "12/05/2022, 4:04:33 AM",
-    },
-    {
-      title: "Birthday Gift",
-      content: `Do you have a suggestion for a good present for John on his work
-        anniversary. I am really confused & would love your thoughts on it.`,
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: false,
-      dateTime: "12/04/2022, 4:04:33 AM",
-    },
-    {
-      title: "Demo",
-      content: `Do you have a suggestion for a good present for John on his work
-        anniversary. I am really confused & would love your thoughts on it.`,
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: true,
-      dateTime: "12/03/2022, 4:04:33 AM",
-    },
-    {
-      title: "Birthday Gift",
-      content: `Do you have a suggestion for a good present for John on his work
-        anniversary. I am really confused & would love your thoughts on it.`,
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: false,
-      dateTime: "12/02/2022, 4:04:33 AM",
-    },
-    {
-      title: "Demo",
-      content: `Do you have a suggestion for a good present for John on his work
-        anniversary. I am really confused & would love your thoughts on it.`,
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: true,
-      dateTime: "12/01/2022, 4:04:33 AM",
-    },
-    {
-      title: "Birthday Gift",
-      content: `Do you have a suggestion for a good present for John on his work
-        anniversary. I am really confused & would love your thoughts on it.`,
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: false,
-      dateTime: "11/05/2022, 4:04:33 AM",
-    },
-    {
-      title: "Demo",
-      content: `Do you have a suggestion for a good present for John on his work
-        anniversary. I am really confused & would love your thoughts on it.`,
-      avatar:
-        "https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-anime-nam-toc-do.jpg",
-      isSeen: true,
-      dateTime: "11/05/2022, 4:04:33 AM",
-    },
-  ];
+  useEffect(() => {
+    getAllNotification();
+  }, []);
+
+  const getAllNotification = async () => {
+    const response = await Asios.Notifications.getAllNotifications();
+    setNotifications(response);
+  };
 
   return (
     <StyledRoot>

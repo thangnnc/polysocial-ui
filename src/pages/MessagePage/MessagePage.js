@@ -191,13 +191,11 @@ export default function MessagePage() {
             } else {
               listContentObject.content = element.content;
             }
-            // console.log('runnn')
           } else {
             listContentObject.content = element.content;
           }
           listContent.push(listContentObject);
         }
-        console.log("listContent", listContent);
 
         setMessageList(listContent.reverse());
       } catch (error) {}

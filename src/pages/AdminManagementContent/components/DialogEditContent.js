@@ -53,7 +53,6 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
       groupId: contentEdit.groupId,
       files: contentEdit.listUrl,
     };
-    console.log(data);
     const response = await Axios.Contents.updatePost(data);
     if (response) {
       toast.success("Cập nhật bài viết thành công");

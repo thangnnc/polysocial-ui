@@ -30,9 +30,11 @@ const scrollbar = {
 
 export default function NotificationPopover({ notifications }) {
   const [open, setOpen] = useState(false);
+  const [notification, setNotification] = useState(notifications.length);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
+    setNotification(0);
   };
 
   const handleClose = () => {
@@ -42,7 +44,7 @@ export default function NotificationPopover({ notifications }) {
   return (
     <>
       <Badge
-        badgeContent={4}
+        badgeContent={notification}
         color="error"
         overlap="circular"
         onClick={handleOpen}
@@ -79,14 +81,18 @@ export default function NotificationPopover({ notifications }) {
             alignItems: "center",
             bgcolor: "#ffffff",
             borderBottom: "1px solid #ed6c02",
-            height: 40
+            height: 40,
           }}
         >
           <ListSubheader
             component="div"
             id="nested-list-subheader"
-            sx={{ fontWeight: 700, fontSize: 18,
-              height: 40, lineHeight: "40px" }}
+            sx={{
+              fontWeight: 700,
+              fontSize: 18,
+              height: 40,
+              lineHeight: "40px",
+            }}
           >
             Thông báo
           </ListSubheader>
@@ -95,8 +101,14 @@ export default function NotificationPopover({ notifications }) {
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
-        <List disablePadding
-          sx={{ width: 500, maxHeight: "calc(52vh - 41px)", overflow: "auto", ...scrollbar }}
+        <List
+          disablePadding
+          sx={{
+            width: 500,
+            maxHeight: "calc(52vh - 41px)",
+            overflow: "auto",
+            ...scrollbar,
+          }}
         >
           <Divider />
           {notifications.map((notification, index) => (

@@ -39,7 +39,6 @@ export default function SearchBar() {
 
   const getAllData = async (keyword) => {
     const response = await Axios.Groups.findGroupByKeyWord(keyword);
-    console.log(response);
     if (response) {
       setGroups(response);
       // toast.success("Lấy dữ liệu thành công");

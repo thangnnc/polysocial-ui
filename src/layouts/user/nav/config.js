@@ -20,7 +20,6 @@ export const navUserConfig = [
     title: "Lời Mời Kết Bạn",
     path: "/friends-requests",
     icon: icon("fluent-mdl2:add-friend"),
-    notiCount: 4
   },
   {
     title: "Nhóm Của Tôi",
@@ -31,7 +30,7 @@ export const navUserConfig = [
     title: "Bài Tập",
     path: "/exercise",
     icon: icon("ph:exam-fill"),
-    notiCount: 2
+    notiCount: 2,
   },
 ];
 
