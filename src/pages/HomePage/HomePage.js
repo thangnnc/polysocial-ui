@@ -29,7 +29,7 @@ export default function HomePage() {
         <title> Trang chủ | Poly Social</title>
       </Helmet>
 
-      <UpPost />
+      <UpPost onChange={handleChange} />
 
       <Post posts={listPostDTO} onChange={handleChange} />
     </>

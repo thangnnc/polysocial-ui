@@ -1,10 +1,10 @@
-import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Box, Card, CardContent, TextField } from "@mui/material";
 import { useState } from "react";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../utils/Login/useLogin";
 import DialogUpPost from "./DialogUpPost";
 
-export default function UpPost() {
+export default function UpPost({ onChange }) {
   const { account } = useLogin();
   const [open, setOpen] = useState(false);
 
@@ -44,7 +44,7 @@ export default function UpPost() {
           </Box>
         </CardContent>
       </Card>
-      <DialogUpPost open={open} handleClose={handleClose} />
+      <DialogUpPost open={open} handleClose={handleClose} onChange={onChange} />
     </Box>
   );
 }

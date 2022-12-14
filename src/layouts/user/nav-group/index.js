@@ -96,7 +96,7 @@ export default function NavGroup() {
             objectFit: "cover",
           }}
           src={
-            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
+            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670978828/groups-default-cover-photo-2x_igy9tq.png"
           }
           alt="avatar group"
         />
