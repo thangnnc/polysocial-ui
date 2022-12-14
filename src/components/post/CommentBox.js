@@ -19,11 +19,11 @@ export default function CommentBox({ show, comments, postId, onChange }) {
   return (
     <Box sx={{ pt: 2 }} hidden={!show}>
       <List disablePadding sx={{ p: 0 }}>
-        <CommentLoading />
+        {/* <CommentLoading />
 
         <Button sx={{ color: "#808080", py: 0, px: 1, mb: 1, minWidth: 0 }}>
           Xem thêm bình luận
-        </Button>
+        </Button> */}
         {comments?.map((comment, index) => (
           <CommentLine key={index} comment={comment} />
         ))}
