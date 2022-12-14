@@ -20,7 +20,8 @@ export default function UpPost({ onChange }) {
     <Box sx={{ p: 0, display: "flex", justifyContent: "center", mb: 4 }}>
       <Card
         sx={{
-          width: "80%",
+          width: "68%",
+          ml: "-0.85%",
         }}
       >
         <CardContent sx={{ p: 3, display: "flex", alignItems: "center" }}>
