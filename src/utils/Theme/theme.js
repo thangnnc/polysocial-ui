@@ -1,50 +1,50 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({      
+const theme = createTheme({
   typography: {
     button: {
-      textTransform: 'none',
-      backgroundColor: '#'
-    }
+      textTransform: "none",
+      backgroundColor: "#",
+    },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: ({ ownerState }) => ({
-          ...((ownerState.className  === 'btn-orange' && {
-            backgroundColor: '#f97c2e',
-            '&:hover': {
-              backgroundColor: '#ff6200',
+          ...((ownerState.className === "btn-orange" && {
+            backgroundColor: "#f97c2e",
+            "&:hover": {
+              backgroundColor: "#ff6200",
             },
-          })
-          || (ownerState.className  === 'btn-red' && {
-            backgroundColor: '#ff5f5f',
-            '&:hover': {
-              backgroundColor: '#ff4848',
-            },
-          })
-          || (ownerState.className  === 'btn-secondary' && {
-            backgroundColor: '#818181',
-            '&:hover': {
-              backgroundColor: '#696969',
-            },
-          })),
+          }) ||
+            (ownerState.className === "btn-red" && {
+              backgroundColor: "#ff5f5f",
+              "&:hover": {
+                backgroundColor: "#ff4848",
+              },
+            }) ||
+            (ownerState.className === "btn-secondary" && {
+              backgroundColor: "#818181",
+              "&:hover": {
+                backgroundColor: "#696969",
+              },
+            })),
         }),
       },
     },
     MuiTextField: {
       styleOverrides: {
         root: ({ ownerState }) => ({
-          ...((ownerState && {
-            '&:hover': {
+          ...(ownerState && {
+            "&:hover": {
               "& .MuiInputLabel-root": {
-                  color: "#f97c2e",
+                color: "#f97c2e",
               },
               "& .MuiInputBase-root": {
                 "& > fieldset": {
                   borderColor: "#f97c2e",
-                }
-              }
+                },
+              },
             },
             "& .Mui-focused": {
               "&.MuiInputLabel-root": {
@@ -53,24 +53,24 @@ const theme = createTheme({
               "&.MuiInputBase-root": {
                 "& > fieldset": {
                   borderColor: "#f97c2e !important",
-                }
-              }
+                },
+              },
             },
-            "&.rounded .MuiInputBase-root":{
+            "&.rounded .MuiInputBase-root": {
               borderRadius: 50,
-              paddingRight: 5
+              paddingRight: 5,
             },
             "&.input-24 input": {
-              fontSize: "22px"
-            }
-          })
-        )})
+              fontSize: "18px",
+            },
+          }),
+        }),
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: '12px'
+          borderRadius: "12px",
         },
       },
     },
@@ -82,7 +82,7 @@ const theme = createTheme({
           },
           "&:hover": {
             borderColor: "#f97c2e",
-          }
+          },
         },
       },
     },
@@ -92,11 +92,11 @@ const theme = createTheme({
           "&.Mui-selected": {
             borderBottom: "2px solid #f97c2e",
             color: "#f97c2e",
-            zIndex: 9999
-          }
+            zIndex: 9999,
+          },
         },
       },
-    }
+    },
     // MuiAutocomplete: {
     //   styleOverrides: {
     //     root: {
@@ -106,7 +106,7 @@ const theme = createTheme({
     //     },
     //   },
     // }
-  }
+  },
 });
 
 export default theme;

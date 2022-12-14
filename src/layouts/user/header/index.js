@@ -110,7 +110,7 @@ export default function Header({ onOpenNav }) {
           const element = arr[index];
 
           listContentObject.avatar = element.avatar;
-          listContentObject.lastMessage =element.lastMessage;
+          listContentObject.lastMessage = element.lastMessage;
           listContentObject.lastUpDateDate = element.lastUpDateDate;
           listContentObject.listContacts = element.listContacts;
 
@@ -231,7 +231,6 @@ export default function Header({ onOpenNav }) {
     }
     setGroupList(listContent);
   };
-
 
   const notifications = [
     {

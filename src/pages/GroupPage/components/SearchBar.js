@@ -1,8 +1,11 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import Axios from "./../../../utils/Axios/index";
+import ListGroupSearch from "./ListGroupSearch";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -28,6 +31,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchBar() {
+  const [groups, setGroups] = useState([]);
+
+  useEffect(() => {
+    getAllData();
+  }, []);
+
+  const getAllData = async (keyword) => {
+    const response = await Axios.Groups.findGroupByKeyWord(keyword);
+    console.log(response);
+    if (response) {
+      setGroups(response);
+      // toast.success("Lấy dữ liệu thành công");
+    } else {
+      // toast.error("Lấy dữ liệu thất bại");
+    }
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Search>
@@ -37,8 +57,22 @@ export default function SearchBar() {
         <StyledInputBase
           placeholder="Tìm kiếm nhóm học tập..."
           inputProps={{ "aria-label": "search" }}
+          onChange={(e) => {
+            getAllData(e.target.value);
+          }}
         />
       </Search>
+
+      <Box sx={{ mt: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          Nhóm do bạn tìm kiếm
+        </Typography>
+        <Box sx={{ height: "200px", overflowY: "scroll" }}>
+          {groups.map((group) => (
+            <ListGroupSearch key={group.groupId} group={group} />
+          ))}
+        </Box>
+      </Box>
     </Box>
   );
 }

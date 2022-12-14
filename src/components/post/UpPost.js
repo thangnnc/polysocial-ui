@@ -17,7 +17,14 @@ export default function UpPost({ onChange }) {
   };
 
   return (
-    <Box sx={{ p: 0, display: "flex", justifyContent: "center", mb: 4 }}>
+    <Box
+      sx={{
+        p: 0,
+        display: "flex",
+        justifyContent: "center",
+        mb: 4,
+      }}
+    >
       <Card
         sx={{
           width: "68%",
@@ -25,7 +32,7 @@ export default function UpPost({ onChange }) {
         }}
       >
         <CardContent sx={{ p: 3, display: "flex", alignItems: "center" }}>
-          <Box sx={{ display: "flex", alignItems: "flex-end", width: "100%" }}>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <AvatarStatus
               src={account.avatar}
               alt={account.fullName}

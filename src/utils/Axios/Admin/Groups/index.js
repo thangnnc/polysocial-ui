@@ -63,7 +63,7 @@ class Groups {
     Axios.get(`/group/api/get-all/teacher`);
 
   //API find group by keywork
-  static findGroup = async (keyword) =>
+  static findGroupByKeyWord = async (keyword) =>
     Axios.get(`/group/api/find-group?keywork=${keyword}`);
 }
 
