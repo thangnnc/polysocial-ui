@@ -13,7 +13,6 @@ export default function HomePage() {
 
   const fetchData = async () => {
     const response = await Axios.Posts.getAllByAllPost(0, 100);
-    console.log(response);
     if (response) {
       setListPost(response.listPostDTO);
     }
