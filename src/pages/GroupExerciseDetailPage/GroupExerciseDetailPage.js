@@ -283,112 +283,118 @@ export default function GroupExerciseDetailPage() {
             </React.Fragment>
           )}
         </Card>
-
-        <Typography variant="h4" sx={{ mb: 5, mt: 5 }}>
-          Danh sách bài tập đã nộp
-        </Typography>
-        {data?.map((item, index) => (
-          <Card key={index} sx={{ mb: 3 }}>
-            <CardHeader
-              avatar={
-                <AvatarStatus
-                  alt={item.fullName}
-                  src={item.avatar}
-                  isActive={true}
-                  sx={{ width: 54, height: 54 }}
+        {account.role !== "Sinh viên" && (
+          <>
+            <Typography variant="h4" sx={{ mb: 5, mt: 5 }}>
+              Danh sách bài tập đã nộp
+            </Typography>
+            {data?.map((item, index) => (
+              <Card key={index} sx={{ mb: 3 }}>
+                <CardHeader
+                  avatar={
+                    <AvatarStatus
+                      alt={item.fullName}
+                      src={item.avatar}
+                      isActive={true}
+                      sx={{ width: 54, height: 54 }}
+                    />
+                  }
+                  action={
+                    <Box>
+                      <TextField
+                        id="file-input"
+                        type="file"
+                        name="file"
+                        onChange={changeHandler}
+                        sx={styleInputFullField}
+                      />
+                      <label
+                        htmlFor="file-input"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          component="span"
+                          sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
+                        >
+                          {item.isSubmit ? "Chọn tệp" : "Đã nộp"}
+                        </Button>
+                      </label>
+                    </Box>
+                  }
+                  title={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: "bold" }}
+                      noWrap
+                      fontSize={16}
+                    >
+                      {item.fullName} đã nộp bài tập: {item.content}
+                    </Typography>
+                  }
+                  subheader={
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                      noWrap
+                    >
+                      {item.endDate}
+                    </Typography>
+                  }
                 />
-              }
-              action={
-                <Box>
-                  <TextField
-                    id="file-input"
-                    type="file"
-                    name="file"
-                    onChange={changeHandler}
-                    sx={styleInputFullField}
-                  />
-                  <label
-                    htmlFor="file-input"
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
+                {!item.isSubmit ? (
+                  <CardContent>
+                    <Typography>Ngày nộp bài: {item.createdDate}</Typography>
+                    <Typography>Đường dẫn file nộp bài: {item?.url}</Typography>
+                    <TextField
+                      type="number"
+                      name="mark"
+                      label="Điểm bài tập"
+                      placeholder="Nhập điểm bài tập"
+                      value={item.mark === null ? 0 : item.mark}
+                      onChange={(e) => setCreateMark(e.target.value)}
+                      variant="standard"
+                      InputProps={{
+                        inputProps: {
+                          max: 10,
+                          min: 0,
+                          fontSize: 18,
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Iconify icon={"ph:bookmarks-bold"} />
+                          </InputAdornment>
+                        ),
+                      }}
+                      autoComplete="none"
+                      sx={styleInputField}
+                      InputLabelProps={{ style: { fontSize: 18 } }}
+                    />
                     <Button
                       variant="contained"
-                      color="primary"
-                      component="span"
-                      sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
+                      sx={{
+                        background: "#ff7b29",
+                        width: "100%",
+                        mt: 3,
+                        borderRadius: 2,
+                      }}
+                      onClick={() =>
+                        submitMarkHandler(item.userId, item.taskId)
+                      }
                     >
-                      {item.isSubmit ? "Chọn tệp" : "Đã nộp"}
+                      Chấm điểm
                     </Button>
-                  </label>
-                </Box>
-              }
-              title={
-                <Typography
-                  variant="subtitle2"
-                  sx={{ fontWeight: "bold" }}
-                  noWrap
-                  fontSize={16}
-                >
-                  {item.fullName} đã nộp bài tập: {item.content}
-                </Typography>
-              }
-              subheader={
-                <Typography
-                  variant="body2"
-                  sx={{ color: "text.secondary" }}
-                  noWrap
-                >
-                  {item.endDate}
-                </Typography>
-              }
-            />
-            {!item.isSubmit ? (
-              <CardContent>
-                <Typography>Ngày nộp bài: {item.createdDate}</Typography>
-                <Typography>Đường dẫn file nộp bài: {item?.url}</Typography>
-                <TextField
-                  type="number"
-                  name="mark"
-                  label="Điểm bài tập"
-                  placeholder="Nhập điểm bài tập"
-                  value={item.mark === null ? 0 : item.mark}
-                  onChange={(e) => setCreateMark(e.target.value)}
-                  variant="standard"
-                  InputProps={{
-                    inputProps: {
-                      max: 10,
-                      min: 0,
-                      fontSize: 18,
-                    },
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Iconify icon={"ph:bookmarks-bold"} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  autoComplete="none"
-                  sx={styleInputField}
-                  InputLabelProps={{ style: { fontSize: 18 } }}
-                />
-                <Button
-                  variant="contained"
-                  sx={{
-                    background: "#ff7b29",
-                    width: "100%",
-                    mt: 3,
-                    borderRadius: 2,
-                  }}
-                  onClick={() => submitMarkHandler(item.userId, item.taskId)}
-                >
-                  Chấm điểm
-                </Button>
-              </CardContent>
-            ) : (
-              ""
-            )}
-          </Card>
-        ))}
+                  </CardContent>
+                ) : (
+                  ""
+                )}
+              </Card>
+            ))}
+          </>
+        )}
       </Box>
+
       <Box sx={{ width: "30%", p: 5 }}>
         <Card sx={{ p: 3 }}>
           <Typography

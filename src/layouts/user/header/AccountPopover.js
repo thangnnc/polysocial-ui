@@ -17,25 +17,31 @@ import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  {
-    label: "Quản lý",
-    path: "/admin",
-    icon: "ci:home-fill",
-  },
-  {
-    label: "Thông tin tài khoản",
-    path: "/profile",
-    icon: "eva:person-fill",
-  },
-];
-
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const { account, logout } = useLogin();
   const navigate = useNavigate();
+
+  let MENU_OPTIONS = [
+    {
+      label: "Thông tin tài khoản",
+      path: "/profile",
+      icon: "eva:person-fill",
+    },
+  ];
+
+  if (account.role === "Đào tạo") {
+    MENU_OPTIONS = [
+      {
+        label: "Quản lý",
+        path: "/admin",
+        icon: "ci:home-fill",
+      },
+      ...MENU_OPTIONS,
+    ];
+  }
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);

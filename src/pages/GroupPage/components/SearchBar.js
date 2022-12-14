@@ -31,6 +31,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchBar() {
+  const [search, setSearch] = useState([]);
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function SearchBar() {
   }, []);
 
   const getAllData = async (keyword) => {
+    setSearch(keyword);
     const response = await Axios.Groups.findGroupByKeyWord(keyword);
     if (response) {
       setGroups(response);
@@ -54,6 +56,7 @@ export default function SearchBar() {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
+          value={search}
           placeholder="Tìm kiếm nhóm học tập..."
           inputProps={{ "aria-label": "search" }}
           onChange={(e) => {
@@ -62,7 +65,7 @@ export default function SearchBar() {
         />
       </Search>
 
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3 }} hidden={!search}>
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           Nhóm do bạn tìm kiếm
         </Typography>
