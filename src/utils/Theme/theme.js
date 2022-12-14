@@ -59,6 +59,9 @@ const theme = createTheme({
             "&.rounded .MuiInputBase-root":{
               borderRadius: 50,
               paddingRight: 5
+            },
+            "&.input-24 input": {
+              fontSize: "22px"
             }
           })
         )})
