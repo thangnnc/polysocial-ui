@@ -73,6 +73,8 @@ export default function Header({ onOpenNav }) {
       };
       const fetDataDESC = async () => {
         const response = await Asios.Messages.getNameGroupDESC(data1);
+        console.log("element--> ", response);
+
         const arr = [];
         for (let index = 0; index < response.data.length; index++) {
           const listNameGr = {};
@@ -113,8 +115,9 @@ export default function Header({ onOpenNav }) {
         for (let index = 0; index < arr.length; index++) {
           const listContentObject = {};
           const element = arr[index];
+
           listContentObject.avatar = element.avatar;
-          listContentObject.lastMessage = fromBinary(element.lastMessage);
+          listContentObject.lastMessage =element.lastMessage;
           listContentObject.lastUpDateDate = element.lastUpDateDate;
           listContentObject.listContacts = element.listContacts;
 
@@ -147,7 +150,7 @@ export default function Header({ onOpenNav }) {
           }
         }
 
-        // console.log("arrr----", listContent);
+        console.log("arrr----", listContent);
         // const listContentIsActive = [];
         setGroupList(listContent);
       };
@@ -212,7 +215,7 @@ export default function Header({ onOpenNav }) {
       const listContentObject = {};
       const element = arr[index];
       listContentObject.avatar = element.avatar;
-      listContentObject.lastMessage = fromBinary(element.lastMessage);
+      listContentObject.lastMessage = element.lastMessage;
       listContentObject.lastUpDateDate = element.lastUpDateDate;
       listContentObject.listContacts = element.listContacts;
 
@@ -251,14 +254,6 @@ export default function Header({ onOpenNav }) {
     setGroupList(listContent);
   };
 
-  function fromBinary(encoded) {
-    const binary = atob(encoded);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < bytes.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-    return String.fromCharCode(...new Uint16Array(bytes.buffer));
-  }
 
   const notifications = [
     {
