@@ -22,7 +22,7 @@ export default function CommentBox({ show, comments, postId, onChange }) {
     }
   };
   return (
-    <Box sx={{ pt: 2 }} hidden={!show}>
+    <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
       <List disablePadding sx={{ p: 0 }}>
         {/* <CommentLoading />
 
@@ -32,6 +32,7 @@ export default function CommentBox({ show, comments, postId, onChange }) {
         {comments?.map((comment, index) => (
           <CommentLine key={index} comment={comment} />
         ))}
+        {comments?.size == 0 && "Chưa có bình luận!"}
       </List>
 
       <TextField

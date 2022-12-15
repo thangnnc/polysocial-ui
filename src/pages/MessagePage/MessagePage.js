@@ -253,7 +253,7 @@ export default function MessagePage() {
       listcontactId: listcontactId,
     };
     const response = await Asios.Messages.createMessage(data);
-    if (response) {
+    if (response) {     
       // await getNameGroupDESC();
     }
   };

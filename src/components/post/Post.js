@@ -38,10 +38,13 @@ const ButtonNormal = styled(Button)(() => ({
 export default function Post({ posts, onChange }) {
   const [isShowCmt, setShowCmt] = useState(false);
   const { account, socket } = useLogin();
+  // const [isLike, setIsLike] = useState(false);
+
   const statusLike = false;
   // const [statusLike, setStatusLike] = useState(false);
 
-  const mySetStatusLike = new Set();
+  // const mySetStatusLike = new Set();
+  const isLike=[];
 
   // const [statusLike, setStatusLike] = useState(false);
 
@@ -55,6 +58,11 @@ export default function Post({ posts, onChange }) {
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
+      // if (isLike) {
+      //   setIsLike(false);
+      // } else {
+      //   setIsLike(true);
+      // }
       onChange();
       socket.emit("Client-request-like");
     }
@@ -63,9 +71,9 @@ export default function Post({ posts, onChange }) {
   return (
     <List
       disablePadding
-      sx={{ p: 0, display: "block", justifyContent: "center", mb: 4, ml: 20 }}
+      sx={{ width: "100%", p: 0, display: "block", mb: 4, mx: "auto" }}
     >
-      {posts.map(
+      {posts?.map(
         (
           {
             user,
@@ -80,7 +88,7 @@ export default function Post({ posts, onChange }) {
           },
           index
         ) => (
-          <Card key={index} sx={{ width: "80%", my: 3 }}>
+          <Card key={index} sx={{ width: "80%", my: 3, mx: "auto" }}>
             <CardHeader
               avatar={
                 <AvatarCmt
@@ -132,7 +140,6 @@ export default function Post({ posts, onChange }) {
                 />
               ))}
             </List>
-
             <CardActions sx={{ display: "block", px: 2 }}>
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", pb: 1 }}
@@ -165,10 +172,13 @@ export default function Post({ posts, onChange }) {
                 }}
               >
                 {listLike.map((element, index) => {
-                  mySetStatusLike.add(element.studentCode)
+                    if(element.studentCode === account.studentCode){
+                      isLike.push(element.studentCode);
+                      isLike.push(element.postId);
+                    }
                 })}
 
-                {(mySetStatusLike.has(account.studentCode)) ? (
+                {isLike.includes(account.studentCode && postId) ? (
                   <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích

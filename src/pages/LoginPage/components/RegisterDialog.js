@@ -93,6 +93,7 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
     let formData = new FormData();
     data.email = newUser.email;
     data.fullName = newUser.fullName;
+    data.studentCode = getStudentCodeFromEmail(newUser.email);
     if (data.email.includes("@fpt.edu.vn")) {
       data.role = "Sinh viên";
     } else {

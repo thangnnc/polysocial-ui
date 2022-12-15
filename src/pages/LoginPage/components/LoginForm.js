@@ -24,6 +24,7 @@ import useValidator from "../../../utils/Validator";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import { RegisterDialog } from "../components/RegisterDialog";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -76,13 +77,10 @@ export const LoginForm = (props) => {
     if (response.status === 200 && response.data) {
       setAccount(response.data);
       window.location = "/home";
+      toast.success("Đăng nhập thành công!")
       return true;
     } else {
-      setForm(() => ({
-        status: "error",
-        message: response.data.message,
-      }));
-      setShowAlert(true);
+      toast.error("Sai tên đăng nhập hoặc tài khoản!")
     }
     setShowLoading(() => false);
   };
@@ -137,11 +135,7 @@ export const LoginForm = (props) => {
     if (
       !(data.email.includes("fpt.edu.vn") || data.email.includes("fe.fpt.vn"))
     ) {
-      setForm(() => ({
-        status: "warning",
-        message: "Please login with mail fpt!",
-      }));
-      setShowAlert(true);
+      toast.warning("Hãy đăng nhập vào tài khoản FPT!")
       return;
     }
     setUserInfo((user) => ({
