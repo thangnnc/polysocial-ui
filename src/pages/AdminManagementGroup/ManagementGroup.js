@@ -234,7 +234,14 @@ export default function ManagementGroup(props) {
 
         <Box sx={{ width: "100%", typography: "body1" }}>
           <Card sx={{ boxShadow: "0px 0px 2px #9e9e9e" }}>
-            <TabContext value={value}>
+            <TabContext
+              value={value}
+              TabIndicatorProps={{
+                style: {
+                  backgroundColor: "#f97c2e",
+                },
+              }}
+            >
               <TabList
                 sx={{ pt: 1, borderColor: "#252525" }}
                 onChange={handleChange}
@@ -607,7 +614,6 @@ export default function ManagementGroup(props) {
         groups={groups}
         setOpen={setIsCreateGroupExcel}
         propsSocket={props}
-        
       />
 
       <BasicSpeedDial

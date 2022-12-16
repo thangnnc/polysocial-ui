@@ -102,7 +102,11 @@ export default function SearchPopover(sockets) {
             }}
           >
             {searchList.map((searchData, index) => (
-              <FriendSearchBox key={index} searchData={searchData} sockets = {sockets}/>
+              <FriendSearchBox
+                key={index}
+                searchData={searchData}
+                sockets={sockets}
+              />
             ))}
           </CardContent>
         </Box>

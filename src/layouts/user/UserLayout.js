@@ -6,8 +6,6 @@ import Header from "./header";
 import { Box } from "@mui/material";
 import NavUser from "./nav";
 import NavFriend from "./nav-friends";
-import { useEffect, useState } from "react";
-import useLogin from "../../utils/Login/useLogin";
 // ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
@@ -52,20 +50,9 @@ const Main = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function UserLayout(props) {
-  // const { account } = useLogin();
-  // useEffect(()=>{
-  //   socket.on("server-send-listSocket", function (data) {
-  //     console.log("--danhsach--",data)
-  //   })
-  // })
-
-  // useEffect(() => {
-  //   socket.emit("client-user-connect", account);
-  // }, []);
-
   return (
     <StyledRoot>
-      <Header socket={props}/>
+      <Header socket={props} />
 
       <Box sx={{ display: "flex", width: "100%", pl: 8 }}>
         <BoxNav>
@@ -77,7 +64,7 @@ export default function UserLayout(props) {
         </Main>
 
         <BoxFriend>
-          <NavFriend socket={props}/>
+          <NavFriend socket={props} />
         </BoxFriend>
       </Box>
     </StyledRoot>

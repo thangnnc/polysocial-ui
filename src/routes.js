@@ -21,6 +21,7 @@ import GroupFeedbackPage from "./pages/GroupFeedbackPage/GroupFeedbackPage";
 import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerciseDetailPage";
 import AddFriendPage from "./pages/AddFriendPage/AddFriendPage";
 import GroupAddMemberPage from "./pages/GroupAddMemberPage/GroupAddMemberPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 // ----------------------------------------------------------------------
 
@@ -39,11 +40,19 @@ export default function Router(props) {
     },
     {
       path: "/",
-      element: !account ? <Navigate to="/login" /> : <UserLayout socket={props} />,
+      element: !account ? (
+        <Navigate to="/login" />
+      ) : (
+        <UserLayout socket={props} />
+      ),
       children: [
         { element: <Navigate to="/home" />, index: true },
         { path: "home", element: <HomePage /> },
-        { path: "message/room/:roomId", element: <MessagePage socket={props}/> },
+        {
+          path: "message/room/:roomId",
+          element: <MessagePage socket={props} />,
+        },
+        { path: "my-profile/:userId", element: <ProfilePage /> },
         { path: "friends-requests", element: <AddFriendPage socket={props} /> },
       ],
     },
