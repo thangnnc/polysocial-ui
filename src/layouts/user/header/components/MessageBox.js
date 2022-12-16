@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import AvatarStatus from "../../../../utils/AvatarStatus/AvatarStatus";
 import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMessage";
 
-export default function MessageBox({ roomChat }) {
+export default function MessageBox({ roomChat,listOnline }) {
+  // console.log('listOnline ABC->',listOnline)
+  
   const navigate = useNavigate();
   const {
     roomId,
@@ -12,26 +14,29 @@ export default function MessageBox({ roomChat }) {
     lastMessage,
     lastUpDateDate,
     isActive,
-    isSeen,
+    // isSeen,
     listContacts,
     status,
     totalMember,
   } = roomChat;
   const pathMessage = "/message/room/";
 
-  const handleOnClick = async (e, listContacts, avatar, name) => {
+  const handleOnClick = async (e, listContacts, avatar, name,isActive) => {
     let group = {};
     group.listContacts = listContacts;
     group.name = name;
     group.avatar = avatar;
+    group.isActive = isActive;
+    group.listOnline = listOnline
     navigate(pathMessage + roomId, {
       state: {
-        listContacts: listContacts,
-        avatar: avatar,
+        // listContacts: listContacts,
+        // avatar: avatar,
         group: group,
       },
     });
   };
+
 
   return (
     <ListItem
@@ -47,7 +52,7 @@ export default function MessageBox({ roomChat }) {
           : { borderBottom: "1px solid #ed6c02", py: 1.5 }
       }
       onClick={(e) => {
-        handleOnClick(e, listContacts, avatar, name);
+        handleOnClick(e, listContacts, avatar, name,!isActive);
       }}
     >
       <ListItemAvatar sx={{ mt: 0 }}>

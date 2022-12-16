@@ -27,8 +27,7 @@ export default function UpPost({ onChange }) {
     >
       <Card
         sx={{
-          width: "68%",
-          ml: "-0.85%",
+          width: "80%",
         }}
       >
         <CardContent sx={{ p: 3, display: "flex", alignItems: "center" }}>

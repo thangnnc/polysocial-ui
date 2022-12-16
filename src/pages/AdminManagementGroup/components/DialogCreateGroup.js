@@ -30,13 +30,16 @@ const styleAvatar = {
   mb: 4,
 };
 
-export const DialogCreateGroup = ({ open, setOpen, onChange }) => {
+export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
+  // const socket = propsSocket.socket.socket;
+  // console.log("prooo--->", propsSocket.socket.socket);
   const [groupCreate, setGroupCreate] = useState({});
 
   const createGroup = async () => {
     const response = await Axios.Groups.createGroup(groupCreate);
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
+
       setOpen(false);
       onChange();
     } else {

@@ -82,7 +82,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ManagementGroup() {
+export default function ManagementGroup(props) {
   const [open, setOpen] = useState(null);
 
   const [isEdit, setIsEdit] = useState(false);
@@ -598,6 +598,7 @@ export default function ManagementGroup() {
         onChange={onlDailogChange}
         open={isCreate}
         setOpen={setIsCreate}
+        propsSocket={props}
       />
 
       <DialogCreateGroupExcel
@@ -605,6 +606,8 @@ export default function ManagementGroup() {
         open={isCreateGroupExcel}
         groups={groups}
         setOpen={setIsCreateGroupExcel}
+        propsSocket={props}
+        
       />
 
       <BasicSpeedDial

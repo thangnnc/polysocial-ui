@@ -19,6 +19,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import CommentBox from "./CommentBox";
 import Axios from "./../../utils/Axios/index";
+import useLogin from "../../utils/Login/useLogin";
 
 const AvatarCmt = styled(Avatar)(() => ({
   border: "2px solid #ff7f30",
@@ -36,6 +37,16 @@ const ButtonNormal = styled(Button)(() => ({
 
 export default function Post({ posts, onChange }) {
   const [isShowCmt, setShowCmt] = useState(false);
+  const { account, socket } = useLogin();
+  // const [isLike, setIsLike] = useState(false);
+
+  const statusLike = false;
+  // const [statusLike, setStatusLike] = useState(false);
+
+  // const mySetStatusLike = new Set();
+  const isLike=[];
+
+  // const [statusLike, setStatusLike] = useState(false);
 
   const handleShowCmt = () => {
     setShowCmt(true);
@@ -47,16 +58,22 @@ export default function Post({ posts, onChange }) {
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
+      // if (isLike) {
+      //   setIsLike(false);
+      // } else {
+      //   setIsLike(true);
+      // }
       onChange();
+      socket.emit("Client-request-like");
     }
   };
 
   return (
     <List
       disablePadding
-      sx={{ p: 0, display: "block", justifyContent: "center", mb: 4, ml: 20 }}
+      sx={{ width: "100%", p: 0, display: "block", mb: 4, mx: "auto" }}
     >
-      {posts.map(
+      {posts?.map(
         (
           {
             user,
@@ -67,10 +84,11 @@ export default function Post({ posts, onChange }) {
             countComment,
             listUrl,
             listComment,
+            listLike,
           },
           index
         ) => (
-          <Card key={index} sx={{ width: "80%", my: 3 }}>
+          <Card key={index} sx={{ width: "80%", my: 3, mx: "auto" }}>
             <CardHeader
               avatar={
                 <AvatarCmt
@@ -122,7 +140,6 @@ export default function Post({ posts, onChange }) {
                 />
               ))}
             </List>
-
             <CardActions sx={{ display: "block", px: 2 }}>
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", pb: 1 }}
@@ -154,7 +171,14 @@ export default function Post({ posts, onChange }) {
                   borderRight: 0,
                 }}
               >
-                {true ? (
+                {listLike.map((element, index) => {
+                    if(element.studentCode === account.studentCode){
+                      isLike.push(element.studentCode);
+                      isLike.push(element.postId);
+                    }
+                })}
+
+                {isLike.includes(account.studentCode && postId) ? (
                   <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích

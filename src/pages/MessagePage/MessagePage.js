@@ -48,7 +48,7 @@ const friend = {
   isActive: true,
 };
 
-export default function MessagePage() {
+export default function MessagePage(props) {
   const { roomId } = useParams();
   const location = useLocation();
   const [room, setRoom] = useState([]);
@@ -58,42 +58,39 @@ export default function MessagePage() {
   const [prevPage, setPrevPage] = useState(1);
   const [lastList, setLastList] = useState(false);
   const [limit, setLimit] = useState(15);
-  const { account, socket } = useLogin();
+  const { account } = useLogin();
   const [messageList, setMessageList] = useState([{}]);
   const [listcontactId, setListcontactId] = useState([]);
   const [contactId, setcontactId] = useState([]);
-  const [listContacts, setListContacts] = useState([]);
+  // const [listContacts, setListContacts] = useState([]);
   const [message, setMessage] = useState("");
   const [userTyping, setUserTyping] = useState([]);
   const [accountTyping, setAccountTyping] = useState([]);
   const messageRef = useRef();
   const ref = useRef(null);
+  const socket = props.socket.socket;
+  const [online, setOnline] = useState([]);
 
   let group = location.state.group;
-
+  console.log("group->,  ", group);
+  // useEffect(() => {
+  //   const mySetOnline = new Set();
+  //   for (let index = 0; index < group.listContacts.length; index++) {
+  //     const element2 = group.listContacts[index];
+  //     mySetOnline.add(element2.at(4));
+  //   }
+  //   console.log("online-",mySetOnline)
+  //   setOnline(mySetOnline);
+  // }, []);
+  useEffect(() => {
+    socket.on("server-send-listSocket", function (data) {
+      setOnline(data);
+      console.log("on", data);
+    });
+  });
   useEffect(() => {
     setUserTyping("");
     setRoom(roomId);
-
-    try {
-      for (let index = 0; index < group.listContacts.length; index++) {
-        const element = group.listContacts[index];
-        if (element[1] === account.studentCode) {
-          setcontactId(element[0]);
-          break;
-        } else {
-        }
-      }
-      var listStudentCode = [];
-      var objectStudentCode = {};
-      for (let index = 0; index < group.listContacts.length; index++) {
-        const element = group.listContacts[index];
-        objectStudentCode = element;
-        listStudentCode.push(objectStudentCode);
-      }
-
-      setListContacts(listStudentCode);
-    } catch (error) {}
   }, []);
 
   useEffect(() => {
@@ -135,9 +132,12 @@ export default function MessagePage() {
   }, [currPage, lastList, prevPage, messageList]);
 
   useEffect(() => {
-    socket.on("recevie_message", (data) => {
-      setMessageList([...messageList, data]);
-    });
+    try {
+      socket.on("recevie_message", (data) => {
+        // console.log("recevie_message",data)
+        setMessageList([...messageList, data]);
+      });
+    } catch (error) {}
   }, [messageList]);
 
   const getMessage = async () => {
@@ -194,27 +194,64 @@ export default function MessagePage() {
           } else {
             listContentObject.content = element.content;
           }
+
+          // group.listContacts
+          const mySetOnline = new Set();
+          for (let index = 0; index < group.listContacts.length; index++) {
+            const element2 = group.listContacts[index];
+            mySetOnline.add(element2.at(4));
+          }
+    
+          const listOnline = [];
+          for (let index = 0; index < group.listOnline.length; index++) {
+            const element2 = group.listOnline[index];
+            listOnline.push(element2.email);
+          }
+          console.log("listOnline", listOnline);
+          console.log("mySetOnline", mySetOnline.size);
+    
+          // for (let index = 0; index < listOnline.length; index++) {
+          //   mySetOnline.delete(account.email);
+          //   if (mySetOnline.has(listOnline[index])) {
+          //     listContentObject.isActive = true;
+          //     console.log("true",listOnline[index])
+          //     // break;
+          //   } else {
+          //     console.log("false",listOnline[index])
+
+          //     listContentObject.isActive = false;
+          //   }
+          // }
+          console.log("----------listContentObject.isActive---",listContentObject.isActive)
+
+          console.log("-------------------------------")
+
           listContent.push(listContentObject);
+          // console.log("message", listContent);
         }
 
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {
-      toast.error("Failed to fetch post list: ", error);
+      toast.error("Failed to fetch message list: ", error);
     }
   };
 
   useEffect(() => {
-    socket.on(room + "user-typing", (account, data) => {
-      setUserTyping(data);
-      setAccountTyping(account);
-    });
+    try {
+      socket.on(room + "user-typing", (account, data) => {
+        setUserTyping(data);
+        setAccountTyping(account);
+      });
+    } catch (error) {}
   });
 
   useEffect(() => {
-    socket.on(room + "stop-user-typing", (data) => {
-      setUserTyping(data);
-    });
+    try {
+      socket.on(room + "stop-user-typing", (data) => {
+        setUserTyping(data);
+      });
+    } catch (error) {}
   });
 
   const handleClick = () => {
@@ -235,6 +272,7 @@ export default function MessagePage() {
           avatar: account.avatar,
           fullName: account.fullName,
           statusCreated: true,
+          email: account.email,
         },
       };
       createMessage();
@@ -276,7 +314,7 @@ export default function MessagePage() {
           avatar={
             <AvatarStatus
               src={group.avatar}
-              isActive={friend.isActive}
+              isActive={group.isActive}
               sx={{ width: "46px", height: "46px" }}
             />
           }
@@ -286,7 +324,7 @@ export default function MessagePage() {
             </IconButton>
           }
           title={<Typography fontWeight={700}>{group.name}</Typography>}
-          subheader={friend.isActive ? "Đang hoạt động" : "Không hoạt động"}
+          subheader={group.isActive ? "Đang hoạt động" : "Không hoạt động"}
         />
         <Divider />
         {/* Nội dung tin nhắn */}
@@ -309,10 +347,12 @@ export default function MessagePage() {
                 <AlertMessage
                   message={value.statusCreated ? "" : value.content}
                 />
+                {/* <TimeLineMessage message={"11:00"} /> */}
+                {/* <MyMessage message={"Hi! Em ngon vậy"} /> */}
                 <MyMessage
                   message={
                     value.statusCreated
-                      ? value.studentCode === account.studentCode
+                      ? value.email === account.email
                         ? value.content
                         : ""
                       : ""
@@ -321,6 +361,7 @@ export default function MessagePage() {
                   createdDate={value.createdDate}
                 />
                 <OtherMessage
+                  isActive={value.isActive}
                   account={value.fullName + " (" + value.email + ")"}
                   avatar={value.avatar}
                   message={
@@ -333,6 +374,17 @@ export default function MessagePage() {
                   showAvatar
                   createdDate={value.createdDate}
                 />
+                {/* <TimeLineMessage message={"16:00"} /> */}
+                {/* <MyMessage message={"Em ăn cơm chưa?"} /> */}
+                {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}
+                {/* <OtherMessage account={friend} message={"Chưa"} /> */}
+                {/* <OtherMessage
+                    account={friend}
+                    message={"Anh chở e đi ăn đi <3"}
+                    showAvatar
+                  /> */}
+                {/* <MyMessage message={"Méo :V"} showAvatar /> */}
+                {/* <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} /> */}
               </div>
             );
           })}

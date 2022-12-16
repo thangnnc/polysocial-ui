@@ -24,12 +24,14 @@ const Message = styled("span")(() => ({
 }));
 
 export default function OtherMessage({
+  isActive,
   message,
   account,
   avatar,
   showAvatar,
   createdDate,
 }) {
+  console.log("---isActive",isActive)
   return (
     <>
       {message && (
@@ -39,7 +41,7 @@ export default function OtherMessage({
               <span>
                 <AvatarStatus
                   src={avatar}
-                  // isActive={account.isActive}
+                  isActive={isActive}
                 />
               </span>
             </Tooltip>

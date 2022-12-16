@@ -4,12 +4,23 @@ import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 
-export default function AddFriendPage() {
+export default function AddFriendPage(props) {
+  const socket = props.socket.socket;
   const [showRequestFriend, setShowRequestFriend] = useState([]);
 
   useEffect(() => {
     getRequestFriend();
   }, []);
+
+  useEffect(()=>{
+   try {
+    socket.on("request-accept", function () {
+      getRequestFriend();
+    })
+   } catch (error) {
+    
+   }
+  })
 
   const getRequestFriend = async () => {
     const response = await Axios.Friends.getAllRequestAddFriend();
@@ -19,8 +30,9 @@ export default function AddFriendPage() {
   const addFriendHandle = async (e, data) => {
     const response = await Axios.Friends.acceptFriend(data);
     if (response.status === 200) {
-      toast.success("Đã thêm bạn thành công");
       getRequestFriend();
+      await socket.emit("accept-friend-request");
+      toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
     }
