@@ -19,7 +19,7 @@ export default function NavUser() {
     {
       title: "Trang Cá Nhân",
       path: `/my-profile/${
-        account.userId === undefined ? "1" : account.userId
+        account.userId === undefined ? "5" : account.userId
       }`,
       icon: icon("healthicons:ui-user-profile"),
     },

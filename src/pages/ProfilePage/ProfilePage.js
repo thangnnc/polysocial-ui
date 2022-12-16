@@ -10,12 +10,14 @@ import ListFriend from "./components/ListFriend";
 import ListContent from "./components/ListContent";
 import useLogin from "../../utils/Login/useLogin";
 import { toast } from "react-toastify";
+import { DialogEditAccount } from "./components/DialogEditAccount";
 
 export default function ProfilePage() {
   const { account } = useLogin();
   const { userId } = useParams();
   const [user, setUser] = useState({});
   const [value, setValue] = useState("1");
+  const [isEdit, setIsEdit] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -105,7 +107,7 @@ export default function ProfilePage() {
                   </Typography>
                 </Box>
                 <Box sx={{ mr: 4 }}>
-                  {account?.email !== user?.email && (
+                  {account?.email !== user?.email ? (
                     <Button
                       variant="contained"
                       sx={{
@@ -118,6 +120,21 @@ export default function ProfilePage() {
                       <Iconify icon={"material-symbols:person-add"} />
                       <Typography sx={{ fontWeight: "bold", ml: 1 }}>
                         Thêm bạn
+                      </Typography>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#f97c2e",
+                        borderRadius: 2,
+                        mr: 2,
+                      }}
+                      onClick={() => setIsEdit(true)}
+                    >
+                      <Iconify icon={"material-symbols:edit"} />
+                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                        Chỉnh sửa thông tin
                       </Typography>
                     </Button>
                   )}
@@ -226,6 +243,8 @@ export default function ProfilePage() {
           </TabContext>
         </Box>
       </Box>
+
+      <DialogEditAccount open={isEdit} setOpen={setIsEdit} user={user} />
     </Box>
   );
 }
