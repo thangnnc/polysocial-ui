@@ -28,9 +28,8 @@ const scrollbar = {
   },
 };
 
-export default function MessagesPopover({ groupList,count }) {
+export default function MessagesPopover({groupList,count,listOnline }) {
   const [open, setOpen] = useState(false);
-
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -105,7 +104,7 @@ export default function MessagesPopover({ groupList,count }) {
         >
           <Divider />
           {groupList.map((roomChat, index) => (
-            <MessageBox key={index} roomChat={roomChat} />
+            <MessageBox key={index} roomChat={roomChat} listOnline={listOnline} />
           ))}
         </List>
       </Popover>

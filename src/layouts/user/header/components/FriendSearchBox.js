@@ -3,13 +3,16 @@ import { Box } from "@mui/system";
 import { toast } from "react-toastify";
 import Axios from "./../../../../utils/Axios/index";
 
-export default function FriendSearchBox({ searchData }) {
+export default function FriendSearchBox({ searchData,sockets }) {
+  const socket = sockets.sockets
   const { avatar, fullName, email, isFriend } = searchData;
 
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
     if (response.status === 200) {
+      await socket.emit("add-friend");
       toast.success("Gửi lời mời kết bạn thành công");
+
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
     }

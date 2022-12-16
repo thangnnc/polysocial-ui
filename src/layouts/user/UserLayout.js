@@ -6,7 +6,8 @@ import Header from "./header";
 import { Box } from "@mui/material";
 import NavUser from "./nav";
 import NavFriend from "./nav-friends";
-
+import { useEffect, useState } from "react";
+import useLogin from "../../utils/Login/useLogin";
 // ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
@@ -18,7 +19,6 @@ const StyledRoot = styled("div")({
   overflow: "hidden",
   backgroundColor: "#f5f5f5",
   position: "relative",
-  
 });
 
 const BoxNav = styled("div")(({ theme }) => ({
@@ -35,8 +35,7 @@ const BoxNav = styled("div")(({ theme }) => ({
 const BoxFriend = styled("div")(({ theme }) => ({
   width: "20%",
   minHeight: "100%",
-  [theme.breakpoints.up("lg")]: {
-  },
+  [theme.breakpoints.up("lg")]: {},
 }));
 
 const Main = styled("div")(({ theme }) => ({
@@ -47,15 +46,26 @@ const Main = styled("div")(({ theme }) => ({
     paddingTop: APP_BAR_DESKTOP + 36,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-  }
+  },
 }));
 
 // ----------------------------------------------------------------------
 
-export default function UserLayout() {
+export default function UserLayout(props) {
+  // const { account } = useLogin();
+  // useEffect(()=>{
+  //   socket.on("server-send-listSocket", function (data) {
+  //     console.log("--danhsach--",data)
+  //   })
+  // })
+
+  // useEffect(() => {
+  //   socket.emit("client-user-connect", account);
+  // }, []);
+
   return (
-    <StyledRoot >
-      <Header />
+    <StyledRoot>
+      <Header socket={props}/>
 
       <Box sx={{ display: "flex", width: "100%", pl: 8 }}>
         <BoxNav>
@@ -67,7 +77,7 @@ export default function UserLayout() {
         </Main>
 
         <BoxFriend>
-          <NavFriend />
+          <NavFriend socket={props}/>
         </BoxFriend>
       </Box>
     </StyledRoot>

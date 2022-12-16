@@ -20,11 +20,11 @@ export default function HomePage() {
     }
   };
 
-  useEffect(() => {
-    socket.on("Server-response-like-comment", async function () {
-      fetchData();
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("Server-response-like-comment", async function () {
+  //     fetchData();
+  //   });
+  // }, []);
 
   const handleChange = () => {
     fetchData();

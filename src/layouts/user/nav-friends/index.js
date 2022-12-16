@@ -48,12 +48,23 @@ const scrollbar = {
     background: "#ffa36a",
   },
 };
-export default function NavFriend() {
+export default function NavFriend(props) {
+  let socket = props.socket.socket.socket;
   const [listFriends, setListFriend] = useState([]);
 
   useEffect(() => {
     getAllFriend();
   }, []);
+
+  useEffect(() => {
+    try {
+      socket.on("accept", function () {
+        // for (let index = 0; index < 4; index++) {
+          getAllFriend();
+        // }
+      });
+    } catch (error) {}
+  });
 
   const getAllFriend = async () => {
     const response = await Axios.Friends.getAllFriend();

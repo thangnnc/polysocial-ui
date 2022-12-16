@@ -24,7 +24,8 @@ import GroupAddMemberPage from "./pages/GroupAddMemberPage/GroupAddMemberPage";
 
 // ----------------------------------------------------------------------
 
-export default function Router() {
+export default function Router(props) {
+  // console.log("router->",props)
   const { account } = useLogin();
 
   const routes = useRoutes([
@@ -38,12 +39,12 @@ export default function Router() {
     },
     {
       path: "/",
-      element: !account ? <Navigate to="/login" /> : <UserLayout />,
+      element: !account ? <Navigate to="/login" /> : <UserLayout socket={props} />,
       children: [
         { element: <Navigate to="/home" />, index: true },
         { path: "home", element: <HomePage /> },
-        { path: "message/room/:roomId", element: <MessagePage /> },
-        { path: "friends-requests", element: <AddFriendPage /> },
+        { path: "message/room/:roomId", element: <MessagePage socket={props}/> },
+        { path: "friends-requests", element: <AddFriendPage socket={props} /> },
       ],
     },
     {
@@ -100,7 +101,7 @@ export default function Router() {
         { element: <Navigate to="/admin/dashboard" />, index: true },
         { path: "dashboard", element: <AdminDashboard /> },
         { path: "users", element: <ManagementUser /> },
-        { path: "groups", element: <ManagementGroup /> },
+        { path: "groups", element: <ManagementGroup socket={props} /> },
         { path: "groups/detail/:groupId", element: <ManagementGroupDetail /> },
         { path: "posts", element: <ManagementContent /> },
         { path: "comments", element: <h2>Quản lý bình luận</h2> },

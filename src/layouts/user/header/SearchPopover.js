@@ -25,7 +25,7 @@ const scrollbar = {
   },
 };
 
-export default function SearchPopover() {
+export default function SearchPopover(sockets) {
   const [open, setOpen] = useState(false);
   const [isFocusPopup, setFocusPopup] = useState(false);
   const [searchList, setSearchList] = useState([]);
@@ -102,7 +102,7 @@ export default function SearchPopover() {
             }}
           >
             {searchList.map((searchData, index) => (
-              <FriendSearchBox key={index} searchData={searchData} />
+              <FriendSearchBox key={index} searchData={searchData} sockets = {sockets}/>
             ))}
           </CardContent>
         </Box>
