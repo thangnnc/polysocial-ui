@@ -8,8 +8,11 @@ import Axios from "./../../utils/Axios/index";
 import Infomation from "./components/Infomation";
 import ListFriend from "./components/ListFriend";
 import ListContent from "./components/ListContent";
+import useLogin from "../../utils/Login/useLogin";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
+  const { account } = useLogin();
   const { userId } = useParams();
   const [user, setUser] = useState({});
   const [value, setValue] = useState("1");
@@ -25,10 +28,18 @@ export default function ProfilePage() {
   const getOneUser = async (userId) => {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
-      console.log(response);
       setUser(response);
     } else {
       setUser(null);
+    }
+  };
+
+  const handleAddFriend = async () => {
+    const response = await Axios.Friends.addFriend(user);
+    if (response.status === 200) {
+      toast.success("Gửi lời mời kết bạn thành công");
+    } else {
+      toast.error("Gửi lời mời kết bạn thất bại");
     }
   };
 
@@ -90,23 +101,26 @@ export default function ProfilePage() {
                     {user?.fullName}
                   </Typography>
                   <Typography sx={{ fontSize: "18", color: "#9b9b9b" }}>
-                    @{user?.email}
+                    {user?.email}
                   </Typography>
                 </Box>
                 <Box sx={{ mr: 4 }}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      background: "#f97c2e",
-                      borderRadius: 2,
-                      mr: 2,
-                    }}
-                  >
-                    <Iconify icon={"material-symbols:person-add"} />
-                    <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                      Thêm bạn
-                    </Typography>
-                  </Button>
+                  {account?.email !== user?.email && (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#f97c2e",
+                        borderRadius: 2,
+                        mr: 2,
+                      }}
+                      onClick={handleAddFriend}
+                    >
+                      <Iconify icon={"material-symbols:person-add"} />
+                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                        Thêm bạn
+                      </Typography>
+                    </Button>
+                  )}
                   {!true && (
                     <>
                       <Button
@@ -192,7 +206,7 @@ export default function ProfilePage() {
               sx={{
                 background: "white",
                 width: "100%",
-                height: 430,
+                height: 450,
                 mt: 2,
                 borderRadius: "12px",
                 boxShadow:
@@ -200,13 +214,13 @@ export default function ProfilePage() {
               }}
             >
               <TabPanel value="1">
-                <Infomation />
+                <Infomation user={user} />
               </TabPanel>
               <TabPanel value="2">
                 <ListFriend />
               </TabPanel>
               <TabPanel value="3">
-                <ListContent />
+                <ListContent user={user} />
               </TabPanel>
             </Box>
           </TabContext>
