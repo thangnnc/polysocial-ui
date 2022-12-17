@@ -275,7 +275,7 @@ export default function ProfilePage() {
               <TabPanel value="1">
                 <Infomation user={user} />
               </TabPanel>
-              {user.status === true ? (
+              {user.status === true || account?.email === user?.email ? (
                 <>
                   <TabPanel value="2">
                     <ListFriend />
