@@ -124,7 +124,7 @@ export default function MessagePage(props) {
                 const element2 = dataOnline;
                 listOnline.push(element2[index].email);
               }
-              console.log("listOnline", listOnline);
+              // console.log("listOnline", listOnline);
               for (let index = 0; index < response.data.length; index++) {
                 const listContentObject = {};
                 const element = response.data[index];
@@ -159,7 +159,6 @@ export default function MessagePage(props) {
                 } catch (error) {}
                 //
               }
-              console.log("---", listContent);
               setMessageList(listContent.reverse());
             } catch (error) {}
           } catch (error) {

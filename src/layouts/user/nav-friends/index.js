@@ -94,7 +94,6 @@ export default function NavFriend(props) {
             }
             listFriends.push(listFrindObject);
           }
-          console.log("listfiend",listFriends)
           setListFriend(listFriends);
         };
         fetDataDESC();
