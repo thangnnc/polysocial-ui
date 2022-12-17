@@ -138,6 +138,7 @@ export default function GroupExerciseDetailPage() {
   return (
     <Box sx={{ display: "flex", mt: 15 }}>
       <Box sx={{ width: "70%", py: 5 }}>
+        {account.role==='Sinh viên' && (<>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Nộp bài tập
         </Typography>
@@ -283,6 +284,7 @@ export default function GroupExerciseDetailPage() {
             </React.Fragment>
           )}
         </Card>
+        </>)}
         {account.role !== "Sinh viên" && (
           <>
             <Typography variant="h4" sx={{ mb: 5, mt: 5 }}>
@@ -352,7 +354,7 @@ export default function GroupExerciseDetailPage() {
                       name="mark"
                       label="Điểm bài tập"
                       placeholder="Nhập điểm bài tập"
-                      value={item.mark === null ? 0 : item.mark}
+                      value={item.mark}
                       onChange={(e) => setCreateMark(e.target.value)}
                       variant="standard"
                       InputProps={{
