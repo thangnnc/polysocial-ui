@@ -69,25 +69,108 @@ export default function MessagePage(props) {
   const messageRef = useRef();
   const ref = useRef(null);
   const socket = props.socket.socket;
-  const [online, setOnline] = useState([]);
-
+  // const [online, setOnline] = useState([]);
   let group = location.state.group;
-  console.log("group->,  ", group);
+
+  // for (let index = 0; index < location.state.group.length; index++) {
+  //   const element = location.state.group;
+  // console.log("element",element)
+
+  // }
   // useEffect(() => {
-  //   const mySetOnline = new Set();
-  //   for (let index = 0; index < group.listContacts.length; index++) {
-  //     const element2 = group.listContacts[index];
-  //     mySetOnline.add(element2.at(4));
-  //   }
-  //   console.log("online-",mySetOnline)
-  //   setOnline(mySetOnline);
+  //   getMessage()
   // }, []);
+
   useEffect(() => {
-    socket.on("server-send-listSocket", function (data) {
-      setOnline(data);
-      console.log("on", data);
-    });
+    try {
+      socket.on("server-send-listSocket", function (dataOnline) {
+        group.isActive = !group.isActive;
+
+        const fetDataMessage = async () => {
+          try {
+            setRoom(roomId);
+            socket.emit("join_room", roomId);
+            const data = {
+              page: currPage,
+              limit: limit,
+              roomId: roomId,
+            };
+            const response = await Asios.Messages.getMessage(data);
+            setRoom(roomId);
+            const arr = [];
+            for (let index = 0; index < group.listContacts.length; index++) {
+              const element = group.listContacts[index];
+              if (element[1] === account.studentCode) {
+                const data = {
+                  contactId: element[0],
+                };
+                setcontactId(element[0]);
+                const responseUpdateviewed =
+                  await Asios.Messages.updateviewedStatus(data);
+                if (responseUpdateviewed) {
+                  await socket.emit("isSeen");
+                }
+                // break;
+              } else {
+                arr.push(element[0]);
+              }
+            }
+            setListcontactId(arr);
+
+            try {
+              const listContent = [];
+              const listOnline = [];
+              for (let index = 0; index < dataOnline.length; index++) {
+                const element2 = dataOnline;
+                listOnline.push(element2[index].email);
+              }
+              console.log("listOnline", listOnline);
+              for (let index = 0; index < response.data.length; index++) {
+                const listContentObject = {};
+                const element = response.data[index];
+                listContentObject.isAdmin = element.isAdmin;
+                listContentObject.avatar = element.avatar;
+                listContentObject.createdDate = element.createdDate;
+                listContentObject.fullName = element.fullName;
+                listContentObject.statusCreated = element.statusCreated;
+                listContentObject.studentCode = element.studentCode;
+                listContentObject.email = element.email;
+                listContentObject.messageRecall = element.messageRecall;
+                if (element.statusCreated === false) {
+                  if (element.studentCode === account.studentCode) {
+                    listContentObject.content = "";
+                  } else {
+                    listContentObject.content = element.content;
+                  }
+                } else {
+                  listContentObject.content = element.content;
+                }
+                try {
+                  for (let i = 0; i < 1; i++) {
+                    var isActive;
+                    if (listOnline.includes(element.email) === true) {
+                      isActive = true;
+                    } else {
+                      isActive = false;
+                    }
+                    listContentObject.isActive = isActive;
+                  }
+                  listContent.push(listContentObject);
+                } catch (error) {}
+                //
+              }
+              console.log("---", listContent);
+              setMessageList(listContent.reverse());
+            } catch (error) {}
+          } catch (error) {
+            // toast.error("Failed to fetch message list: ", error);
+          }
+        };
+        fetDataMessage();
+      });
+    } catch (error) {}
   });
+
   useEffect(() => {
     setUserTyping("");
     setRoom(roomId);
@@ -158,6 +241,7 @@ export default function MessagePage(props) {
           const data = {
             contactId: element[0],
           };
+          setcontactId(element[0]);
           const responseUpdateviewed = await Asios.Messages.updateviewedStatus(
             data
           );
@@ -169,11 +253,17 @@ export default function MessagePage(props) {
           arr.push(element[0]);
         }
       }
-
       setListcontactId(arr);
 
       try {
         const listContent = [];
+        const listOnline = [];
+        for (let index = 0; index < group.listOnline.length; index++) {
+          const element2 = group.listOnline[index];
+          listOnline.push(element2.email);
+        }
+        listOnline.splice(listOnline.indexOf(account.email), 1);
+
         for (let index = 0; index < response.data.length; index++) {
           const listContentObject = {};
           const element = response.data[index];
@@ -194,46 +284,25 @@ export default function MessagePage(props) {
           } else {
             listContentObject.content = element.content;
           }
-
-          // group.listContacts
-          const mySetOnline = new Set();
-          for (let index = 0; index < group.listContacts.length; index++) {
-            const element2 = group.listContacts[index];
-            mySetOnline.add(element2.at(4));
-          }
-    
-          const listOnline = [];
-          for (let index = 0; index < group.listOnline.length; index++) {
-            const element2 = group.listOnline[index];
-            listOnline.push(element2.email);
-          }
-          console.log("listOnline", listOnline);
-          console.log("mySetOnline", mySetOnline.size);
-    
-          // for (let index = 0; index < listOnline.length; index++) {
-          //   mySetOnline.delete(account.email);
-          //   if (mySetOnline.has(listOnline[index])) {
-          //     listContentObject.isActive = true;
-          //     console.log("true",listOnline[index])
-          //     // break;
-          //   } else {
-          //     console.log("false",listOnline[index])
-
-          //     listContentObject.isActive = false;
-          //   }
-          // }
-          console.log("----------listContentObject.isActive---",listContentObject.isActive)
-
-          console.log("-------------------------------")
-
-          listContent.push(listContentObject);
-          // console.log("message", listContent);
+          try {
+            for (let i = 0; i < 1; i++) {
+              var isActive;
+              if (listOnline.includes(element.email) === true) {
+                isActive = true;
+              } else {
+                isActive = false;
+              }
+              listContentObject.isActive = isActive;
+            }
+            listContent.push(listContentObject);
+          } catch (error) {}
+          //
         }
-
+        console.log("---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {
-      toast.error("Failed to fetch message list: ", error);
+      // toast.error("Failed to fetch message list: ", error);
     }
   };
 
@@ -347,8 +416,16 @@ export default function MessagePage(props) {
                 <AlertMessage
                   message={value.statusCreated ? "" : value.content}
                 />
-                {/* <TimeLineMessage message={"11:00"} /> */}
-                {/* <MyMessage message={"Hi! Em ngon vậy"} /> */}
+                {/* <AlertMessage
+                  message={
+                    value.statusCreated
+                      ? value.statusCreated+ 0.1 < value.statusCreated 
+                        ? "11:00"
+                        : ""
+                      : ""
+                  }
+                /> */}
+
                 <MyMessage
                   message={
                     value.statusCreated
@@ -357,11 +434,11 @@ export default function MessagePage(props) {
                         : ""
                       : ""
                   }
-                  showAvatar
+                  showAvatar={4 - 2 === 2}
                   createdDate={value.createdDate}
                 />
                 <OtherMessage
-                  isActive={value.isActive}
+                  isActive={value.isActive ? false : true}
                   account={value.fullName + " (" + value.email + ")"}
                   avatar={value.avatar}
                   message={
@@ -375,7 +452,6 @@ export default function MessagePage(props) {
                   createdDate={value.createdDate}
                 />
                 {/* <TimeLineMessage message={"16:00"} /> */}
-                {/* <MyMessage message={"Em ăn cơm chưa?"} /> */}
                 {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}
                 {/* <OtherMessage account={friend} message={"Chưa"} /> */}
                 {/* <OtherMessage
@@ -384,7 +460,6 @@ export default function MessagePage(props) {
                     showAvatar
                   /> */}
                 {/* <MyMessage message={"Méo :V"} showAvatar /> */}
-                {/* <AlertMessage message={"♥ Gấu Chó ♥ đã chặn bạn."} /> */}
               </div>
             );
           })}

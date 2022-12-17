@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Iconify from "../../../components/iconify";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../../utils/Axios/index";
@@ -51,24 +52,89 @@ const scrollbar = {
 export default function NavFriend(props) {
   let socket = props.socket.socket.socket;
   const [listFriends, setListFriend] = useState([]);
+  const navigate = useNavigate();
+  const [listOnline, setListOnline] = useState();
 
   useEffect(() => {
-    getAllFriend();
-  }, []);
+    try {
+      socket.on("server-send-listSocket", function (data) {
+        // console.log("online", data);
+        setListOnline(data);
+        const mySetOnline = new Set();
+        for (let i = 0; i < data.length; i++) {
+          const element2 = data;
+          mySetOnline.add(element2[i].email);
+        }
+        
+
+        const listFriends = [];
+        const fetDataDESC = async () => {
+          const response = await Axios.Friends.getAllFriend();
+          for (let index = 0; index < response.length; index++) {
+            const listFrindObject = {};
+            const element = response[index];
+            listFrindObject.avatarUserConfirm = element.avatarUserConfirm;
+            listFrindObject.avatarUserInvite = element.avatarUserInvite;
+            listFrindObject.friendAvatar = element.friendAvatar;
+            listFrindObject.friendEmail = element.friendEmail;
+            listFrindObject.friendName = element.friendName;
+            listFrindObject.fullNameUserConfirm = element.fullNameUserConfirm;
+            listFrindObject.fullNameUserInvite = element.fullNameUserInvite;
+            listFrindObject.groupId = element.groupId;
+            listFrindObject.listContact = element.listContact;
+            listFrindObject.roomId = element.roomId;
+            listFrindObject.status = element.status;
+            listFrindObject.userConfirmId = element.userConfirmId;
+            listFrindObject.userInviteId = element.userInviteId;
+            if(mySetOnline.has(element.friendEmail)){
+              listFrindObject.isActive =true;
+            }else{
+            listFrindObject.isActive =false;
+
+            }
+            listFriends.push(listFrindObject);
+          }
+          console.log("listfiend",listFriends)
+          setListFriend(listFriends);
+        };
+        fetDataDESC();
+      });
+    } catch (error) {}
+  });
+  // useEffect(() => {
+  //   getAllFriend();
+  // }, []);
 
   useEffect(() => {
     try {
       socket.on("accept", function () {
         // for (let index = 0; index < 4; index++) {
-          getAllFriend();
+        getAllFriend();
         // }
       });
     } catch (error) {}
   });
 
   const getAllFriend = async () => {
+
     const response = await Axios.Friends.getAllFriend();
+    console.log("--->", response);
     setListFriend(response);
+  };
+  const pathMessage = "/message/room/";
+
+  const handleOnClick = async (e, listContacts, avatar, name,isActive,roomId) => {
+    let group = {};
+    group.listContacts = listContacts;
+    group.name = name;
+    group.avatar = avatar;
+    group.isActive = isActive;
+     group.listOnline = listOnline
+    navigate(pathMessage + roomId, {
+      state: {
+        group: group,
+      },
+    });
   };
 
   return (
@@ -114,13 +180,15 @@ export default function NavFriend(props) {
       >
         {listFriends.map((value, index) => {
           return (
-            <Button key={index} color="warning" sx={styleListFriends}>
+            <Button  onClick={(e) => {
+              handleOnClick(e,value.listContact,value.friendAvatar,value.friendName,value.isActive,value.roomId);
+            }} key={index} color="warning" sx={styleListFriends}>
               <ListItem>
                 <ListItemAvatar>
                   <AvatarStatus
                     alt={value.friendName}
                     src={value.friendAvatar}
-                    isActive={value.status}
+                    isActive={value.isActive}
                     sx={{ width: 48, height: 48 }}
                   />
                 </ListItemAvatar>
