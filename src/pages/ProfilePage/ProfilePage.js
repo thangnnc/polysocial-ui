@@ -11,6 +11,7 @@ import ListContent from "./components/ListContent";
 import useLogin from "../../utils/Login/useLogin";
 import { toast } from "react-toastify";
 import { DialogEditAccount } from "./components/DialogEditAccount";
+import ChangePassword from "./components/ChangePassword";
 
 export default function ProfilePage() {
   const { account } = useLogin();
@@ -217,6 +218,11 @@ export default function ProfilePage() {
                   value="3"
                   sx={{ fontSize: 15, fontWeight: "bold" }}
                 />
+                <Tab
+                  label="Đổi mật khẩu"
+                  value="4"
+                  sx={{ fontSize: 15, fontWeight: "bold" }}
+                />
               </TabList>
             </Box>
             <Box
@@ -238,6 +244,9 @@ export default function ProfilePage() {
               </TabPanel>
               <TabPanel value="3">
                 <ListContent user={user} />
+              </TabPanel>
+              <TabPanel value="4">
+                <ChangePassword user={user} />
               </TabPanel>
             </Box>
           </TabContext>
