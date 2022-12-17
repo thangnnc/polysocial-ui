@@ -1,15 +1,48 @@
 import { Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import Iconify from "../../../components/iconify/Iconify";
 import NavUserSection from "../../../components/nav-user-section/NavUserSection";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";
-import navUserConfig from "./config";
 
 export default function NavUser() {
   const { account } = useLogin();
-  
+
+  const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
+
+  const navUserConfig = [
+    {
+      title: "Trang Chủ",
+      path: "/home",
+      icon: icon("material-symbols:home"),
+    },
+    {
+      title: "Trang Cá Nhân",
+      path: `/my-profile/${
+        account.userId === undefined ? "5" : account.userId
+      }`,
+      icon: icon("healthicons:ui-user-profile"),
+    },
+    {
+      title: "Lời Mời Kết Bạn",
+      path: "/friends-requests",
+      icon: icon("fluent-mdl2:add-friend"),
+    },
+    {
+      title: "Nhóm Của Tôi",
+      path: "/groups",
+      icon: icon("ri:team-fill"),
+    },
+    {
+      title: "Bài Tập",
+      path: "/exercise",
+      icon: icon("ph:exam-fill"),
+      notiCount: 2,
+    },
+  ];
+
   return (
-    <Box sx={{width: "18%",position: "fixed"}}>
+    <Box sx={{ width: "18%", position: "fixed" }}>
       <Card
         sx={{
           display: "flex",
@@ -41,7 +74,7 @@ export default function NavUser() {
           alignItems: "center",
           textAlign: "left",
           mt: 2,
-          p: 0
+          p: 0,
         }}
       >
         <NavUserSection data={navUserConfig} />

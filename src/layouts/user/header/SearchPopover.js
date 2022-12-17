@@ -60,6 +60,7 @@ export default function SearchPopover(sockets) {
 
   const handleSearch = async (e) => {
     const response = await Axios.Friends.searchUserByKeywork(e.target.value);
+    console.log(response);
     setSearchList(response);
   };
 
@@ -102,7 +103,11 @@ export default function SearchPopover(sockets) {
             }}
           >
             {searchList.map((searchData, index) => (
-              <FriendSearchBox key={index} searchData={searchData} sockets = {sockets}/>
+              <FriendSearchBox
+                key={index}
+                searchData={searchData}
+                sockets={sockets}
+              />
             ))}
           </CardContent>
         </Box>
