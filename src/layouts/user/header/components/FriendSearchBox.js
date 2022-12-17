@@ -1,18 +1,18 @@
 import { Avatar, Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "./../../../../utils/Axios/index";
 
-export default function FriendSearchBox({ searchData,sockets }) {
-  const socket = sockets.sockets
-  const { avatar, fullName, email, isFriend } = searchData;
+export default function FriendSearchBox({ searchData, sockets }) {
+  const socket = sockets.sockets;
+  const { avatar, fullName, email, isFriend, userId } = searchData;
 
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
     if (response.status === 200) {
       await socket.emit("add-friend");
       toast.success("Gửi lời mời kết bạn thành công");
-
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
     }
@@ -35,9 +35,14 @@ export default function FriendSearchBox({ searchData,sockets }) {
         <Box display={"flex"} maxWidth="70%">
           <Avatar alt={fullName} src={avatar} sx={{ width: 48, height: 48 }} />
           <Box sx={{ maxWidth: "80%", ml: 2 }}>
-            <Typography variant="subtitle2" noWrap fontSize={16}>
-              {fullName}
-            </Typography>
+            <Link
+              to={`/my-profile/${userId === undefined ? "1" : userId}`}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Typography variant="subtitle2" noWrap fontSize={16}>
+                {fullName}
+              </Typography>
+            </Link>
             <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
               {email}
             </Typography>

@@ -31,7 +31,7 @@ export default function OtherMessage({
   showAvatar,
   createdDate,
 }) {
-  console.log("---isActive",isActive)
+  // console.log("---isActive",isActive,'name-',account)
   return (
     <>
       {message && (
@@ -41,7 +41,7 @@ export default function OtherMessage({
               <span>
                 <AvatarStatus
                   src={avatar}
-                  isActive={isActive}
+                  isActive={!isActive}
                 />
               </span>
             </Tooltip>

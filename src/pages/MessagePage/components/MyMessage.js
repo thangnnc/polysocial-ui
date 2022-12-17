@@ -25,6 +25,7 @@ const Message = styled("span")(() => ({
 }));
 
 export default function MyMessage({ message, showAvatar,createdDate }) {
+  // console.log("avt",showAvatar)
   const { account } = useLogin();
   return (
     <>
