@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const getOneUser = async (userId) => {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
+      // const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
       setUser(response);
     } else {
       setUser(null);
@@ -41,8 +42,19 @@ export default function ProfilePage() {
     const response = await Axios.Friends.addFriend(user);
     if (response.status === 200) {
       toast.success("Gửi lời mời kết bạn thành công");
+      getOneUser(userId);
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
+    }
+  };
+
+  const handleConfirmFriend = async () => {
+    const response = await Axios.Friends.acceptFriend(user);
+    if (response.status === 200) {
+      toast.success("Đã thêm bạn thành công");
+      getOneUser(userId);
+    } else {
+      toast.error("Đã thêm bạn thất bại");
     }
   };
 
@@ -108,22 +120,7 @@ export default function ProfilePage() {
                   </Typography>
                 </Box>
                 <Box sx={{ mr: 4 }}>
-                  {account?.email !== user?.email ? (
-                    <Button
-                      variant="contained"
-                      sx={{
-                        background: "#f97c2e",
-                        borderRadius: 2,
-                        mr: 2,
-                      }}
-                      onClick={handleAddFriend}
-                    >
-                      <Iconify icon={"material-symbols:person-add"} />
-                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                        Thêm bạn
-                      </Typography>
-                    </Button>
-                  ) : (
+                  {account?.email === user?.email ? (
                     <Button
                       variant="contained"
                       sx={{
@@ -138,37 +135,74 @@ export default function ProfilePage() {
                         Chỉnh sửa thông tin
                       </Typography>
                     </Button>
-                  )}
-                  {!true && (
+                  ) : (
                     <>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          background: "#D8DADF",
-                          color: "black",
-                          borderRadius: 2,
-                          mr: 2,
-                        }}
-                      >
-                        <Iconify icon={"bi:person-check-fill"} />
-                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                          Bạn bè
-                        </Typography>
-                      </Button>
+                      {user.status ? (
+                        <>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              background: "#D8DADF",
+                              color: "black",
+                              borderRadius: 2,
+                              mr: 2,
+                            }}
+                          >
+                            <Iconify icon={"bi:person-check-fill"} />
+                            <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                              Bạn bè
+                            </Typography>
+                          </Button>
 
-                      <Button
-                        variant="contained"
-                        sx={{
-                          background: "#D8DADF",
-                          color: "black",
-                          borderRadius: 2,
-                        }}
-                      >
-                        <Iconify icon={"mdi:facebook-messenger"} />
-                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                          Nhắn tin
-                        </Typography>
-                      </Button>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              background: "#D8DADF",
+                              color: "black",
+                              borderRadius: 2,
+                            }}
+                          >
+                            <Iconify icon={"mdi:facebook-messenger"} />
+                            <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                              Nhắn tin
+                            </Typography>
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          {user.status === false ? (
+                            <Button
+                              variant="contained"
+                              sx={{
+                                background: "#f97c2e",
+                                borderRadius: 2,
+                                mr: 2,
+                              }}
+                              onClick={handleConfirmFriend}
+                            >
+                              <Iconify icon={"material-symbols:person-add"} />
+                              <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                                Chấp nhận
+                              </Typography>
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              sx={{
+                                background: "#f97c2e",
+                                borderRadius: 2,
+                                mr: 2,
+                              }}
+                              onClick={handleAddFriend}
+                            >
+                              <Iconify icon={"material-symbols:person-add"} />
+                              <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                                Thêm bạn
+                              </Typography>
+                            </Button>
+                          )}
+                        </>
+                      )}
                     </>
                   )}
                 </Box>
@@ -218,11 +252,13 @@ export default function ProfilePage() {
                   value="3"
                   sx={{ fontSize: 15, fontWeight: "bold" }}
                 />
-                <Tab
-                  label="Đổi mật khẩu"
-                  value="4"
-                  sx={{ fontSize: 15, fontWeight: "bold" }}
-                />
+                {account?.email === user?.email && (
+                  <Tab
+                    label="Đổi mật khẩu"
+                    value="4"
+                    sx={{ fontSize: 15, fontWeight: "bold" }}
+                  />
+                )}
               </TabList>
             </Box>
             <Box
@@ -239,15 +275,41 @@ export default function ProfilePage() {
               <TabPanel value="1">
                 <Infomation user={user} />
               </TabPanel>
-              <TabPanel value="2">
-                <ListFriend />
-              </TabPanel>
-              <TabPanel value="3">
-                <ListContent user={user} />
-              </TabPanel>
-              <TabPanel value="4">
-                <ChangePassword user={user} />
-              </TabPanel>
+              {user.status === true ? (
+                <>
+                  <TabPanel value="2">
+                    <ListFriend />
+                  </TabPanel>
+                  <TabPanel value="3">
+                    <ListContent user={user} />
+                  </TabPanel>
+                </>
+              ) : (
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: "22",
+                      fontWeight: "bold",
+                      color: "#9b9b9b",
+                    }}
+                  >
+                    Bạn không có quyền xem
+                  </Typography>
+                </Box>
+              )}
+              {account?.email === user?.email && (
+                <TabPanel value="4">
+                  <ChangePassword user={user} />
+                </TabPanel>
+              )}
             </Box>
           </TabContext>
         </Box>

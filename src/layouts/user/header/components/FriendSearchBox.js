@@ -6,7 +6,7 @@ import Axios from "./../../../../utils/Axios/index";
 
 export default function FriendSearchBox({ searchData, sockets }) {
   const socket = sockets.sockets;
-  const { avatar, fullName, email, isFriend, userId } = searchData;
+  const { avatar, fullName, email, status, userId } = searchData;
 
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
@@ -36,7 +36,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
           <Avatar alt={fullName} src={avatar} sx={{ width: 48, height: 48 }} />
           <Box sx={{ maxWidth: "80%", ml: 2 }}>
             <Link
-              to={`/my-profile/${userId === undefined ? "1" : userId}`}
+              to={`/my-profile/${userId}`}
               style={{ textDecoration: "none", color: "black" }}
             >
               <Typography variant="subtitle2" noWrap fontSize={16}>
@@ -48,7 +48,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
             </Typography>
           </Box>
         </Box>
-        {!isFriend && (
+        {!status && (
           <Button
             className="btn-orange"
             variant="contained"
