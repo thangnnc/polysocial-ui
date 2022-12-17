@@ -79,23 +79,7 @@ export default function GroupPage() {
 
           <SearchBar />
 
-          {account.role === "Giảng viên" && (
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                Nhóm do bạn quản lý
-              </Typography>
-              <Box sx={{ height: "570px", overflowY: "scroll" }}>
-                {groupsTeacher.map((groupTeacher) => (
-                  <ListGroupTeacherJoin
-                    key={groupTeacher.groupId}
-                    group={groupTeacher}
-                  />
-                ))}
-              </Box>
-            </Box>
-          )}
-
-          {account.role === "Sinh viên" && (
+          {account.role === "Sinh viên" ? (
             <Box sx={{ mt: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 Nhóm do bạn đã tham gia
@@ -106,7 +90,19 @@ export default function GroupPage() {
                 ))}
               </Box>
             </Box>
-          )}
+          ):(<Box sx={{ mt: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Nhóm do bạn quản lý
+            </Typography>
+            <Box sx={{ height: "570px", overflowY: "scroll" }}>
+              {groupsTeacher.map((groupTeacher) => (
+                <ListGroupTeacherJoin
+                  key={groupTeacher.groupId}
+                  group={groupTeacher}
+                />
+              ))}
+            </Box>
+          </Box>)}
         </BoxNav>
         <Box sx={{ width: "78%", mt: 10 }}>
           <h1 style={{ padding: 20 }}>Group Page</h1>

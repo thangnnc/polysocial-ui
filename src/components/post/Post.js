@@ -171,14 +171,14 @@ export default function Post({ posts, onChange }) {
                   borderRight: 0,
                 }}
               >
-                {listLike.map((element, index) => {
+                {listLike?.map((element, index) => {
                     if(element.studentCode === account.studentCode){
                       isLike.push(element.studentCode);
                       isLike.push(element.postId);
                     }
                 })}
 
-                {isLike.includes(account.studentCode && postId) ? (
+                {isLike?.includes(account.studentCode && postId) ? (
                   <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích

@@ -41,7 +41,10 @@ Header.propTypes = {
 };
 
 export default function Header(props, { onOpenNav }) {
-  let socket = props.socket.socket.socket;
+  let socket;
+  try {
+    socket = props.socket.socket.socket;
+  } catch (error) {}
   const { account } = useLogin();
 
   const [groupList, setGroupList] = useState([]);
@@ -58,7 +61,7 @@ export default function Header(props, { onOpenNav }) {
     try {
       socket.on("get_one_message", function () {
         // for (let index = 0; index < 4; index++) {
-          getNameGroupDESC();
+        getNameGroupDESC();
         // }
       });
     } catch (error) {}
@@ -84,43 +87,41 @@ export default function Header(props, { onOpenNav }) {
         const fetDataDESC = async () => {
           const arr = [];
           try {
-          const response = await Asios.Messages.getNameGroupDESC(data1);
-          for (let index = 0; index < response.data.length; index++) {
-            const listNameGr = {};
-            const element = response.data[index];
-            const names = element.name.split(",");
-            const n = account.fullName;
-            const getName = names.filter((name) => name !== n);
+            const response = await Asios.Messages.getNameGroupDESC(data1);
+            for (let index = 0; index < response.data.length; index++) {
+              const listNameGr = {};
+              const element = response.data[index];
+              const names = element.name.split(",");
+              const n = account.fullName;
+              const getName = names.filter((name) => name !== n);
 
-            try {
-              const Avatar = element.avatar.split(",");
-              const ns = account.avatar;
-              const getAvatar = Avatar.filter((name) => name !== ns);
+              try {
+                const Avatar = element.avatar.split(",");
+                const ns = account.avatar;
+                const getAvatar = Avatar.filter((name) => name !== ns);
 
-              if (getAvatar[0] === account.avatar) {
-                listNameGr.avatar = element.avatar;
+                if (getAvatar[0] === account.avatar) {
+                  listNameGr.avatar = element.avatar;
+                } else {
+                  listNameGr.avatar = getAvatar[0];
+                }
+              } catch (error) {}
+
+              listNameGr.roomId = element.roomId;
+              listNameGr.lastMessage = element.lastMessage;
+
+              listNameGr.totalMember = element.totalMember;
+              listNameGr.status = element.status;
+              if (getName[0] === account.fullName) {
+                listNameGr.name = element.name;
               } else {
-                listNameGr.avatar = getAvatar[0];
+                listNameGr.name = getName[0];
               }
-            } catch (error) {}
-
-            listNameGr.roomId = element.roomId;
-            listNameGr.lastMessage = element.lastMessage;
-
-            listNameGr.totalMember = element.totalMember;
-            listNameGr.status = element.status;
-            if (getName[0] === account.fullName) {
-              listNameGr.name = element.name;
-            } else {
-              listNameGr.name = getName[0];
+              listNameGr.listContacts = element.listContacts;
+              listNameGr.lastUpDateDate = element.lastUpDateDate;
+              arr.push(listNameGr);
             }
-            listNameGr.listContacts = element.listContacts;
-            listNameGr.lastUpDateDate = element.lastUpDateDate;
-            arr.push(listNameGr);
-          }
-        } catch (error) {
-            
-        }
+          } catch (error) {}
 
           const listContent = [];
           var counts = 0;
@@ -192,7 +193,7 @@ export default function Header(props, { onOpenNav }) {
     const arr = [];
     try {
       const response = await Asios.Messages.getNameGroupDESC(data);
-    // console.log("run response",response);
+      // console.log("run response",response);
 
       for (let index = 0; index < response.data.length; index++) {
         const listNameGr = {};
@@ -322,7 +323,11 @@ export default function Header(props, { onOpenNav }) {
                 </Avatar>
               </Badge>
 
-              <MessagesPopover groupList={groupList} count={count} listOnline={online}/>
+              <MessagesPopover
+                groupList={groupList}
+                count={count}
+                listOnline={online}
+              />
 
               <NotificationPopover notifications={notifications} />
             </Box>
