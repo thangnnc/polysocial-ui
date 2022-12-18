@@ -15,6 +15,7 @@ export default function GroupAddMemberPage() {
 
   const getRequestMember = async (groupId) => {
     const response = await Axios.Groups.getMemberJoinGroup(groupId);
+    console.log("r4epsssss",response)
     setShowRequestMember(response);
   };
 
@@ -47,7 +48,7 @@ export default function GroupAddMemberPage() {
           <Box sx={{ display: "flex", alignItems: "center", my: 2 }}>
             <AvatarStatus
               alt="Avatar"
-              isActive={true}
+              isActive={false}
               sx={{ width: 54, height: 54 }}
               src={item.avatar}
             />

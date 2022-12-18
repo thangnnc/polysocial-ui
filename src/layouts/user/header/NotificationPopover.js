@@ -12,6 +12,7 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Box } from "@mui/system";
 import NotificationBox from "./components/NotificationBox";
+import Asios from "../../../utils/Axios";
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,14 @@ export default function NotificationPopover({ notifications, onchange }) {
     setOpen(null);
   };
 
+  const updateAllNotification = async (notificationId) => {
+    const response = await Asios.Notifications.updateAllNotifications();
+    if(response.status === 200){
+      onchange(); 
+    }else{
+      
+    }
+  };
 
 
 
@@ -111,7 +120,9 @@ export default function NotificationPopover({ notifications, onchange }) {
             Thông báo
           </ListSubheader>
 
-          <Button color="warning" sx={{ mr: 1 }}>
+          <Button
+            onClick={updateAllNotification}
+          color="warning" sx={{ mr: 1 }}>
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>

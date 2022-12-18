@@ -1,18 +1,34 @@
-import { Helmet } from 'react-helmet';
-import { faker } from '@faker-js/faker';
+import { Helmet } from "react-helmet";
+import { faker } from "@faker-js/faker";
 // @mui
-import { Grid, Container } from '@mui/material';
+import { Grid, Container } from "@mui/material";
 // sections
 import {
   AppNewsUpdate,
   AppOrderTimeline,
   AppWidgetSummary,
-} from '../../sections/@dashboard/app';
-import Title from '../../components/title';
+} from "../../sections/@dashboard/app";
+import Title from "../../components/title";
+import { useEffect, useState } from "react";
+import Axios from "./../../utils/Axios/index";
 
 // ----------------------------------------------------------------------
 
 export default function AdminDashboard() {
+  const [revenus, setRevenus] = useState({});
+  const [accessTime, setAccessTime] = useState({});
+
+  useEffect(() => {
+    getAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getAllData = async () => {
+    const response = await Axios.Revenus.getAllRevenus();
+    const responseAccessTime = await Axios.Revenus.getAllRevenuAccseeTime();
+    setRevenus(response);
+    setAccessTime({ people: responseAccessTime });
+  };
 
   return (
     <>
@@ -21,25 +37,45 @@ export default function AdminDashboard() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Title icon={'bxs:dashboard'}>
-          Dashboard
-        </Title>
+        <Title icon={"bxs:dashboard"}>Dashboard</Title>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Số Bài Viết" total={714000} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary
+              title="Số Nhóm Học Tập"
+              total={revenus.totalGroup}
+              icon={"ant-design:android-filled"}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Số Bình Luận" total={1352831} color="info" bg="#d0f2ff" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary
+              title="Số Sinh Viên"
+              total={revenus.totalStudent}
+              color="info"
+              bg="#d0f2ff"
+              icon={"ant-design:apple-filled"}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Số Lượt Thích" total={1723315} color="warning" bg="#fff7cd" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary
+              title="Số Giảng Viên"
+              total={revenus.totalTeacher}
+              color="warning"
+              bg="#fff7cd"
+              icon={"ant-design:windows-filled"}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Tổng Số Thông Báo" total={234} color="error" bg="#ffe7d9" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary
+              title="Số Sinh Viên Hoạt Động"
+              total={accessTime}
+              color="error"
+              bg="#ffe7d9"
+              icon={"ant-design:bug-filled"}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -61,11 +97,11 @@ export default function AdminDashboard() {
               list={[...Array(3)].map((_, index) => ({
                 id: faker.datatype.uuid(),
                 title: [
-                  '1983, orders, $4220',
-                  '12 Invoices have been paid',
-                  'Order #37745 from September',
-                  'New order placed #XF-2356',
-                  'New order placed #XF-2346',
+                  "1983, orders, $4220",
+                  "12 Invoices have been paid",
+                  "Order #37745 from September",
+                  "New order placed #XF-2356",
+                  "New order placed #XF-2346",
                 ][index],
                 type: `order${index + 1}`,
                 time: faker.date.past(),

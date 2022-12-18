@@ -50,6 +50,7 @@ export default function NavGroup() {
       title: "Xét duyệt thành viên",
       path: `/groups/detail/add-members/${groupId}`,
       icon: icon("fluent-mdl2:add-friend"),
+      notiCount:3
     });
   }
 
