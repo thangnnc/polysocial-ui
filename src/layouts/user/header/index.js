@@ -53,15 +53,11 @@ export default function Header(props) {
   const [notifications, setNotifications] = useState([]);
   const data1 = { userId: 1 };
 
-  useEffect(() => {
-    getNameGroupDESC(data1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data1]);
 
   useEffect(() => {
     try {
       socket.on("get_one_message", function () {
-        console.log("get_one_message");
+        console.log("get_one_message"); 
         getNameGroupDESC(data1);
       });
     } catch (error) {}
