@@ -245,6 +245,11 @@ export default function ManagementGroup(props) {
               <TabList
                 sx={{ pt: 1, borderColor: "#252525" }}
                 onChange={handleChange}
+                TabIndicatorProps={{
+                  style: {
+                    backgroundColor: "#f97c2e",
+                  },
+                }}
                 aria-label="lab API tabs example"
               >
                 <Tab
