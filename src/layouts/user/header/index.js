@@ -40,41 +40,34 @@ Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
 
-export default function Header(props, { onOpenNav }) {
+export default function Header(props) {
   let socket;
   try {
     socket = props.socket.socket.socket;
   } catch (error) {}
-  const { account } = useLogin();
 
+  const { account } = useLogin();
   const [groupList, setGroupList] = useState([]);
   const [count, setCount] = useState(0);
   const [online, setOnline] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const data1 = { userId: 1 };
 
-  useEffect(() => {
-    // setCount(0);
-    getNameGroupDESC();
-  }, []);
 
   useEffect(() => {
     try {
       socket.on("get_one_message", function () {
-        console.log("get_one_message")
-        // for (let index = 0; index < 4; index++) {
-        getNameGroupDESC();
-        // }
+        console.log("get_one_message"); 
+        getNameGroupDESC(data1);
       });
     } catch (error) {}
-  },);
+  });
+
   useEffect(() => {
     try {
       socket.on("accept", function () {
-        console.log("accept")
-
-        // for (let index = 0; index < 4; index++) {
-        getNameGroupDESC();
-        // }
+        console.log("accept");
+        getNameGroupDESC(data1);
       });
     } catch (error) {}
   });
@@ -82,12 +75,8 @@ export default function Header(props, { onOpenNav }) {
   useEffect(() => {
     try {
       socket.on("server-send-listSocket", function (data) {
-        // console.log("on-->", data);
         setOnline(data);
-        const data1 = {
-          userId: 1,
-        };
-        const fetDataDESC = async () => {
+        const fetDataDESC = async (data1) => {
           const arr = [];
           try {
             const response = await Asios.Messages.getNameGroupDESC(data1);
@@ -172,30 +161,16 @@ export default function Header(props, { onOpenNav }) {
           setCount(counts);
           setGroupList(listContent);
         };
-        fetDataDESC();
+        fetDataDESC(data1);
       });
     } catch (error) {}
   });
 
-  // useEffect(() => {
-  //   try {
-  //     socket.on("seen", function () {
-  //       // for (let index = 0; index < 4; index++) {
-  //         getNameGroupDESC();
-  //       // }
-  //     });
-  //   } catch (error) {}
-  // });
-
-  const getNameGroupDESC = async () => {
+  const getNameGroupDESC = async (data1) => {
     console.log("run getNameGroupDESC");
-    const data = {
-      userId: 1,
-    };
     const arr = [];
     try {
-      const response = await Asios.Messages.getNameGroupDESC(data);
-      // console.log("run response",response);
+      const response = await Asios.Messages.getNameGroupDESC(data1);
 
       for (let index = 0; index < response.data.length; index++) {
         const listNameGr = {};
@@ -288,6 +263,10 @@ export default function Header(props, { onOpenNav }) {
     setNotifications(response);
   };
 
+  const handleChange = () =>{
+   getAllNotification();
+  }
+
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -331,7 +310,7 @@ export default function Header(props, { onOpenNav }) {
                 listOnline={online}
               />
 
-              <NotificationPopover notifications={notifications} />
+              <NotificationPopover notifications={notifications} onchange={handleChange} />
             </Box>
 
             <AccountPopover />

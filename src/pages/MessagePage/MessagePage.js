@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
-// import { useParams } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Iconify from "../../components/iconify";
@@ -22,10 +21,6 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import Asios from "../../utils/Axios";
 import useLogin from "../../utils/Login/useLogin";
-import { toast } from "react-toastify";
-import { el } from "date-fns/locale";
-
-// import { io } from "socket.io-client";
 
 const scrollbar = {
   "::-webkit-scrollbar": {
@@ -41,24 +36,15 @@ const scrollbar = {
   },
 };
 
-const friend = {
-  avatar:
-    "https://pdp.edu.vn/wp-content/uploads/2021/06/hinh-anh-gai-xinh-de-thuong-nhat-1-600x600.jpg",
-  fullName: "♥ Gấu Chó ♥",
-  email: "gaucho@gmail.com",
-  isActive: true,
-};
-
 export default function MessagePage(props) {
   const { roomId } = useParams();
   const location = useLocation();
   const [room, setRoom] = useState([]);
-
   const listInnerRef = useRef();
   const [currPage, setCurrPage] = useState(1);
   const [prevPage, setPrevPage] = useState(1);
   const [lastList, setLastList] = useState(false);
-  const [limit, setLimit] = useState(15);
+  const limit = 20;
   const { account } = useLogin();
   const [messageList, setMessageList] = useState([{}]);
   const [listcontactId, setListcontactId] = useState([]);
@@ -70,18 +56,11 @@ export default function MessagePage(props) {
   const [userIdOther, setUserIdOther] = useState();
   const [isActiveOther, setIsActiveOther] = useState();
   const [emailOther, setEmailOther] = useState();
-
   const messageRef = useRef();
   const ref = useRef(null);
   const socket = props.socket.socket;
-  // const [online, setOnline] = useState([]);
   let group = location.state.group;
-  // console.log("groupppp", group);
-  // for (let index = 0; index < location.state.group.length; index++) {
-  //   const element = location.state.group;
-  // console.log("element",element)
 
-  // }
   useEffect(() => {
     try {
       socket.on("server-send-listSocket", function (dataOnline) {
@@ -175,9 +154,7 @@ export default function MessagePage(props) {
               }
               setMessageList(listContent.reverse());
             } catch (error) {}
-          } catch (error) {
-            // toast.error("Failed to fetch message list: ", error);
-          }
+          } catch (error) {}
         };
         fetDataMessage();
       });
@@ -187,12 +164,13 @@ export default function MessagePage(props) {
   useEffect(() => {
     setUserTyping("");
     setRoom(roomId);
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     getMessage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
-  //
+
   useEffect(() => {
     const fetchData = async () => {
       const data = {
@@ -225,7 +203,7 @@ export default function MessagePage(props) {
     if (!lastList && prevPage !== currPage) {
       fetchData();
     }
-  }, [currPage, lastList, prevPage, messageList]);
+  }, [currPage, lastList, prevPage, messageList, limit, roomId]);
   //
   useEffect(() => {
     try {
@@ -233,10 +211,9 @@ export default function MessagePage(props) {
         setMessageList([...messageList, data]);
       });
     } catch (error) {}
-  }, [messageList]);
+  }, [messageList, socket]);
 
   const getMessage = async () => {
-    // console.log("run get message");
     try {
       setRoom(roomId);
       socket.emit("join_room", roomId);
@@ -476,10 +453,10 @@ export default function MessagePage(props) {
                   createdDate={value.createdDate}
                   userId={value.userId}
                   email={value.email}
-                  roomId = {roomId}
-                  listContacts= {listContacts}
+                  roomId={roomId}
+                  listContacts={listContacts}
                 />
-       
+
                 <OtherMessage
                   isActive={value.isActive ? false : true}
                   account={value.fullName + " (" + value.email + ")"}
@@ -495,8 +472,8 @@ export default function MessagePage(props) {
                   createdDate={value.createdDate}
                   userId={value.userId}
                   email={value.email}
-                  roomId = {roomId}
-                  listContacts= {listContacts}
+                  roomId={roomId}
+                  listContacts={listContacts}
                 />
                 {/* <TimeLineMessage message={"16:00"} /> */}
                 {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}

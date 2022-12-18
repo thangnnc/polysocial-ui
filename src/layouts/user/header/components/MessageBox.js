@@ -4,7 +4,6 @@ import AvatarStatus from "../../../../utils/AvatarStatus/AvatarStatus";
 import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMessage";
 
 export default function MessageBox({ roomChat,listOnline }) {
-  // console.log('listOnline ABC->',listOnline)
   
   const navigate = useNavigate();
   const {
@@ -14,10 +13,8 @@ export default function MessageBox({ roomChat,listOnline }) {
     lastMessage,
     lastUpDateDate,
     isActive,
-    // isSeen,
     listContacts,
     status,
-    totalMember,
   } = roomChat;
   const pathMessage = "/message/room/";
 
@@ -30,8 +27,6 @@ export default function MessageBox({ roomChat,listOnline }) {
     group.listOnline = listOnline
     navigate(pathMessage + roomId, {
       state: {
-        // listContacts: listContacts,
-        // avatar: avatar,
         group: group,
       },
     });

@@ -13,6 +13,7 @@ export default function ListFriend() {
 
   const getAllFriend = async () => {
     const response = await Axios.Friends.getAllFriend();
+    console.log(response);
     setListFriend(response);
   };
   return (
@@ -46,7 +47,7 @@ export default function ListFriend() {
                 sx={{ color: "text.secondary" }}
                 noWrap
               >
-                fptpolytechnic@fpt.edu.vn
+                {friend.friendEmail}
               </Typography>
             </Box>
           </Box>

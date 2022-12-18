@@ -37,16 +37,8 @@ const ButtonNormal = styled(Button)(() => ({
 
 export default function Post({ posts, onChange }) {
   const [isShowCmt, setShowCmt] = useState(false);
-  const { account} = useLogin();
-  // const [isLike, setIsLike] = useState(false);
-
-  const statusLike = false;
-  // const [statusLike, setStatusLike] = useState(false);
-
-  // const mySetStatusLike = new Set();
-  const isLike=[];
-
-  // const [statusLike, setStatusLike] = useState(false);
+  const { account } = useLogin();
+  const isLike = [];
 
   const handleShowCmt = () => {
     setShowCmt(true);
@@ -58,11 +50,6 @@ export default function Post({ posts, onChange }) {
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
-      // if (isLike) {
-      //   setIsLike(false);
-      // } else {
-      //   setIsLike(true);
-      // }
       onChange();
       // socket.emit("Client-request-like");
     }
@@ -171,11 +158,12 @@ export default function Post({ posts, onChange }) {
                   borderRight: 0,
                 }}
               >
-                {listLike?.map((element, index) => {
-                    if(element.studentCode === account.studentCode){
-                      isLike.push(element.studentCode);
-                      isLike.push(element.postId);
-                    }
+                {listLike?.map((element) => {
+                  if (element.studentCode === account.studentCode) {
+                    isLike.push(element.studentCode);
+                    isLike.push(element.postId);
+                  }
+                  return "";
                 })}
 
                 {isLike?.includes(account.studentCode && postId) ? (

@@ -59,6 +59,10 @@ export default function NavGroup() {
       title: "Mọi người",
       path: `/groups/detail/members/${groupId}`,
       icon: icon("la:user-friends"),
+    },    {
+      title: "Nhắn tin",
+      path: `/message/room/${!group.roomId ? "1" : group.roomId}`,
+      icon: icon("la:user-friends"),
     },
     {
       title: "Phản hồi",
@@ -97,7 +101,7 @@ export default function NavGroup() {
         <img
           style={{
             width: "100%",
-            height: 300,
+            height: "20vh",
             objectFit: "cover",
           }}
           src={
@@ -111,7 +115,7 @@ export default function NavGroup() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          height: 65,
+          height: "5vh",
           paddingTop: 2,
           paddingLeft: 3,
           paddingRight: 2,

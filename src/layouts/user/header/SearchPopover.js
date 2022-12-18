@@ -36,6 +36,8 @@ export default function SearchPopover(sockets) {
 
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");
+    // console.log('getData',response);
+
     setSearchList(response);
   };
 
@@ -60,7 +62,7 @@ export default function SearchPopover(sockets) {
 
   const handleSearch = async (e) => {
     const response = await Axios.Friends.searchUserByKeywork(e.target.value);
-    console.log(response);
+    console.log('handleSearch',response);
     setSearchList(response);
   };
 

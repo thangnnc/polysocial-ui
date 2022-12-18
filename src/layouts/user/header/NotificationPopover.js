@@ -12,6 +12,7 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Box } from "@mui/system";
 import NotificationBox from "./components/NotificationBox";
+
 // ----------------------------------------------------------------------
 
 const scrollbar = {
@@ -28,23 +29,36 @@ const scrollbar = {
   },
 };
 
-export default function NotificationPopover({ notifications }) {
+export default function NotificationPopover({ notifications, onchange }) {
   const [open, setOpen] = useState(false);
-  const [notification, setNotification] = useState(notifications.length);
-
+  let count =0;
+  try {
+    for (let index = 0; index < notifications.content.length; index++) {
+      const element = notifications.content[index];
+      if(element.status===false){
+        count=count+1;
+      }else{
+        count=count+0;
+      }
+    }
+  } catch (error) {
+    
+  }
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
-    setNotification(0);
   };
 
   const handleClose = () => {
     setOpen(null);
   };
 
+
+
+
   return (
     <>
       <Badge
-        badgeContent={notification}
+        badgeContent={count}
         color="error"
         overlap="circular"
         onClick={handleOpen}
@@ -111,8 +125,8 @@ export default function NotificationPopover({ notifications }) {
           }}
         >
           <Divider />
-          {notifications.map((notification, index) => (
-            <NotificationBox key={index} notification={notification} />
+          {notifications.content?.map((notification, index) => (
+            <NotificationBox key={index} notification={notification} onchange={onchange}/>
           ))}
         </List>
       </Popover>
