@@ -373,11 +373,6 @@ export default function ManagementContent() {
           <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
           Chỉnh sửa
         </MenuItem>
-
-        <MenuItem sx={{ color: "error.main" }}>
-          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
-          Xóa
-        </MenuItem>
       </Popover>
 
       <DialogEditContent
