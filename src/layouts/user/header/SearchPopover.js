@@ -36,7 +36,7 @@ export default function SearchPopover(sockets) {
 
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");
-    // console.log('getData',response);
+    console.log('getData',response);  
 
     setSearchList(response);
   };
@@ -104,7 +104,7 @@ export default function SearchPopover(sockets) {
               ...scrollbar,
             }}
           >
-            {searchList.map((searchData, index) => (
+            {searchList?.map((searchData, index) => (
               <FriendSearchBox
                 key={index}
                 searchData={searchData}
