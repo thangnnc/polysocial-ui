@@ -116,7 +116,7 @@ export default function ProfilePage(props) {
         group: group,
       },
     });
-
+  }
   const handleConfirmFriend = async () => {
     const response = await Axios.Friends.acceptFriend(user);
     if (response.status === 200) {
@@ -391,4 +391,4 @@ export default function ProfilePage(props) {
     </Box>
   );
 }
-}
+
