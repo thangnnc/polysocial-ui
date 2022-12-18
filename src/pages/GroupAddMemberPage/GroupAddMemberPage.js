@@ -15,7 +15,8 @@ export default function GroupAddMemberPage() {
 
   const getRequestMember = async (groupId) => {
     const response = await Axios.Groups.getMemberJoinGroup(groupId);
-    console.log("r4epsssss",response)
+    // console.log("r4epsssss",response)
+    // console.log("r4epsssss",response.length)
     setShowRequestMember(response);
   };
 

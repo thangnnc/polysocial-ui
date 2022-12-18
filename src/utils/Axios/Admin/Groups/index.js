@@ -70,7 +70,7 @@ class Groups {
   static getMemberJoinGroup = async (groupId) =>
     Axios.get(`/group/member-join-group-false?groupId=${groupId}`);
 
-  //API request join group
+  //API request join group  
   static requestJoinGroup = async (groupId) =>
     Axios.post(`/group/member-join-group?groupId=${groupId}`);
 
