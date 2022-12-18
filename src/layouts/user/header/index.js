@@ -288,6 +288,10 @@ export default function Header(props, { onOpenNav }) {
     setNotifications(response);
   };
 
+  const handleChange = () =>{
+   getAllNotification();
+  }
+
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -331,7 +335,7 @@ export default function Header(props, { onOpenNav }) {
                 listOnline={online}
               />
 
-              <NotificationPopover notifications={notifications} />
+              <NotificationPopover notifications={notifications} onchange={handleChange} />
             </Box>
 
             <AccountPopover />

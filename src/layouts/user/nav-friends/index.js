@@ -69,7 +69,7 @@ export default function NavFriend(props) {
         const listFriends = [];
         const fetDataDESC = async () => {
           const response = await Axios.Friends.getAllFriend();
-          console.log("--nav-friends->", response);
+          // console.log("--nav-friends->", response);
 
           for (let index = 0; index < response.length; index++) {
             const listFrindObject = {};
@@ -106,7 +106,7 @@ export default function NavFriend(props) {
             }
             listFriends.push(listFrindObject);
           }
-          console.log("list friend- ", listFriends);
+          // console.log("list friend- ", listFriends);
           setListFriend(listFriends);
         };
         fetDataDESC();
