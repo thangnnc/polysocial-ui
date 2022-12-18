@@ -1,4 +1,5 @@
 import { Box, styled, Tooltip } from "@mui/material";
+import { Link } from "react-router-dom";
 import AvatarBlank from "../../../components/avatar-blank/AvatarBlank";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";
@@ -24,7 +25,9 @@ const Message = styled("span")(() => ({
   wordWrap: "break-word",
 }));
 
-export default function MyMessage({ message, showAvatar,createdDate }) {
+export default function MyMessage({ message, showAvatar,createdDate,userId, email,
+  roomId,
+  listContacts, }) {
   // console.log("avt",showAvatar)
   const { account } = useLogin();
   return (
@@ -34,15 +37,28 @@ export default function MyMessage({ message, showAvatar,createdDate }) {
           <Tooltip title={createdDate}>
             <Message>{message}</Message>
           </Tooltip>
+         
           {showAvatar ? (
+             <Link
+             to={`/my-profile/`+userId}
+             state={{
+              isActive: true,
+              email: email,
+              roomId: roomId,
+              listContacts: listContacts,
+            }}
+             style={{ textDecoration: "none", color: "black" }}
+           >
             <Tooltip title={account.fullName + " (" + account.email + ")"}>
               <span>
                 <AvatarStatus src={account.avatar} isActive={true} />
               </span>
             </Tooltip>
+            </Link>
           ) : (
             <AvatarBlank sx={{ width: 44, height: 44 }} />
           )}
+          
         </MessageLine>
       )}
     </>

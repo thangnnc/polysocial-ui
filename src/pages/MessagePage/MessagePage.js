@@ -18,11 +18,12 @@ import MyMessage from "./components/MyMessage";
 import OtherMessage from "./components/OtherMessage";
 import AlertMessage from "./components/AlertMessage";
 import EnteringMessage from "./components/EnteringMessage";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import Asios from "../../utils/Axios";
 import useLogin from "../../utils/Login/useLogin";
 import { toast } from "react-toastify";
+import { el } from "date-fns/locale";
 
 // import { io } from "socket.io-client";
 
@@ -62,30 +63,29 @@ export default function MessagePage(props) {
   const [messageList, setMessageList] = useState([{}]);
   const [listcontactId, setListcontactId] = useState([]);
   const [contactId, setcontactId] = useState([]);
-  // const [listContacts, setListContacts] = useState([]);
+  const [listContacts, setListContacts] = useState();
   const [message, setMessage] = useState("");
   const [userTyping, setUserTyping] = useState([]);
   const [accountTyping, setAccountTyping] = useState([]);
+  const [userIdOther, setUserIdOther] = useState();
+  const [isActiveOther, setIsActiveOther] = useState();
+  const [emailOther, setEmailOther] = useState();
+
   const messageRef = useRef();
   const ref = useRef(null);
   const socket = props.socket.socket;
   // const [online, setOnline] = useState([]);
   let group = location.state.group;
-
+  // console.log("groupppp", group);
   // for (let index = 0; index < location.state.group.length; index++) {
   //   const element = location.state.group;
   // console.log("element",element)
 
   // }
-  // useEffect(() => {
-  //   getMessage()
-  // }, []);
-
   useEffect(() => {
     try {
       socket.on("server-send-listSocket", function (dataOnline) {
-        group.isActive = !group.isActive;
-
+        console.log("run server-send-listSocket");
         const fetDataMessage = async () => {
           try {
             setRoom(roomId);
@@ -98,6 +98,8 @@ export default function MessagePage(props) {
             const response = await Asios.Messages.getMessage(data);
             setRoom(roomId);
             const arr = [];
+            setListContacts(group.listContacts);
+
             for (let index = 0; index < group.listContacts.length; index++) {
               const element = group.listContacts[index];
               if (element[1] === account.studentCode) {
@@ -124,7 +126,7 @@ export default function MessagePage(props) {
                 const element2 = dataOnline;
                 listOnline.push(element2[index].email);
               }
-              // console.log("listOnline", listOnline);
+              console.log("listOnline", listOnline);
               for (let index = 0; index < response.data.length; index++) {
                 const listContentObject = {};
                 const element = response.data[index];
@@ -136,11 +138,15 @@ export default function MessagePage(props) {
                 listContentObject.studentCode = element.studentCode;
                 listContentObject.email = element.email;
                 listContentObject.messageRecall = element.messageRecall;
+                listContentObject.userId = element.userId;
+
                 if (element.statusCreated === false) {
                   if (element.studentCode === account.studentCode) {
                     listContentObject.content = "";
                   } else {
                     listContentObject.content = element.content;
+                    setUserIdOther(element.userId);
+                    setEmailOther(element.email);
                   }
                 } else {
                   listContentObject.content = element.content;
@@ -150,6 +156,14 @@ export default function MessagePage(props) {
                     var isActive;
                     if (listOnline.includes(element.email) === true) {
                       isActive = true;
+                      if (
+                        element.email === account.email &&
+                        listOnline.length < 2
+                      ) {
+                        setIsActiveOther(false);
+                      } else {
+                        setIsActiveOther(true);
+                      }
                     } else {
                       isActive = false;
                     }
@@ -178,7 +192,7 @@ export default function MessagePage(props) {
   useEffect(() => {
     getMessage();
   }, [roomId]);
-
+  //
   useEffect(() => {
     const fetchData = async () => {
       const data = {
@@ -212,17 +226,17 @@ export default function MessagePage(props) {
       fetchData();
     }
   }, [currPage, lastList, prevPage, messageList]);
-
+  //
   useEffect(() => {
     try {
       socket.on("recevie_message", (data) => {
-        // console.log("recevie_message",data)
         setMessageList([...messageList, data]);
       });
     } catch (error) {}
   }, [messageList]);
 
   const getMessage = async () => {
+    // console.log("run get message");
     try {
       setRoom(roomId);
       socket.emit("join_room", roomId);
@@ -234,6 +248,9 @@ export default function MessagePage(props) {
       const response = await Asios.Messages.getMessage(data);
       setRoom(roomId);
       const arr = [];
+      setListContacts(group.listContacts);
+      console.log("run get message", group.listContacts);
+
       for (let index = 0; index < group.listContacts.length; index++) {
         const element = group.listContacts[index];
         if (element[1] === account.studentCode) {
@@ -274,11 +291,15 @@ export default function MessagePage(props) {
           listContentObject.studentCode = element.studentCode;
           listContentObject.email = element.email;
           listContentObject.messageRecall = element.messageRecall;
+          listContentObject.userId = element.userId;
+
           if (element.statusCreated === false) {
             if (element.studentCode === account.studentCode) {
               listContentObject.content = "";
             } else {
               listContentObject.content = element.content;
+              setUserIdOther(element.userId);
+              setEmailOther(element.email);
             }
           } else {
             listContentObject.content = element.content;
@@ -288,6 +309,11 @@ export default function MessagePage(props) {
               var isActive;
               if (listOnline.includes(element.email) === true) {
                 isActive = true;
+                if (element.email === account.email && listOnline.length < 2) {
+                  setIsActiveOther(false);
+                } else {
+                  setIsActiveOther(true);
+                }
               } else {
                 isActive = false;
               }
@@ -341,6 +367,8 @@ export default function MessagePage(props) {
           fullName: account.fullName,
           statusCreated: true,
           email: account.email,
+          isActive: true,
+          userId: account.userId,
         },
       };
       createMessage();
@@ -378,22 +406,33 @@ export default function MessagePage(props) {
         <title> Message | Poly Social</title>
       </Helmet>
       <Card sx={{ minHeight: "72vh" }}>
-        <CardHeader
-          avatar={
-            <AvatarStatus
-              src={group.avatar}
-              isActive={group.isActive}
-              sx={{ width: "46px", height: "46px" }}
-            />
-          }
-          action={
-            <IconButton nButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={<Typography fontWeight={700}>{group.name}</Typography>}
-          subheader={group.isActive ? "Đang hoạt động" : "Không hoạt động"}
-        />
+        <Link
+          to={`/my-profile/` + userIdOther}
+          state={{
+            isActive: isActiveOther,
+            email: emailOther,
+            roomId: roomId,
+            listContacts: listContacts,
+          }}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <CardHeader
+            avatar={
+              <AvatarStatus
+                src={group.avatar}
+                isActive={isActiveOther}
+                sx={{ width: "46px", height: "46px" }}
+              />
+            }
+            action={
+              <IconButton nButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={<Typography fontWeight={700}>{group.name}</Typography>}
+            subheader={isActiveOther ? "Đang hoạt động" : "Không hoạt động"}
+          />
+        </Link>
         <Divider />
         {/* Nội dung tin nhắn */}
         <CardContent
@@ -435,7 +474,12 @@ export default function MessagePage(props) {
                   }
                   showAvatar={4 - 2 === 2}
                   createdDate={value.createdDate}
+                  userId={value.userId}
+                  email={value.email}
+                  roomId = {roomId}
+                  listContacts= {listContacts}
                 />
+       
                 <OtherMessage
                   isActive={value.isActive ? false : true}
                   account={value.fullName + " (" + value.email + ")"}
@@ -449,6 +493,10 @@ export default function MessagePage(props) {
                   }
                   showAvatar
                   createdDate={value.createdDate}
+                  userId={value.userId}
+                  email={value.email}
+                  roomId = {roomId}
+                  listContacts= {listContacts}
                 />
                 {/* <TimeLineMessage message={"16:00"} /> */}
                 {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}

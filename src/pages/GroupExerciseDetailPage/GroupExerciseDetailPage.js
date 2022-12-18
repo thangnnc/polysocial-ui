@@ -138,156 +138,167 @@ export default function GroupExerciseDetailPage() {
   return (
     <Box sx={{ display: "flex", mt: 15 }}>
       <Box sx={{ width: "70%", py: 5 }}>
-        {account.role==='Sinh viên' && (<>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Nộp bài tập
-        </Typography>
-        <Card>
-          <CardHeader
-            avatar={
-              <AvatarStatus
-                alt={account.fullName}
-                src={account.avatar}
-                isActive={true}
-                sx={{ width: 54, height: 54 }}
+        {account.role === "Sinh viên" && (
+          <>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Nộp bài tập
+            </Typography>
+            <Card>
+              <CardHeader
+                avatar={
+                  <AvatarStatus
+                    alt={account.fullName}
+                    src={account.avatar}
+                    isActive={true}
+                    sx={{ width: 54, height: 54 }}
+                  />
+                }
+                action={
+                  <Box>
+                    <TextField
+                      id="file-input"
+                      type="file"
+                      name="file"
+                      onChange={changeHandler}
+                      sx={styleInputFullField}
+                    />
+                    <label
+                      htmlFor="file-input"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        component="span"
+                        sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
+                      >
+                        {!exercise.isSubmit ? "Chọn tệp" : "Đã nộp"}
+                      </Button>
+                    </label>
+                  </Box>
+                }
+                title={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: "bold" }}
+                    noWrap
+                    fontSize={16}
+                  >
+                    {account.fullName} đã tạo mới một bài tập:{" "}
+                    {exercise.content}
+                  </Typography>
+                }
+                subheader={
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "text.secondary" }}
+                    noWrap
+                  >
+                    {exercise.endDate}
+                  </Typography>
+                }
               />
-            }
-            action={
-              <Box>
-                <TextField
-                  id="file-input"
-                  type="file"
-                  name="file"
-                  onChange={changeHandler}
-                  sx={styleInputFullField}
-                />
-                <label
-                  htmlFor="file-input"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    component="span"
-                    sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
-                  >
-                    {!exercise.isSubmit ? "Chọn tệp" : "Đã nộp"}
-                  </Button>
-                </label>
-              </Box>
-            }
-            title={
-              <Typography
-                variant="subtitle2"
-                sx={{ fontWeight: "bold" }}
-                noWrap
-                fontSize={16}
-              >
-                {account.fullName} đã tạo mới một bài tập: {exercise.content}
-              </Typography>
-            }
-            subheader={
-              <Typography
-                variant="body2"
-                sx={{ color: "text.secondary" }}
-                noWrap
-              >
-                {exercise.endDate}
-              </Typography>
-            }
-          />
-          {exercise.isSubmit ? (
-            <CardContent>
-              {isSelected ? (
+              {exercise.isSubmit ? (
                 <CardContent>
-                  <Typography>Tên tệp: {selectedFile.name}</Typography>
-                  <Typography>Loại tệp: {selectedFile.type}</Typography>
-                  <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
+                  {isSelected ? (
+                    <CardContent>
+                      <Typography>Tên tệp: {selectedFile.name}</Typography>
+                      <Typography>Loại tệp: {selectedFile.type}</Typography>
+                      <Typography>
+                        Dung lượng tệp: {selectedFile.size}
+                      </Typography>
+                      <Typography>
+                        Ngày sửa đổi cuối cùng:
+                        {selectedFile.lastModifiedDate.toLocaleDateString()}
+                      </Typography>
+                    </CardContent>
+                  ) : (
+                    ""
+                  )}
                   <Typography>
-                    Ngày sửa đổi cuối cùng:
-                    {selectedFile.lastModifiedDate.toLocaleDateString()}
+                    Đường dẫn file nộp bài: {exercise.url}
                   </Typography>
+                  {!exercise.isSubmit ? (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#ff7b29",
+                        width: "100%",
+                        mt: 3,
+                        borderRadius: 2,
+                      }}
+                      onClick={submitHandler}
+                    >
+                      Nộp bài
+                    </Button>
+                  ) : (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-around" }}
+                    >
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#ff7b29",
+                          width: "40%",
+                          mt: 3,
+                          borderRadius: 2,
+                        }}
+                        onClick={updateHandler}
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#ff7b29",
+                          width: "40%",
+                          mt: 3,
+                          borderRadius: 2,
+                        }}
+                        onClick={() => deleteHandler(exercise.taskFileId)}
+                      >
+                        Xoá
+                      </Button>
+                    </Box>
+                  )}
                 </CardContent>
               ) : (
-                ""
+                <React.Fragment>
+                  {isSelected ? (
+                    <CardContent>
+                      <Typography>Tên tệp: {selectedFile.name}</Typography>
+                      <Typography>Loại tệp: {selectedFile.type}</Typography>
+                      <Typography>
+                        Dung lượng tệp: {selectedFile.size}
+                      </Typography>
+                      <Typography>
+                        Ngày sửa đổi cuối cùng:
+                        {selectedFile.lastModifiedDate.toLocaleDateString()}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#ff7b29",
+                          width: "100%",
+                          mt: 3,
+                          borderRadius: 2,
+                        }}
+                        onClick={submitHandler}
+                      >
+                        Nộp bài
+                      </Button>
+                    </CardContent>
+                  ) : (
+                    ""
+                  )}
+                </React.Fragment>
               )}
-              <Typography>Đường dẫn file nộp bài: {exercise.url}</Typography>
-              {!exercise.isSubmit ? (
-                <Button
-                  variant="contained"
-                  sx={{
-                    background: "#ff7b29",
-                    width: "100%",
-                    mt: 3,
-                    borderRadius: 2,
-                  }}
-                  onClick={submitHandler}
-                >
-                  Nộp bài
-                </Button>
-              ) : (
-                <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      background: "#ff7b29",
-                      width: "40%",
-                      mt: 3,
-                      borderRadius: 2,
-                    }}
-                    onClick={updateHandler}
-                  >
-                    Cập nhật
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      background: "#ff7b29",
-                      width: "40%",
-                      mt: 3,
-                      borderRadius: 2,
-                    }}
-                    onClick={() => deleteHandler(exercise.taskFileId)}
-                  >
-                    Xoá
-                  </Button>
-                </Box>
-              )}
-            </CardContent>
-          ) : (
-            <React.Fragment>
-              {isSelected ? (
-                <CardContent>
-                  <Typography>Tên tệp: {selectedFile.name}</Typography>
-                  <Typography>Loại tệp: {selectedFile.type}</Typography>
-                  <Typography>Dung lượng tệp: {selectedFile.size}</Typography>
-                  <Typography>
-                    Ngày sửa đổi cuối cùng:
-                    {selectedFile.lastModifiedDate.toLocaleDateString()}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      background: "#ff7b29",
-                      width: "100%",
-                      mt: 3,
-                      borderRadius: 2,
-                    }}
-                    onClick={submitHandler}
-                  >
-                    Nộp bài
-                  </Button>
-                </CardContent>
-              ) : (
-                ""
-              )}
-            </React.Fragment>
-          )}
-        </Card>
-        </>)}
+            </Card>
+          </>
+        )}
         {account.role !== "Sinh viên" && (
           <>
-            <Typography variant="h4" sx={{ mb: 5, mt: 5 }}>
+            <Typography variant="h4" sx={{ mb: 5 }}>
               Danh sách bài tập đã nộp
             </Typography>
             {data?.map((item, index) => (
