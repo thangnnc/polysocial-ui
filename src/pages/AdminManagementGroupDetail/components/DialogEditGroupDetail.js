@@ -16,6 +16,7 @@ import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import useLogin from "./../../../utils/Login/useLogin";
 
 const styleInputFullField = {
   width: "100%",
@@ -38,6 +39,7 @@ export const DialogEditGroupDetail = ({
   onChange,
 }) => {
   const [memberEdit, setMemberEdit] = useState([]);
+  const { account } = useLogin();
 
   useEffect(() => {
     setMemberEdit(member);
@@ -172,18 +174,20 @@ export const DialogEditGroupDetail = ({
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ p: "0 24px 12px 24px" }}>
-          <Button onClick={deleteMember} variant="contained" color="error">
-            Xóa
-          </Button>
-          <Button
-            onClick={handleClose}
-            variant="contained"
-            className="btn-secondary"
-          >
-            Hủy
-          </Button>
-        </DialogActions>
+        {account.role === "Giảng viên" && (
+          <DialogActions sx={{ p: "0 24px 12px 24px" }}>
+            <Button onClick={deleteMember} variant="contained" color="error">
+              Xóa
+            </Button>
+            <Button
+              onClick={handleClose}
+              variant="contained"
+              className="btn-secondary"
+            >
+              Hủy
+            </Button>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );

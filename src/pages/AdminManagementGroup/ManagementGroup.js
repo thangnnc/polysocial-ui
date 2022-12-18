@@ -592,11 +592,6 @@ export default function ManagementGroup(props) {
             Thành viên
           </Link>
         </MenuItem>
-
-        <MenuItem sx={{ color: "error.main" }}>
-          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
-          Xóa
-        </MenuItem>
       </Popover>
 
       <DialogEditGroup
