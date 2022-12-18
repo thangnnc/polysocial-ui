@@ -7,7 +7,6 @@ import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 import Infomation from "./components/Infomation";
 import ListFriend from "./components/ListFriend";
-import ListContent from "./components/ListContent";
 import useLogin from "../../utils/Login/useLogin";
 import { toast } from "react-toastify";
 import { DialogEditAccount } from "./components/DialogEditAccount";
@@ -24,10 +23,8 @@ export default function ProfilePage(props) {
   const [online, setOnline] = useState([]);
   let profilePage;
   try {
-    profilePage=location.state;
-  } catch (error) {
-    
-  }
+    profilePage = location.state;
+  } catch (error) {}
   let isActive;
   let email;
   let roomId;
@@ -37,11 +34,9 @@ export default function ProfilePage(props) {
     email = profilePage.email;
     roomId = profilePage.roomId;
     listContacts = profilePage.listContacts;
-  } catch (error) {
-    
-  }
-  console.log("profile",profilePage)
-  
+  } catch (error) {}
+  console.log("profile", profilePage);
+
   const { account } = useLogin();
   const { userId } = useParams();
   const [user, setUser] = useState({});
@@ -49,7 +44,6 @@ export default function ProfilePage(props) {
   const [isEdit, setIsEdit] = useState(false);
   const [isActiveOther, setIsActiveOther] = useState(isActive);
   const navigate = useNavigate();
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -102,13 +96,13 @@ export default function ProfilePage(props) {
 
   const pathMessage = "/message/room/";
 
-  const handleOnClick = async (e, avatar, name,isActive) => {
+  const handleOnClick = async (e, avatar, name, isActive) => {
     let group = {};
     group.listContacts = listContacts;
-    group.name =name;
+    group.name = name;
     group.avatar = avatar;
     group.isActive = isActive;
-    group.listOnline = online
+    group.listOnline = online;
     navigate(pathMessage + roomId, {
       state: {
         // listContacts: listContacts,
@@ -116,7 +110,7 @@ export default function ProfilePage(props) {
         group: group,
       },
     });
-  }
+  };
   const handleConfirmFriend = async () => {
     const response = await Axios.Friends.acceptFriend(user);
     if (response.status === 200) {
@@ -231,7 +225,12 @@ export default function ProfilePage(props) {
                               borderRadius: 2,
                             }}
                             onClick={(e) => {
-                              handleOnClick(e, user?.avatar, user?.fullName,isActiveOther);
+                              handleOnClick(
+                                e,
+                                user?.avatar,
+                                user?.fullName,
+                                isActiveOther
+                              );
                             }}
                           >
                             <Iconify icon={"mdi:facebook-messenger"} />
@@ -319,15 +318,10 @@ export default function ProfilePage(props) {
                   value="2"
                   sx={{ fontSize: 15, fontWeight: "bold" }}
                 />
-                <Tab
-                  label="Bài viết"
-                  value="3"
-                  sx={{ fontSize: 15, fontWeight: "bold" }}
-                />
                 {account?.email === user?.email && (
                   <Tab
                     label="Đổi mật khẩu"
-                    value="4"
+                    value="3"
                     sx={{ fontSize: 15, fontWeight: "bold" }}
                   />
                 )}
@@ -352,9 +346,6 @@ export default function ProfilePage(props) {
                   <TabPanel value="2">
                     <ListFriend />
                   </TabPanel>
-                  <TabPanel value="3">
-                    <ListContent user={user} />
-                  </TabPanel>
                 </>
               ) : (
                 <Box
@@ -378,7 +369,7 @@ export default function ProfilePage(props) {
                 </Box>
               )}
               {account?.email === user?.email && (
-                <TabPanel value="4">
+                <TabPanel value="3">
                   <ChangePassword user={user} />
                 </TabPanel>
               )}
@@ -391,4 +382,3 @@ export default function ProfilePage(props) {
     </Box>
   );
 }
-

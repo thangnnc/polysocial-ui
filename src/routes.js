@@ -101,7 +101,7 @@ export default function Router(props) {
       path: "/admin",
       element: !account ? (
         <Navigate to="/login" />
-      ) : account.role !== "Đào tạo" ? (
+      ) : account.role === "Sinh viên" ? (
         <Navigate to="/home" />
       ) : (
         <AdminLayout />

@@ -8,13 +8,16 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "./../../utils/Axios/index";
 
 export default function DialogUpPost({ open, handleClose, onChange }) {
+  const { groupId } = useParams();
+
   const [itemInputPost, setItemInputPost] = useState({
     content: "",
-    groupId: 1,
+    groupId: groupId === undefined ? "1" : groupId,
     files: [],
   });
 
