@@ -7,7 +7,7 @@ import Axios from "./../../../../utils/Axios/index";
 export default function FriendSearchBox({ searchData, sockets }) {
   const socket = sockets.sockets;
   const { avatar, fullName, email, isFriend, userId } = searchData;
-
+  // console.log("searchData",searchData)
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
     if (response.status === 200) {

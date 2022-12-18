@@ -1,7 +1,7 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Button, Card, CardContent, Tab, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Iconify from "../../components/iconify/Iconify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
@@ -13,16 +13,68 @@ import { toast } from "react-toastify";
 import { DialogEditAccount } from "./components/DialogEditAccount";
 import ChangePassword from "./components/ChangePassword";
 
-export default function ProfilePage() {
+export default function ProfilePage(props) {
+  const socket = props.socket.socket;
+
+  const location = useLocation();
+  // const { isActive } = location.state;
+  // const { email } = location.state;
+  // const { roomId } = location.state;
+  // const { listContacts } = location.state;
+  const [online, setOnline] = useState([]);
+  let profilePage;
+  try {
+    profilePage=location.state;
+  } catch (error) {
+    
+  }
+  let isActive;
+  let email;
+  let roomId;
+  let listContacts;
+  try {
+    isActive = profilePage.isActive;
+    email = profilePage.email;
+    roomId = profilePage.roomId;
+    listContacts = profilePage.listContacts;
+  } catch (error) {
+    
+  }
+  console.log("profile",profilePage)
+  
   const { account } = useLogin();
   const { userId } = useParams();
   const [user, setUser] = useState({});
   const [value, setValue] = useState("1");
   const [isEdit, setIsEdit] = useState(false);
+  const [isActiveOther, setIsActiveOther] = useState(isActive);
+  const navigate = useNavigate();
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    try {
+      socket.on("server-send-listSocket", function (dataOnline) {
+        setOnline(dataOnline);
+
+        const listOnline = [];
+        for (let index = 0; index < dataOnline.length; index++) {
+          const element2 = dataOnline;
+          listOnline.push(element2[index].email);
+        }
+        listOnline.splice(listOnline.indexOf(account.email), 1);
+        console.log("list ont", listOnline);
+        if (listOnline.includes(email) === true) {
+          setIsActiveOther(true);
+        } else {
+          setIsActiveOther(false);
+        }
+      });
+    } catch (error) {}
+  });
 
   useEffect(() => {
     getOneUser(userId);
@@ -44,6 +96,24 @@ export default function ProfilePage() {
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
     }
+  };
+
+  const pathMessage = "/message/room/";
+
+  const handleOnClick = async (e, avatar, name,isActive) => {
+    let group = {};
+    group.listContacts = listContacts;
+    group.name =name;
+    group.avatar = avatar;
+    group.isActive = isActive;
+    group.listOnline = online
+    navigate(pathMessage + roomId, {
+      state: {
+        // listContacts: listContacts,
+        // avatar: avatar,
+        group: group,
+      },
+    });
   };
 
   return (
@@ -84,7 +154,7 @@ export default function ProfilePage() {
                   <AvatarStatus
                     src={user?.avatar}
                     alt={user?.fullName}
-                    isActive={true}
+                    isActive={isActiveOther}
                     sx={{ width: 130, height: 130 }}
                   />
                 </Box>
@@ -155,8 +225,10 @@ export default function ProfilePage() {
                           Bạn bè
                         </Typography>
                       </Button>
-
                       <Button
+                         onClick={(e) => {
+                          handleOnClick(e, user?.avatar, user?.fullName,isActiveOther);
+                        }}
                         variant="contained"
                         sx={{
                           background: "#D8DADF",

@@ -1,4 +1,5 @@
 import { Box, styled, Tooltip } from "@mui/material";
+import { Link } from "react-router-dom";
 import AvatarBlank from "../../../components/avatar-blank/AvatarBlank";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
@@ -30,21 +31,32 @@ export default function OtherMessage({
   avatar,
   showAvatar,
   createdDate,
+  userId,
+  email,
+  roomId,
+  listContacts,
 }) {
-  // console.log("---isActive",isActive,'name-',account)
   return (
     <>
       {message && (
         <MessageLine>
           {showAvatar ? (
-            <Tooltip title={account}>
-              <span>
-                <AvatarStatus
-                  src={avatar}
-                  isActive={!isActive}
-                />
-              </span>
-            </Tooltip>
+            <Link
+              to={`/my-profile/${userId}`}
+              state={{
+                isActive: isActive,
+                email: email,
+                roomId: roomId,
+                listContacts: listContacts,
+              }}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Tooltip title={account}>
+                <span>
+                  <AvatarStatus src={avatar} isActive={!isActive} />
+                </span>
+              </Tooltip>
+            </Link>
           ) : (
             <AvatarBlank sx={{ width: 44, height: 44 }} />
           )}

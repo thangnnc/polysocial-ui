@@ -60,15 +60,18 @@ export default function Header(props, { onOpenNav }) {
   useEffect(() => {
     try {
       socket.on("get_one_message", function () {
+        console.log("get_one_message")
         // for (let index = 0; index < 4; index++) {
         getNameGroupDESC();
         // }
       });
     } catch (error) {}
-  });
+  },);
   useEffect(() => {
     try {
       socket.on("accept", function () {
+        console.log("accept")
+
         // for (let index = 0; index < 4; index++) {
         getNameGroupDESC();
         // }
@@ -167,7 +170,6 @@ export default function Header(props, { onOpenNav }) {
           }
 
           setCount(counts);
-
           setGroupList(listContent);
         };
         fetDataDESC();

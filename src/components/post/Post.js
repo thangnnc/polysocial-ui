@@ -37,7 +37,7 @@ const ButtonNormal = styled(Button)(() => ({
 
 export default function Post({ posts, onChange }) {
   const [isShowCmt, setShowCmt] = useState(false);
-  const { account, socket } = useLogin();
+  const { account} = useLogin();
   // const [isLike, setIsLike] = useState(false);
 
   const statusLike = false;
@@ -64,7 +64,7 @@ export default function Post({ posts, onChange }) {
       //   setIsLike(true);
       // }
       onChange();
-      socket.emit("Client-request-like");
+      // socket.emit("Client-request-like");
     }
   };
 

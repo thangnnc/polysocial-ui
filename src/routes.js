@@ -52,7 +52,7 @@ export default function Router(props) {
           path: "message/room/:roomId",
           element: <MessagePage socket={props} />,
         },
-        { path: "my-profile/:userId", element: <ProfilePage /> },
+        { path: "my-profile/:userId", element: <ProfilePage socket={props} /> },
         { path: "friends-requests", element: <AddFriendPage socket={props} /> },
       ],
     },

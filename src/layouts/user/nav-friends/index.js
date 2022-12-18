@@ -65,11 +65,12 @@ export default function NavFriend(props) {
           const element2 = data;
           mySetOnline.add(element2[i].email);
         }
-        
 
         const listFriends = [];
         const fetDataDESC = async () => {
           const response = await Axios.Friends.getAllFriend();
+          console.log("--nav-friends->", response);
+
           for (let index = 0; index < response.length; index++) {
             const listFrindObject = {};
             const element = response[index];
@@ -81,19 +82,31 @@ export default function NavFriend(props) {
             listFrindObject.fullNameUserConfirm = element.fullNameUserConfirm;
             listFrindObject.fullNameUserInvite = element.fullNameUserInvite;
             listFrindObject.groupId = element.groupId;
-            listFrindObject.listContact = element.listContact;
+            var listContact = [];
+            for (let i = 0; i < element.listContact.length; i++) {
+              var arr = [];
+              const element2 = element.listContact[i];
+              arr.push(element2.contactId);
+              arr.push(element2.studentCode);
+              arr.push(element.friendAvatar);
+              arr.push(element.friendName);
+              arr.push(element2.email);
+              listContact.push(arr);
+            }
+            listFrindObject.listContact = listContact;
+
             listFrindObject.roomId = element.roomId;
             listFrindObject.status = element.status;
             listFrindObject.userConfirmId = element.userConfirmId;
             listFrindObject.userInviteId = element.userInviteId;
-            if(mySetOnline.has(element.friendEmail)){
-              listFrindObject.isActive =true;
-            }else{
-            listFrindObject.isActive =false;
-
+            if (mySetOnline.has(element.friendEmail)) {
+              listFrindObject.isActive = true;
+            } else {
+              listFrindObject.isActive = false;
             }
             listFriends.push(listFrindObject);
           }
+          console.log("list friend- ", listFriends);
           setListFriend(listFriends);
         };
         fetDataDESC();
@@ -115,20 +128,26 @@ export default function NavFriend(props) {
   });
 
   const getAllFriend = async () => {
-
     const response = await Axios.Friends.getAllFriend();
-    console.log("--->", response);
+    // console.log("--->", response);
     setListFriend(response);
   };
   const pathMessage = "/message/room/";
 
-  const handleOnClick = async (e, listContacts, avatar, name,isActive,roomId) => {
+  const handleOnClick = async (
+    e,
+    listContacts,
+    avatar,
+    name,
+    isActive,
+    roomId
+  ) => {
     let group = {};
     group.listContacts = listContacts;
     group.name = name;
     group.avatar = avatar;
     group.isActive = isActive;
-     group.listOnline = listOnline
+    group.listOnline = listOnline;
     navigate(pathMessage + roomId, {
       state: {
         group: group,
@@ -179,9 +198,21 @@ export default function NavFriend(props) {
       >
         {listFriends.map((value, index) => {
           return (
-            <Button  onClick={(e) => {
-              handleOnClick(e,value.listContact,value.friendAvatar,value.friendName,value.isActive,value.roomId);
-            }} key={index} color="warning" sx={styleListFriends}>
+            <Button
+              onClick={(e) => {
+                handleOnClick(
+                  e,
+                  value.listContact,
+                  value.friendAvatar,
+                  value.friendName,
+                  value.isActive,
+                  value.roomId
+                );
+              }}
+              key={index}
+              color="warning"
+              sx={styleListFriends}
+            >
               <ListItem>
                 <ListItemAvatar>
                   <AvatarStatus
