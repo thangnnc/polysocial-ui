@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import Post from "../../components/post/Post";
 import UpPost from "../../components/post/UpPost";
+import useLogin from "../../utils/Login/useLogin";
 import Axios from "./../../utils/Axios/index";
 
 export default function HomePage() {
+  const { account } = useLogin();
   const [listPostDTO, setListPost] = useState([]);
 
   useEffect(() => {
@@ -27,8 +29,7 @@ export default function HomePage() {
       <Helmet>
         <title> Trang chủ | Poly Social</title>
       </Helmet>
-
-      <UpPost onChange={handleChange} />
+      {account.role !== "Sinh viên" && <UpPost onChange={handleChange} />}
 
       <Post posts={listPostDTO} onChange={handleChange} />
     </>

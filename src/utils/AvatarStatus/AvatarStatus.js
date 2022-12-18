@@ -1,5 +1,4 @@
 import { Avatar, Badge, Box, styled } from "@mui/material";
-import { Link } from "react-router-dom";
 
 const StyledBadge = styled(Badge)(({ theme, isActive }) => ({
   "& .MuiBadge-badge": {
@@ -28,11 +27,11 @@ export default function AvatarStatus({
           },
         }}
       >
-          <Avatar
-            alt={alt}
-            src={src}
-            sx={{ border: "2px solid #ff7f30", ...sx }}
-          />
+        <Avatar
+          alt={alt}
+          src={src}
+          sx={{ border: "2px solid #ff7f30", ...sx }}
+        />
       </StyledBadge>
     </Box>
   );

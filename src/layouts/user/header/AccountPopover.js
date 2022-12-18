@@ -15,10 +15,6 @@ import Iconify from "../../../components/iconify";
 import { useNavigate } from "react-router-dom";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
-
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const { account, logout } = useLogin();
@@ -32,7 +28,7 @@ export default function AccountPopover() {
     },
   ];
 
-  if (account.role === "Đào tạo") {
+  if (account.role !== "Sinh viên") {
     MENU_OPTIONS = [
       {
         label: "Quản lý",
