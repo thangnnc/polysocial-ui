@@ -16,9 +16,11 @@ export default function NotificationBox({ notification, onchange }) {
     const response = await Asios.Notifications.updateNotifications(
       notificationId
     );
-    console.log("repsss", response);
-    onchange(); 
+    if(response.status === 200){
+      onchange(); 
+    }
   };
+
 
   return (
     <ListItem
