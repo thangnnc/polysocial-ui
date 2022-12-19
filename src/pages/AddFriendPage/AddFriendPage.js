@@ -15,6 +15,7 @@ export default function AddFriendPage(props) {
   useEffect(()=>{
    try {
     socket.on("request-accept", function () {
+      console.log("request-accept")
       getRequestFriend();
     })
    } catch (error) {
@@ -30,7 +31,7 @@ export default function AddFriendPage(props) {
   const addFriendHandle = async (e, data) => {
     const response = await Axios.Friends.acceptFriend(data);
     if (response.status === 200) {
-      getRequestFriend();
+      await getRequestFriend();
       await socket.emit("accept-friend-request");
       toast.success("Đã thêm bạn thành công");
     } else {

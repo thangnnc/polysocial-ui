@@ -64,7 +64,7 @@ export default function MessagePage(props) {
   useEffect(() => {
     try {
       socket.on("server-send-listSocket", function (dataOnline) {
-        console.log("run server-send-listSocket");
+        console.log("run server-send-listSocket -MessagePage");
         const fetDataMessage = async () => {
           try {
             setRoom(roomId);
@@ -170,40 +170,40 @@ export default function MessagePage(props) {
     getMessage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = {
-        page: currPage,
-        limit: limit,
-        roomId: roomId,
-      };
-      const response = await Asios.Messages.getMessage(data);
-      if (!response.data.length) {
-        setLastList(true);
-        return;
-      }
-      setPrevPage(currPage);
-      const listContent = [];
-      for (let index = 0; index < response.data.length; index++) {
-        const listContentObject = {};
-        const element = response.data[index];
-        listContentObject.isAdmin = element.isAdmin;
-        listContentObject.avatar = element.avatar;
-        listContentObject.content = element.content;
-        listContentObject.createdDate = element.createdDate;
-        listContentObject.fullName = element.fullName;
-        listContentObject.statusCreated = element.statusCreated;
-        listContentObject.studentCode = element.studentCode;
-        listContentObject.email = element.email;
-        listContent.push(listContentObject);
-      }
-      setMessageList([...listContent.reverse(), ...messageList]);
-    };
-    if (!lastList && prevPage !== currPage) {
-      fetchData();
-    }
-  }, [currPage, lastList, prevPage, messageList, limit, roomId]);
+  //phan trang
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = {
+  //       page: currPage,
+  //       limit: limit,
+  //       roomId: roomId,
+  //     };
+  //     const response = await Asios.Messages.getMessage(data);
+  //     if (!response.data.length) {
+  //       setLastList(true);
+  //       return;
+  //     }
+  //     setPrevPage(currPage);
+  //     const listContent = [];
+  //     for (let index = 0; index < response.data.length; index++) {
+  //       const listContentObject = {};
+  //       const element = response.data[index];
+  //       listContentObject.isAdmin = element.isAdmin;
+  //       listContentObject.avatar = element.avatar;
+  //       listContentObject.content = element.content;
+  //       listContentObject.createdDate = element.createdDate;
+  //       listContentObject.fullName = element.fullName;
+  //       listContentObject.statusCreated = element.statusCreated;
+  //       listContentObject.studentCode = element.studentCode;
+  //       listContentObject.email = element.email;
+  //       listContent.push(listContentObject);
+  //     }
+  //     setMessageList([...listContent.reverse(), ...messageList]);
+  //   };
+  //   if (!lastList && prevPage !== currPage) {
+  //     fetchData();
+  //   }
+  // }, [currPage, lastList, prevPage, messageList, limit, roomId]);
   //
   useEffect(() => {
     try {
@@ -327,6 +327,7 @@ export default function MessagePage(props) {
 
   const handleClick = () => {
     ref.current.focus();
+    account.isActive = true;
     socket.emit("I'm typing", room, account);
   };
   const handleClickOut = () => {
@@ -348,7 +349,7 @@ export default function MessagePage(props) {
           userId: account.userId,
         },
       };
-      createMessage();
+      await createMessage();
       await socket.emit("send_message", messageContent);
       setMessageList([...messageList, messageContent.content]);
       setMessage("");
