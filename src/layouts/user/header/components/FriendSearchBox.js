@@ -9,7 +9,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
 
   const { avatar, fullName, email, status, userId, roomId, listContact } =
     searchData;
-  // console.log("searchData",searchData)
+
   var listArr = [];
   try {
     for (let i = 0; i < listContact.length; i++) {
@@ -21,11 +21,10 @@ export default function FriendSearchBox({ searchData, sockets }) {
       arr.push(element2.fullName);
       listArr.push(arr);
     }
-  } catch (error) {
-    
-  }
+  } catch (error) {}
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
+    console.log(response);
     if (response.status === 200) {
       await socket.emit("add-friend");
       toast.success("Gửi lời mời kết bạn thành công");
@@ -70,7 +69,15 @@ export default function FriendSearchBox({ searchData, sockets }) {
             </Typography>
           </Box>
         </Box>
-        {!status && (
+        {!status ? (
+          <Button
+            className="btn-orange"
+            variant="contained"
+            sx={{ borderRadius: 50 }}
+          >
+            Huỷ
+          </Button>
+        ) : (
           <Button
             className="btn-orange"
             variant="contained"

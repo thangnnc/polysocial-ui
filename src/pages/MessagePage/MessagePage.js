@@ -42,8 +42,8 @@ export default function MessagePage(props) {
   const [room, setRoom] = useState([]);
   const listInnerRef = useRef();
   const [currPage, setCurrPage] = useState(1);
-  const [prevPage, setPrevPage] = useState(1);
-  const [lastList, setLastList] = useState(false);
+  // const [prevPage, setPrevPage] = useState(1);
+  // const [lastList, setLastList] = useState(false);
   const limit = 20;
   const { account } = useLogin();
   const [messageList, setMessageList] = useState([{}]);
@@ -62,7 +62,7 @@ export default function MessagePage(props) {
   let group;
   let listOnline;
   try {
-    group = location.state.group
+    group = location.state.group;
     listOnline = props.socket.listOnline;
   } catch (error) {}
 
@@ -169,14 +169,12 @@ export default function MessagePage(props) {
               if (listOnlines.includes(element.email) === true) {
                 isActive = true;
                 console.log("listOnline meeesss 123------", listOnlines);
-                if (element.email === account.email ) {
+                if (element.email === account.email) {
                   console.log("false");
                   setIsActiveOther(false);
-
                 } else {
                   console.log("true");
                   setIsActiveOther(true);
-
                 }
               } else {
                 isActive = false;

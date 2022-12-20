@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import {
+  Autocomplete,
   Avatar,
   DialogContentText,
   Divider,
@@ -14,7 +15,7 @@ import {
 } from "@mui/material";
 import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const styleInputFullField = {
@@ -34,15 +35,37 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   // const socket = propsSocket.socket.socket;
   // console.log("prooo--->", propsSocket.socket.socket);
   const [groupCreate, setGroupCreate] = useState({});
+  const [src, setSrc] = useState();
+  const [admins, setAdmins] = useState([]);
+
+  const handleUploadFile = (e) => {
+    setGroupCreate((group) => ({
+      ...group,
+      avatarFile: e.target.files[0],
+    }));
+    setSrc(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const handleChange = (e, value) => {
+    setGroupCreate({ ...groupCreate, adminId: value.userId });
+  };
+
+  useEffect(() => {
+    getAllAdmin();
+  }, []);
+
+  const getAllAdmin = async () => {
+    const response = await Axios.Groups.getAllUserRoleAdmin();
+    setAdmins(response);
+  };
 
   const createGroup = async () => {
-    console.log("groupCreate", groupCreate);
+    let formData = new FormData();
+    formData.append("avatarFile", groupCreate.avatarFile);
     const response = await Axios.Groups.createGroup(groupCreate);
-    console.log("response", response);
 
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
-
       setOpen(false);
       onChange();
     } else {
@@ -63,14 +86,14 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
           <DialogContentText />
           <Grid container spacing={2} sx={{ width: 800 }}>
             <Grid item xs={5}>
-              <label htmlFor="avatar">
+              <label htmlFor="avatarFile">
                 <Avatar
                   sx={styleAvatar}
                   alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
+                  src={src ? src : "/static/images/avatar/1.jpg"}
                 />
                 <Typography width="100%" fontSize={24} textAlign="center">
-                  Chọn ảnh nhóm học tập
+                  Chọn ảnh nhóm
                 </Typography>
               </label>
               <TextField
@@ -79,14 +102,40 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 label="File"
                 type="file"
                 sx={{ display: "none" }}
-                onChange={(e) =>
-                  setGroupCreate({ ...groupCreate, avatarFile: null })
-                }
+                onChange={handleUploadFile}
               />
             </Grid>
 
             <Grid item xs={7}>
-              <TextField
+              <Autocomplete
+                name="adminId"
+                options={admins}
+                getOptionLabel={(option) => option?.fullName}
+                onChange={handleChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify icon={"bx:code-block"} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <React.Fragment>
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      ),
+                    }}
+                    variant="standard"
+                    label="Người tạo nhóm học tập"
+                    placeholder="Chọn người tạo nhóm học tập"
+                    sx={styleInputFullField}
+                  />
+                )}
+              />
+              {/* <TextField
                 name="adminId"
                 label="Người tạo nhóm học tập"
                 onChange={(e) =>
@@ -103,7 +152,7 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
-              />
+              /> */}
 
               <TextField
                 name="name"
@@ -126,38 +175,16 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
 
               <TextField
                 name="className"
-                label="Nhom lop hoc tap"
+                label="Mã lớp học tập"
                 onChange={(e) =>
                   setGroupCreate({ ...groupCreate, className: e.target.value })
                 }
                 variant="standard"
-                placeholder="Nhập tên nhóm học tập"
+                placeholder="Nhập mã lớp học tập"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <Iconify icon={"material-symbols:edit-note-sharp"} />
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="none"
-                sx={styleInputFullField}
-              />
-
-              <TextField
-                name="totalMember"
-                label="Số lượng thành viên"
-                placeholder="Nhập số lượng thành viên "
-                onChange={(e) =>
-                  setGroupCreate({
-                    ...groupCreate,
-                    totalMember: e.target.value,
-                  })
-                }
-                variant="standard"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={"ic:sharp-groups"} />
                     </InputAdornment>
                   ),
                 }}
@@ -180,29 +207,6 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                   startAdornment: (
                     <InputAdornment position="start">
                       <Iconify icon={"fluent:text-description-20-regular"} />
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="none"
-                sx={styleInputFullField}
-              />
-
-              <TextField
-                name="createdDate"
-                label="Ngày taọ nhóm học tập"
-                type="datetime-local"
-                placeholder="Chọn ngày tạo nhóm học tập"
-                onChange={(e) =>
-                  setGroupCreate({
-                    ...groupCreate,
-                    createdDate: e.target.value,
-                  })
-                }
-                variant="standard"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:date-range"} />
                     </InputAdornment>
                   ),
                 }}

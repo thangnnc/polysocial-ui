@@ -116,7 +116,6 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
 
   const handleRegister = async (formData) => {
     const response = await Axios.LoginAPI.registerAPI(formData);
-    console.log(response);
     if (response) {
       setAccount(response);
       toast.success("Đăng ký thành công! Vui lòng đăng nhập!");

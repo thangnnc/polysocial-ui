@@ -15,7 +15,7 @@ class Groups {
 
   //API create new group
   static createGroup = async (data) =>
-    Axios.post("/group/api/create-group", data);
+    Axios.postFile("/group/api/create-group", data);
 
   //API create new group by excel
   static createGroupExcel = async (data, groupId) =>
@@ -70,7 +70,7 @@ class Groups {
   static getMemberJoinGroup = async (groupId) =>
     Axios.get(`/group/member-join-group-false?groupId=${groupId}`);
 
-  //API request join group  
+  //API request join group
   static requestJoinGroup = async (groupId) =>
     Axios.post(`/group/member-join-group?groupId=${groupId}`);
 
@@ -83,6 +83,10 @@ class Groups {
   //API member out group
   static memberOutGroup = async (groupId) =>
     Axios.delete(`/group/leave-group?groupId=${groupId}`);
+
+  // API get all user role gv and dt
+  static getAllUserRoleAdmin = async () =>
+    Axios.get("/user/get-all-user-not-student");
 }
 
 export default Groups;
