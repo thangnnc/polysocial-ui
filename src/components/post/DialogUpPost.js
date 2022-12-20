@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "./../../utils/Axios/index";
 
-export default function DialogUpPost({ open, handleClose, onChange }) {
+export default function DialogUpPost({ open, handleClose, onChange,socket }) {
   const { groupId } = useParams();
 
   const [itemInputPost, setItemInputPost] = useState({
@@ -34,6 +34,7 @@ export default function DialogUpPost({ open, handleClose, onChange }) {
     if (responseCreate) {
       itemInputPost.files = [];
       toast.success("Tạo bài viết thành công");
+      await socket.emit("Client-request-createPost");
       onChange();
     } else {
       toast.error("Tạo bài viết thất bại");

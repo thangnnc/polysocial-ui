@@ -4,7 +4,7 @@ import AvatarStatus from "../../../../utils/AvatarStatus/AvatarStatus";
 import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMessage";
 
 export default function MessageBox({ roomChat,listOnline }) {
-  
+  // console.log('MessageBox-------->',listOnline)
   const navigate = useNavigate();
   const {
     roomId,

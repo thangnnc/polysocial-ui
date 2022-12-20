@@ -47,7 +47,7 @@ export default function Router(props) {
       ),
       children: [
         { element: <Navigate to="/home" />, index: true },
-        { path: "home", element: <HomePage /> },
+        { path: "home", element: <HomePage socket={props}/> },
         {
           path: "message/room/:roomId",
           element: <MessagePage socket={props} />,
@@ -58,19 +58,19 @@ export default function Router(props) {
     },
     {
       path: "/groups",
-      element: !account ? <Navigate to="/login" /> : <GroupPage />,
+      element: !account ? <Navigate to="/login" /> : <GroupPage socket={props}/>,
     },
     {
       path: "/",
-      element: !account ? <Navigate to="/login" /> : <GroupLayout />,
+      element: !account ? <Navigate to="/login" /> : <GroupLayout socket={props}/>,
       children: [
         { element: <Navigate to="/home" />, index: true },
-        { path: "/groups/detail/:groupId", element: <GroupDetailPage /> },
+        { path: "/groups/detail/:groupId", element: <GroupDetailPage socket={props} /> },
         {
           path: "/groups/detail/add-members/:groupId",
           element:
             account?.role !== "Sinh viên" ? (
-              <GroupAddMemberPage />
+              <GroupAddMemberPage socket={props}/>
             ) : (
               <Navigate to="/home" />
             ),
@@ -112,7 +112,7 @@ export default function Router(props) {
         { path: "users", element: <ManagementUser /> },
         { path: "groups", element: <ManagementGroup socket={props} /> },
         { path: "groups/detail/:groupId", element: <ManagementGroupDetail /> },
-        { path: "posts", element: <ManagementContent /> },
+        { path: "posts", element: <ManagementContent socket={props}/> },
         // { path: "comments", element: <h2>Quản lý bình luận</h2> },
         // { path: "likes", element: <h2>Quản lý lượt yêu thích</h2> },
         // { path: "activities", element: <h2>Quản lý lịch sử hoạt động</h2> },

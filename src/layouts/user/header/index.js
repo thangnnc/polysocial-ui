@@ -41,218 +41,26 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
-  let socket;
-  try {
-    socket = props.socket.socket.socket;
-  } catch (error) {}
-
+  // console.log("groupList",props.socket.socket.groupList)
   const { account } = useLogin();
-  const [groupList, setGroupList] = useState([]);
-  const [count, setCount] = useState(0);
-  const [online, setOnline] = useState([]);
+
+  let groupList;
+  let count;
+  let listOnline;
+  let socket;
+  if (account) {
+    try {
+      count = props.socket.socket.count;
+      groupList = props.socket.socket.groupList;
+      listOnline = props.socket.socket.listOnline;
+      socket = props.socket.socket.socket;
+    } catch (error) {}
+  }
+
+  // const [groupList, setGroupList] = useState([]);
+  // const [count, setCount] = useState(0);
+  // const [online, setOnline] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const data1 = { userId: 1 };
-
-
-  useEffect(() => {
-    try {
-      socket.on("get_one_message", function () {
-        console.log("get_one_message"); 
-        getNameGroupDESC(data1);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("accept", function () {
-        console.log("accept");
-        getNameGroupDESC(data1);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("server-send-listSocket", function (data) {
-        setOnline(data);
-        const fetDataDESC = async (data1) => {
-          const arr = [];
-          try {
-            const response = await Asios.Messages.getNameGroupDESC(data1);
-            for (let index = 0; index < response.data.length; index++) {
-              const listNameGr = {};
-              const element = response.data[index];
-              const names = element.name.split(",");
-              const n = account.fullName;
-              const getName = names.filter((name) => name !== n);
-
-              try {
-                const Avatar = element.avatar.split(",");
-                const ns = account.avatar;
-                const getAvatar = Avatar.filter((name) => name !== ns);
-
-                if (getAvatar[0] === account.avatar) {
-                  listNameGr.avatar = element.avatar;
-                } else {
-                  listNameGr.avatar = getAvatar[0];
-                }
-              } catch (error) {}
-
-              listNameGr.roomId = element.roomId;
-              listNameGr.lastMessage = element.lastMessage;
-
-              listNameGr.totalMember = element.totalMember;
-              listNameGr.status = element.status;
-              if (getName[0] === account.fullName) {
-                listNameGr.name = element.name;
-              } else {
-                listNameGr.name = getName[0];
-              }
-              listNameGr.listContacts = element.listContacts;
-              listNameGr.lastUpDateDate = element.lastUpDateDate;
-              arr.push(listNameGr);
-            }
-          } catch (error) {}
-
-          const listContent = [];
-          var counts = 0;
-          for (let index = 0; index < arr.length; index++) {
-            const listContentObject = {};
-            const element = arr[index];
-
-            listContentObject.avatar = element.avatar;
-            listContentObject.lastMessage = element.lastMessage;
-            listContentObject.lastUpDateDate = element.lastUpDateDate;
-            listContentObject.listContacts = element.listContacts;
-
-            const mySetOnline = new Set();
-            for (let index = 0; index < element.listContacts.length; index++) {
-              const element2 = element.listContacts[index];
-              mySetOnline.add(element2.at(4));
-            }
-
-            const listOnline = [];
-            for (let index = 0; index < data.length; index++) {
-              const element2 = data[index];
-              listOnline.push(element2.email);
-            }
-
-            for (let index = 0; index < listOnline.length; index++) {
-              mySetOnline.delete(account.email);
-              if (mySetOnline.has(listOnline[index])) {
-                listContentObject.isActive = false;
-                break;
-              } else {
-                listContentObject.isActive = true;
-              }
-            }
-
-            listContentObject.name = element.name;
-            listContentObject.roomId = element.roomId;
-            listContentObject.status = element.status;
-            listContentObject.totalMember = element.totalMember;
-            listContent.push(listContentObject);
-            if (element.status === false) {
-              counts++;
-            }
-          }
-
-          setCount(counts);
-          setGroupList(listContent);
-        };
-        fetDataDESC(data1);
-      });
-    } catch (error) {}
-  });
-
-  const getNameGroupDESC = async (data1) => {
-    console.log("run getNameGroupDESC");
-    const arr = [];
-    try {
-      const response = await Asios.Messages.getNameGroupDESC(data1);
-
-      for (let index = 0; index < response.data.length; index++) {
-        const listNameGr = {};
-        const element = response.data[index];
-        const names = element.name.split(",");
-        const n = account.fullName;
-        const getName = names.filter((name) => name !== n);
-
-        try {
-          const Avatar = element.avatar.split(",");
-          const ns = account.avatar;
-          const getAvatar = Avatar.filter((name) => name !== ns);
-
-          if (getAvatar[0] === account.avatar) {
-            listNameGr.avatar = element.avatar;
-          } else {
-            listNameGr.avatar = getAvatar[0];
-          }
-        } catch (error) {}
-
-        listNameGr.roomId = element.roomId;
-        listNameGr.lastMessage = element.lastMessage;
-
-        listNameGr.totalMember = element.totalMember;
-        listNameGr.status = element.status;
-        if (getName[0] === account.fullName) {
-          listNameGr.name = element.name;
-        } else {
-          listNameGr.name = getName[0];
-        }
-        listNameGr.listContacts = element.listContacts;
-        listNameGr.lastUpDateDate = element.lastUpDateDate;
-        listNameGr.messageRecall = element.messageRecall;
-        arr.push(listNameGr);
-      }
-    } catch (error) {}
-    var counts = 0;
-
-    const listContent = [];
-    for (let index = 0; index < arr.length; index++) {
-      const listContentObject = {};
-      const element = arr[index];
-      listContentObject.avatar = element.avatar;
-      listContentObject.lastMessage = element.lastMessage;
-      listContentObject.lastUpDateDate = element.lastUpDateDate;
-      listContentObject.listContacts = element.listContacts;
-
-      const mySetOnline = new Set();
-      for (let index = 0; index < element.listContacts.length; index++) {
-        const element2 = element.listContacts[index];
-        mySetOnline.add(element2.at(4));
-      }
-
-      const listOnline = [];
-      for (let index = 0; index < online.length; index++) {
-        const element2 = online[index];
-        listOnline.push(element2.email);
-      }
-
-      for (let index = 0; index < listOnline.length; index++) {
-        mySetOnline.delete(account.email);
-        if (mySetOnline.has(listOnline[index])) {
-          listContentObject.isActive = false;
-
-          break;
-        } else {
-          listContentObject.isActive = true;
-        }
-      }
-
-      listContentObject.name = element.name;
-      listContentObject.roomId = element.roomId;
-      listContentObject.status = element.status;
-      listContentObject.totalMember = element.totalMember;
-      listContent.push(listContentObject);
-      if (element.status === false) {
-        counts++;
-      }
-    }
-    setCount(counts);
-    setGroupList(listContent);
-  };
 
   useEffect(() => {
     getAllNotification();
@@ -263,9 +71,18 @@ export default function Header(props) {
     setNotifications(response);
   };
 
-  const handleChange = () =>{
-   getAllNotification();
-  }
+  useEffect(() => {
+    try {
+      socket.on("reset_getAllNotification", function () {
+        console.log("reset-getAllNotification");
+        getAllNotification();
+      });
+    } catch (error) {}
+  });
+
+  const handleChange = () => {
+    getAllNotification();
+  };
 
   return (
     <StyledRoot>
@@ -307,10 +124,14 @@ export default function Header(props) {
               <MessagesPopover
                 groupList={groupList}
                 count={count}
-                listOnline={online}
+                listOnline={listOnline}
+                socket={socket}
               />
 
-              <NotificationPopover notifications={notifications} onchange={handleChange} />
+              <NotificationPopover
+                notifications={notifications}
+                onchange={handleChange}
+              />
             </Box>
 
             <AccountPopover />

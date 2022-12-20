@@ -13,7 +13,6 @@ export default function ListFriend() {
 
   const getAllFriend = async () => {
     const response = await Axios.Friends.getAllFriend();
-    console.log(response);
     setListFriend(response);
   };
   return (

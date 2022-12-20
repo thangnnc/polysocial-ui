@@ -12,6 +12,9 @@ import {
 import MailIcon from "@mui/icons-material/Mail";
 import { Box } from "@mui/system";
 import MessageBox from "./components/MessageBox";
+import Axios from "../../../utils/Axios";
+import useLogin from "../../../utils/Login/useLogin";
+
 // ----------------------------------------------------------------------
 
 const scrollbar = {
@@ -28,7 +31,8 @@ const scrollbar = {
   },
 };
 
-export default function MessagesPopover({groupList,count,listOnline }) {
+export default function MessagesPopover({groupList,count,listOnline,socket }) {
+  const { account } = useLogin();
   const [open, setOpen] = useState(false);
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -36,6 +40,13 @@ export default function MessagesPopover({groupList,count,listOnline }) {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const updateAllViewStatus = async () => {
+    const response = await Axios.Messages.updateAllViewedStatus({userId:account.userId});
+    if(response.status===200){
+      await socket.emit("isSeen");
+    }
   };
 
   return (
@@ -89,7 +100,9 @@ export default function MessagesPopover({groupList,count,listOnline }) {
             Tin nhắn
           </ListSubheader>
 
-          <Button color="warning" sx={{ mr: 1 }}>
+          <Button
+          onClick={updateAllViewStatus}
+           color="warning" sx={{ mr: 1 }}>
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
@@ -103,7 +116,7 @@ export default function MessagesPopover({groupList,count,listOnline }) {
           }}
         >
           <Divider />
-          {groupList.map((roomChat, index) => (
+          {groupList?.map((roomChat, index) => (
             <MessageBox key={index} roomChat={roomChat} listOnline={listOnline} />
           ))}
         </List>

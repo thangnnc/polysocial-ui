@@ -3,9 +3,18 @@ import LoginIcon from "@mui/icons-material/Login";
 import Axios from "./../../../utils/Axios/index";
 
 export default function ListGroupSearch(props) {
+
+  let socket;
+
+  try {
+    socket =props.socket;
+  } catch (error) {
+    
+  }
   const handleJoinGroup = async (groupId) => {
     const response = await Axios.Groups.requestJoinGroup(groupId);
     if (response) {
+      socket.emit("request-group");
       alert("Gửi lời tham gia nhóm thành công");
     } else {
       alert("Gửi lời tham gia nhóm thất bại");
@@ -25,7 +34,7 @@ export default function ListGroupSearch(props) {
         <img
           style={{ borderRadius: 10, width: 75, height: 75 }}
           src={
-            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670978828/groups-default-cover-photo-2x_igy9tq.png"
+            props.group.avatar
           }
           alt="avatar group"
         />
@@ -39,7 +48,7 @@ export default function ListGroupSearch(props) {
           {props.group.name} - {props.group.description}
         </Typography>
         <Typography variant="subtitle2" sx={{ color: "#9b9b9b" }}>
-          Nhóm công khai - {props.group.totalMember} thành viên
+          Nhóm kín - {props.group.totalMember} thành viên
         </Typography>
       </Box>
       <Button

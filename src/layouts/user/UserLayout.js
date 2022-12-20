@@ -50,13 +50,14 @@ const Main = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function UserLayout(props) {
+  // console.log("UserLayout",props)
   return (
     <StyledRoot>
       <Header socket={props} />
 
       <Box sx={{ display: "flex", width: "100%", pl: 8 }}>
         <BoxNav>
-          <NavUser />
+          <NavUser socket={props}/>
         </BoxNav>
 
         <Main>

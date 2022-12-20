@@ -30,9 +30,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   paddingLeft: `calc(1em + ${theme.spacing(4)})`,
 }));
 
-export default function SearchBar() {
+export default function SearchBar(props) {
   const [search, setSearch] = useState([]);
   const [groups, setGroups] = useState([]);
+
+
+  let socket;
+  try {
+    socket = props.socket.socket.socket;
+  } catch (error) {
+    
+  }
 
   useEffect(() => {
     getAllData();
@@ -43,6 +51,7 @@ export default function SearchBar() {
     const response = await Axios.Groups.findGroupByKeyWord(keyword);
     if (response) {
       setGroups(response);
+      console.log("ressss",response)
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");
@@ -71,7 +80,7 @@ export default function SearchBar() {
         </Typography>
         <Box sx={{ height: "200px", overflowY: "scroll" }}>
           {groups.map((group) => (
-            <ListGroupSearch key={group.groupId} group={group} />
+            <ListGroupSearch key={group.groupId} group={group} socket={socket}/>
           ))}
         </Box>
       </Box>

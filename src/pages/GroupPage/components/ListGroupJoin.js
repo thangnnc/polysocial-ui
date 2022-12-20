@@ -2,13 +2,17 @@ import { Box, ImageListItem, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function ListGroupJoin(props) {
+  const roomId = props.group.roomId;
+  console.log("romm---------------------------",props)
   return (
     <Link
       to={`/groups/detail/${props.group.groupId}`}
+      state={{ roomId: roomId }}
       style={{
         color: "inherit",
         textDecoration: "none",
       }}
+      
     >
       <Box
         sx={{
@@ -22,7 +26,7 @@ export default function ListGroupJoin(props) {
           <img
             style={{ borderRadius: 10, width: 75, height: 75 }}
             src={
-              "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670588428/groups-default-cover-photo-2x_ysxgpp.png"
+              props.group.avatarGroup
             }
             alt="avatar group"
           />
@@ -36,7 +40,7 @@ export default function ListGroupJoin(props) {
             Nhóm {props.group.groupName}
           </Typography>
           <Typography variant="subtitle2" sx={{ color: "#9b9b9b" }}>
-            Nhóm công khai - {props.group.totalMember} thành viên
+            Nhóm kín - {props.group.totalMember} thành viên
           </Typography>
         </Box>
       </Box>

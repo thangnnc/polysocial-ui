@@ -4,9 +4,48 @@ import Iconify from "../../../components/iconify/Iconify";
 import NavUserSection from "../../../components/nav-user-section/NavUserSection";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";
+import Axios from "../../../utils/Axios";
+import { useEffect, useState } from "react";
 
-export default function NavUser() {
+
+export default function NavUser(props) {
   const { account } = useLogin();
+  const [count, setCount] = useState(0);
+
+  let socket;
+  try {
+    socket = props.socket.socket.socket;
+  } catch (error) {
+    
+  }
+
+  const getRequestFriend = async () => {
+    const response = await Axios.Friends.getAllRequestAddFriend();
+    setCount(response.length);
+  };
+
+  useEffect(() => {
+    getRequestFriend();
+  }, []);
+
+  
+  useEffect(() => {
+    try {
+      socket.on("request-accept", function () {
+        console.log("runnnnnn")
+        getRequestFriend();
+      });
+    } catch (error) {}
+  });
+
+  useEffect(() => {
+    try {
+      socket.on("reset_friend", function () {
+        console.log("runnnnnn reset_friend")
+        getRequestFriend();
+      });
+    } catch (error) {}
+  });
 
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
@@ -25,6 +64,7 @@ export default function NavUser() {
       title: "Lời Mời Kết Bạn",
       path: "/friends-requests",
       icon: icon("fluent-mdl2:add-friend"),
+      notiCount: count === 0 ? null : count,
     },
     {
       title: "Nhóm Của Tôi",

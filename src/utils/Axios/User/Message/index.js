@@ -10,6 +10,7 @@ class Messages {
     Axios.post("/api/updateViewedStatus", data);
 
   static getNameGroupDESC = async (data) => Axios.post("/api/getName", data);
+  static updateAllViewedStatus = async (data) => Axios.post("/api/updateAllViewedStatus", data);
 }
 
 export default Messages;

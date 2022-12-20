@@ -5,8 +5,8 @@ import Axios from "./../../utils/Axios/index";
 import { useState } from "react";
 import useLogin from "../../utils/Login/useLogin";
 
-export default function CommentBox({ show, comments, postId, onChange }) {
-  const { account, socket } = useLogin();
+export default function CommentBox({ show, comments, postId, onChange,socket }) {
+  const { account } = useLogin();
 
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
@@ -16,11 +16,11 @@ export default function CommentBox({ show, comments, postId, onChange }) {
   const createComment = async () => {
     const response = await Axios.Comments.createComment(itemInputComment);
     if (response.status === 200) {
-      onChange();
       socket.emit("Client-request-comment");
-
+      onChange();
     }
   };
+  
   return (
     <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
       <List disablePadding sx={{ p: 0 }}>

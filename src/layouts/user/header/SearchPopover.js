@@ -36,7 +36,7 @@ export default function SearchPopover(sockets) {
 
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");
-    console.log('getData',response);  
+    // console.log('getData',response);  
 
     setSearchList(response);
   };

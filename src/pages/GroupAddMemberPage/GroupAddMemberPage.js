@@ -5,7 +5,13 @@ import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 
-export default function GroupAddMemberPage() {
+export default function GroupAddMemberPage(props) {
+  let socket;
+  try {
+    socket = props.socket.socket
+  } catch (error) {
+    
+  }
   const { groupId } = useParams();
   const [showRequestMember, setShowRequestMember] = useState([]);
 
@@ -15,13 +21,25 @@ export default function GroupAddMemberPage() {
 
   const getRequestMember = async (groupId) => {
     const response = await Axios.Groups.getMemberJoinGroup(groupId);
-    console.log("r4epsssss",response)
+    // console.log("r4epsssss",response)
+    // console.log("r4epsssss",response.length)
     setShowRequestMember(response);
   };
+  
+  useEffect(() => {
+    try {
+      socket.on("accept-member", function () {
+        console.log("runnnnnn")
+        getRequestMember(groupId);
+      });
+    } catch (error) {}
+  });
+  
 
   const addFriendHandle = async (userId) => {
     const response = await Axios.Groups.addMemberJoinGroup(groupId, userId);
     if (response.status === 200) {
+      socket.emit("add-member");
       toast.success("Đã thêm thành viên thành công");
       getRequestMember(groupId);
     } else {
