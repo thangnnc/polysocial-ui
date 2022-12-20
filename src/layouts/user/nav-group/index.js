@@ -14,7 +14,7 @@ import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
 import useLogin from "../../../utils/Login/useLogin";
 import Axios from "./../../../utils/Axios/index";
-import { useLocation } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -33,18 +33,44 @@ const BoxNav = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function NavGroup() {
+export default function NavGroup(props) {
   const { groupId } = useParams();
   const { account } = useLogin();
   const [group, setGroup] = useState([]);
-  const location = useLocation()
-  const { roomId } = location.state
+  const location = useLocation();
+  // const [showRequestMember, setShowRequestMember] = useState([]);
+  const [count, setCount] = useState(0);
+  let socket;
   try {
-  console.log("group----------",roomId)
-    
-  } catch (error) {
-    
-  }
+    socket = props.socket.socket.socket;
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      socket.on("accept-member", function () {
+        console.log("runnnnnn")
+        getRequestMember(groupId);
+      });
+    } catch (error) {}
+  });
+
+  let roomId;
+  try {
+    roomId = location.state;
+  } catch (error) {}
+  try {
+    console.log("group----------", roomId);
+  } catch (error) {}
+
+  useEffect(() => {
+    getRequestMember(groupId);
+  }, []);
+
+  const getRequestMember = async (groupId) => {
+    const response = await Axios.Groups.getMemberJoinGroup(groupId);
+    setCount(response.length);
+  };
+
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
   let navGroupConfig = [
@@ -59,7 +85,7 @@ export default function NavGroup() {
       title: "Xét duyệt thành viên",
       path: `/groups/detail/add-members/${groupId}`,
       icon: icon("fluent-mdl2:add-friend"),
-      notiCount:3
+      notiCount: count === 0 ? null : count,
     });
   }
 
@@ -69,7 +95,8 @@ export default function NavGroup() {
       title: "Mọi người",
       path: `/groups/detail/members/${groupId}`,
       icon: icon("la:user-friends"),
-    },    {
+    },
+    {
       title: "Nhắn tin",
       path: `/message/room/${roomId}`,
       icon: icon("la:user-friends"),
@@ -99,6 +126,7 @@ export default function NavGroup() {
     const response = await Axios.Groups.getOneGroup(groupId);
     if (response) {
       setGroup(response);
+      console.log("repppp", response);
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");
@@ -114,9 +142,7 @@ export default function NavGroup() {
             height: "20vh",
             objectFit: "cover",
           }}
-          src={
-            "https://res.cloudinary.com/dwc7dkxy7/image/upload/v1670978828/groups-default-cover-photo-2x_igy9tq.png"
-          }
+          src={group.avatar}
           alt="avatar group"
         />
       </ImageListItem>
@@ -146,7 +172,7 @@ export default function NavGroup() {
               variant="subtitle2"
               sx={{ color: "#9b9b9b", paddingLeft: 1, paddingTop: 0.5 }}
             >
-              Nhóm công khai - {group.totalMember} thành viên
+              Nhóm kín - {group.totalMember} thành viên
             </Typography>
           </Box>
         </Box>

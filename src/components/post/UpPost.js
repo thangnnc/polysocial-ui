@@ -4,7 +4,8 @@ import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../utils/Login/useLogin";
 import DialogUpPost from "./DialogUpPost";
 
-export default function UpPost({ onChange }) {
+export default function UpPost({ onChange,socket }) {
+  
   const { account } = useLogin();
   const [open, setOpen] = useState(false);
 
@@ -52,7 +53,7 @@ export default function UpPost({ onChange }) {
           </Box>
         </CardContent>
       </Card>
-      <DialogUpPost open={open} handleClose={handleClose} onChange={onChange} />
+      <DialogUpPost open={open} handleClose={handleClose} onChange={onChange} socket={socket}/>
     </Box>
   );
 }

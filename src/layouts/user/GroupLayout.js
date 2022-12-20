@@ -24,13 +24,14 @@ const Main = styled("div")(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function GroupLayout() {
+export default function GroupLayout(props) {
+
   return (
     <StyledRoot>
-      <Header />
+      <Header socket={props}/>
 
       <Box sx={{ display: "flex", width: "100%" }}>
-        <NavGroup />
+        <NavGroup socket={props}/>
 
         <Main>
           <Outlet />

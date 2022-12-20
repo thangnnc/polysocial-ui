@@ -36,7 +36,10 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   const [groupCreate, setGroupCreate] = useState({});
 
   const createGroup = async () => {
+    console.log("groupCreate", groupCreate);
     const response = await Axios.Groups.createGroup(groupCreate);
+    console.log("response", response);
+
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
 
@@ -71,13 +74,13 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 </Typography>
               </label>
               <TextField
-                id="avatar"
-                name="avatar"
+                id="avatarFile"
+                name="avatarFile"
                 label="File"
                 type="file"
                 sx={{ display: "none" }}
                 onChange={(e) =>
-                  setGroupCreate({ ...groupCreate, avatar: null })
+                  setGroupCreate({ ...groupCreate, avatarFile: null })
                 }
               />
             </Grid>
@@ -107,6 +110,25 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 label="Tên nhóm học tập"
                 onChange={(e) =>
                   setGroupCreate({ ...groupCreate, name: e.target.value })
+                }
+                variant="standard"
+                placeholder="Nhập tên nhóm học tập"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={"material-symbols:edit-note-sharp"} />
+                    </InputAdornment>
+                  ),
+                }}
+                autoComplete="none"
+                sx={styleInputFullField}
+              />
+
+              <TextField
+                name="className"
+                label="Nhom lop hoc tap"
+                onChange={(e) =>
+                  setGroupCreate({ ...groupCreate, className: e.target.value })
                 }
                 variant="standard"
                 placeholder="Nhập tên nhóm học tập"

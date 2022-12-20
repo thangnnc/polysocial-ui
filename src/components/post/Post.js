@@ -16,7 +16,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import DateTimeOfMessage from "../../utils/DateTimeOfMessage/DateTimeOfMessage";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommentBox from "./CommentBox";
 import Axios from "./../../utils/Axios/index";
 import useLogin from "../../utils/Login/useLogin";
@@ -35,7 +35,7 @@ const ButtonNormal = styled(Button)(() => ({
   color: "#a2a2a2 !important",
 }));
 
-export default function Post({ posts, onChange }) {
+export default function Post({ posts, onChange,socket }) {
   const [isShowCmt, setShowCmt] = useState(false);
   const { account } = useLogin();
   const isLike = [];
@@ -44,14 +44,17 @@ export default function Post({ posts, onChange }) {
     setShowCmt(true);
   };
 
+ 
+
   const likeUnLike = async (postId) => {
     const data = {
       postId: postId,
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
+      socket.emit("Client-request-like");
       onChange();
-      // socket.emit("Client-request-like");
+     
     }
   };
 
@@ -159,8 +162,8 @@ export default function Post({ posts, onChange }) {
                 }}
               >
                 {listLike?.map((element) => {
-                  if (element.studentCode === account.studentCode) {
-                    isLike.push(element.studentCode);
+                  if (element.userId === account.userId) {
+                    isLike.push(element.userId);
                     isLike.push(element.postId);
                   }
                   return "";
@@ -189,6 +192,7 @@ export default function Post({ posts, onChange }) {
                 comments={listComment}
                 postId={postId}
                 onChange={onChange}
+                socket={socket}
               />
             </CardActions>
           </Card>

@@ -58,7 +58,7 @@ export default function AddFriendPage(props) {
           <Box sx={{ display: "flex", alignItems: "center", my: 2 }}>
             <AvatarStatus
               alt="Avatar"
-              isActive={true}
+              isActive={false}
               src={request.avatarUserInvite}
               sx={{ width: 54, height: 54 }}
             />

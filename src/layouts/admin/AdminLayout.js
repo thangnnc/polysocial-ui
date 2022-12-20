@@ -34,7 +34,7 @@ const Main = styled('div')(({ theme }) => ({
 
 export default function AdminLayout() {
   const [open, setOpen] = useState(false);
-
+  console.log("runnnnnn")
   return (
     <StyledRoot>
       <Header onOpenNav={() => setOpen(true)} />

@@ -22,6 +22,7 @@ function App() {
   const [listOnline, setListOnline] = useState();
 
   const [listFriends, setListFriend] = useState([]);
+
   // const [status, setStatus] = useState(false);
 
   //messgage
@@ -44,8 +45,6 @@ function App() {
   useEffect(() => {
     try {
       if (account) {
-        console.log("runnnnnnn11111111111111111");
-
         const CONNECTTION_PORT = "localhost:3002";
         setsocket(
           io(CONNECTTION_PORT).emit("connectUser", account.email, listRoomId)
@@ -59,12 +58,6 @@ function App() {
     if (account) {
       try {
         socket.on("server-send-listSocket-room", function (data) {
-          console.log(
-            "==============================listSocket=========================================="
-          );
-          console.log(
-            "==============================TRUEEEEEEEEEEEE=========================================="
-          );
           setListOnline(data);
           fetchNameGroup(data);
           getNameGroupDESC(data1, data);
@@ -77,7 +70,7 @@ function App() {
 
   const getNameGroupDESC = async (data1, onl) => {
     if (account) {
-      console.log("run getNameGroupDESC APP");
+      // console.log("run getNameGroupDESC APP");
       const arr = [];
       try {
           for (let index = 0; index < listResponse.data.length; index++) {
@@ -179,6 +172,8 @@ function App() {
       });
     } catch (error) {}
   });
+
+
 
 
   useEffect(() => {

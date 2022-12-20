@@ -41,7 +41,6 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
-  // console.log("Header",props)
   // console.log("groupList",props.socket.socket.groupList)
   const { account } = useLogin();
 

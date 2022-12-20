@@ -79,7 +79,8 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ManagementContent() {
+export default function ManagementContent(props) {
+  console.log("ptoo",props)
   const [open, setOpen] = useState(null);
 
   const [isEdit, setIsEdit] = useState(false);

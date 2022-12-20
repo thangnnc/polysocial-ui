@@ -63,7 +63,6 @@ export default function MessagePage(props) {
   let listOnline;
   try {
     group = location.state.group
-    console.log("group-----messss-->",group);
     listOnline = props.socket.listOnline;
   } catch (error) {}
 

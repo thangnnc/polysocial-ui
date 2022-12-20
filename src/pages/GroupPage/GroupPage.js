@@ -32,11 +32,17 @@ const BoxNav = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function GroupPage() {
+export default function GroupPage(props) {
+  let socket;
   const { account } = useLogin();
   const [groups, setGroups] = useState([]);
   const [groupsTeacher, setGroupsTeacher] = useState([]);
 
+  try {
+    socket=props.socket.socket;
+  } catch (error) {
+    
+  }
   useEffect(() => {
     getAllData();
   }, []);
@@ -53,9 +59,19 @@ export default function GroupPage() {
     }
   };
 
+  // 
+  useEffect(() => {
+    try {
+      socket.on("reset_private_room", function () {
+        getAllData();
+      });
+    } catch (error) {}
+  });
+
+
   return (
     <StyledRoot>
-      <Header />
+      <Header socket={props}/>
       <Box sx={{ display: "flex", width: "100%" }}>
         <BoxNav>
           <Box
@@ -77,7 +93,7 @@ export default function GroupPage() {
             </IconButton>
           </Box>
 
-          <SearchBar />
+          <SearchBar socket={props}/>
 
           {account.role === "Sinh viên" ? (
             <Box sx={{ mt: 3 }}>
@@ -86,7 +102,7 @@ export default function GroupPage() {
               </Typography>
               <Box sx={{ height: "570px", overflowY: "scroll" }}>
                 {groups.map((group) => (
-                  <ListGroupJoin key={group.groupId} group={group} />
+                  <ListGroupJoin key={group.groupId} group={group} socket={props}/>
                 ))}
               </Box>
             </Box>
