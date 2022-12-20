@@ -16,7 +16,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import DateTimeOfMessage from "../../utils/DateTimeOfMessage/DateTimeOfMessage";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CommentBox from "./CommentBox";
 import Axios from "./../../utils/Axios/index";
 import useLogin from "../../utils/Login/useLogin";
@@ -35,7 +35,7 @@ const ButtonNormal = styled(Button)(() => ({
   color: "#a2a2a2 !important",
 }));
 
-export default function Post({ posts, onChange,socket }) {
+export default function Post({ posts, onChange, socket }) {
   const [isShowCmt, setShowCmt] = useState(false);
   const { account } = useLogin();
   const isLike = [];
@@ -43,8 +43,6 @@ export default function Post({ posts, onChange,socket }) {
   const handleShowCmt = () => {
     setShowCmt(true);
   };
-
- 
 
   const likeUnLike = async (postId) => {
     const data = {
@@ -54,7 +52,6 @@ export default function Post({ posts, onChange,socket }) {
     if (response.status === 200) {
       socket.emit("Client-request-like");
       onChange();
-     
     }
   };
 

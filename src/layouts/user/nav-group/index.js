@@ -48,7 +48,7 @@ export default function NavGroup(props) {
   useEffect(() => {
     try {
       socket.on("accept-member", function () {
-        console.log("runnnnnn")
+        console.log("runnnnnn");
         getRequestMember(groupId);
       });
     } catch (error) {}
@@ -64,7 +64,7 @@ export default function NavGroup(props) {
 
   useEffect(() => {
     getRequestMember(groupId);
-  }, []);
+  }, [groupId]);
 
   const getRequestMember = async (groupId) => {
     const response = await Axios.Groups.getMemberJoinGroup(groupId);
@@ -99,7 +99,7 @@ export default function NavGroup(props) {
     {
       title: "Nhắn tin",
       path: `/message/room/${roomId}`,
-      icon: icon("la:user-friends"),
+      icon: icon("jam:messages-alt"),
     },
     {
       title: "Phản hồi",
@@ -159,7 +159,7 @@ export default function NavGroup(props) {
       >
         <Box>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            Nhóm {group.name} - {group.description}
+            Nhóm {group.name} - {group.className}
           </Typography>
           <Box
             sx={{
@@ -167,7 +167,7 @@ export default function NavGroup(props) {
               alignItems: "center",
             }}
           >
-            <Iconify icon={"material-symbols:public"} style={{ width: 20 }} />
+            <Iconify icon={"uil:padlock"} style={{ width: 20 }} />
             <Typography
               variant="subtitle2"
               sx={{ color: "#9b9b9b", paddingLeft: 1, paddingTop: 0.5 }}

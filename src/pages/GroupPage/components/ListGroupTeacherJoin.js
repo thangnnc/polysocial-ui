@@ -21,9 +21,7 @@ export default function ListGroupTeacherJoin(props) {
         <ImageListItem>
           <img
             style={{ borderRadius: 10, width: 75, height: 75 }}
-            src={
-              props.group.avatarGroup
-            }
+            src={props.group.avatarGroup}
             alt="avatar group"
           />
         </ImageListItem>
@@ -33,7 +31,7 @@ export default function ListGroupTeacherJoin(props) {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 19 }}>
-            Nhóm {props.group.groupName}
+            Nhóm {props.group.groupName} - {props.group.className}
           </Typography>
           <Typography variant="subtitle2" sx={{ color: "#9b9b9b" }}>
             Nhóm kín - {props.group.totalMember} thành viên

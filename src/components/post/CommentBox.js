@@ -3,11 +3,14 @@ import { Box, Button, List, TextField } from "@mui/material";
 import CommentLine from "./CommentLine";
 import Axios from "./../../utils/Axios/index";
 import { useState } from "react";
-import useLogin from "../../utils/Login/useLogin";
 
-export default function CommentBox({ show, comments, postId, onChange,socket }) {
-  const { account } = useLogin();
-
+export default function CommentBox({
+  show,
+  comments,
+  postId,
+  onChange,
+  socket,
+}) {
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
     content: "",
@@ -20,19 +23,14 @@ export default function CommentBox({ show, comments, postId, onChange,socket }) 
       onChange();
     }
   };
-  
+
   return (
     <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
       <List disablePadding sx={{ p: 0 }}>
-        {/* <CommentLoading />
-
-        <Button sx={{ color: "#808080", py: 0, px: 1, mb: 1, minWidth: 0 }}>
-          Xem thêm bình luận
-        </Button> */}
         {comments?.map((comment, index) => (
           <CommentLine key={index} comment={comment} />
         ))}
-        {comments?.size == 0 && "Chưa có bình luận!"}
+        {comments?.size === 0 && "Chưa có bình luận!"}
       </List>
 
       <TextField

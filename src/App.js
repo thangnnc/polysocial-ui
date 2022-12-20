@@ -20,9 +20,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [groupList, setGroupList] = useState([]);
   const [listOnline, setListOnline] = useState();
-
   const [listFriends, setListFriend] = useState([]);
-
   // const [status, setStatus] = useState(false);
 
   //messgage
@@ -41,7 +39,9 @@ function App() {
       getRoomId();
     } else {
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     try {
       if (account) {
@@ -52,6 +52,7 @@ function App() {
       } else {
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -73,40 +74,40 @@ function App() {
       // console.log("run getNameGroupDESC APP");
       const arr = [];
       try {
-          for (let index = 0; index < listResponse.data.length; index++) {
-            const listNameGr = {};
-            const element = listResponse.data[index];
-            const names = element.name.split(",");
-            const n = account.fullName;
-            const getName = names.filter((name) => name !== n);
+        for (let index = 0; index < listResponse.data.length; index++) {
+          const listNameGr = {};
+          const element = listResponse.data[index];
+          const names = element.name.split(",");
+          const n = account.fullName;
+          const getName = names.filter((name) => name !== n);
 
-            try {
-              const Avatar = element.avatar.split(",");
-              const ns = account.avatar;
-              const getAvatar = Avatar.filter((name) => name !== ns);
+          try {
+            const Avatar = element.avatar.split(",");
+            const ns = account.avatar;
+            const getAvatar = Avatar.filter((name) => name !== ns);
 
-              if (getAvatar[0] === account.avatar) {
-                listNameGr.avatar = element.avatar;
-              } else {
-                listNameGr.avatar = getAvatar[0];
-              }
-            } catch (error) {}
-
-            listNameGr.roomId = element.roomId;
-            listNameGr.lastMessage = element.lastMessage;
-
-            listNameGr.totalMember = element.totalMember;
-            listNameGr.status = element.status;
-            if (getName[0] === account.fullName) {
-              listNameGr.name = element.name;
+            if (getAvatar[0] === account.avatar) {
+              listNameGr.avatar = element.avatar;
             } else {
-              listNameGr.name = getName[0];
+              listNameGr.avatar = getAvatar[0];
             }
-            listNameGr.listContacts = element.listContacts;
-            listNameGr.lastUpDateDate = element.lastUpDateDate;
-            listNameGr.messageRecall = element.messageRecall;
-            arr.push(listNameGr);
+          } catch (error) {}
+
+          listNameGr.roomId = element.roomId;
+          listNameGr.lastMessage = element.lastMessage;
+
+          listNameGr.totalMember = element.totalMember;
+          listNameGr.status = element.status;
+          if (getName[0] === account.fullName) {
+            listNameGr.name = element.name;
+          } else {
+            listNameGr.name = getName[0];
           }
+          listNameGr.listContacts = element.listContacts;
+          listNameGr.lastUpDateDate = element.lastUpDateDate;
+          listNameGr.messageRecall = element.messageRecall;
+          arr.push(listNameGr);
+        }
       } catch (error) {}
       var counts = 0;
 
@@ -132,10 +133,10 @@ function App() {
         //     listOnline.push(element2.email);
         //   }
         // } else {
-          for (let index = 0; index < onl.length; index++) {
-            const element2 = onl[index];
-            listOnline.push(element2.email);
-          }
+        for (let index = 0; index < onl.length; index++) {
+          const element2 = onl[index];
+          listOnline.push(element2.email);
+        }
         // }
 
         for (let index = 0; index < listOnline.length; index++) {
@@ -161,7 +162,7 @@ function App() {
       }
       setCount(counts);
       setGroupList(listContent);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -172,9 +173,6 @@ function App() {
       });
     } catch (error) {}
   });
-
-
-
 
   useEffect(() => {
     try {
@@ -239,11 +237,7 @@ function App() {
       listContentObject.listContacts = element.listContacts;
 
       const mySetOnline = new Set();
-      for (
-        let index = 0;
-        index < element.listContacts.length;
-        index++
-      ) {
+      for (let index = 0; index < element.listContacts.length; index++) {
         const element2 = element.listContacts[index];
         mySetOnline.add(element2.at(4));
       }

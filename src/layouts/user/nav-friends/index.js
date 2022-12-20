@@ -8,11 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Iconify from "../../../components/iconify";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
-import Axios from "./../../../utils/Axios/index";
 
 const styleListFriends = {
   padding: "8px 12px",
@@ -50,12 +48,11 @@ const scrollbar = {
   },
 };
 export default function NavFriend(props) {
-  let socket = props.socket.socket.socket;
+  // let socket = props.socket.socket.socket;
 
-  let listFriends=props.socket.socket.listFriends
-  // const [listFriends, setListFriend] = useState([]);
+  let listFriends = props.socket.socket.listFriends;
   const navigate = useNavigate();
-  let listOnline = props.socket.socket.listOnline
+  let listOnline = props.socket.socket.listOnline;
   const pathMessage = "/message/room/";
 
   const handleOnClick = async (

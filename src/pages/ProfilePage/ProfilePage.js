@@ -35,7 +35,6 @@ export default function ProfilePage(props) {
     roomId = profilePage.roomId;
     listContacts = profilePage.listContacts;
   } catch (error) {}
-  console.log("profile", profilePage);
 
   const { account } = useLogin();
   const { userId } = useParams();
@@ -53,15 +52,12 @@ export default function ProfilePage(props) {
     try {
       socket.on("server-send-listSocket-room", function (dataOnline) {
         console.log("run server-send-listSocket ProfilePage");
-        setOnline(dataOnline);
-
         const listOnline = [];
         for (let index = 0; index < dataOnline.length; index++) {
           const element2 = dataOnline;
           listOnline.push(element2[index].email);
         }
         listOnline.splice(listOnline.indexOf(account.email), 1);
-        console.log("list ont", listOnline);
         if (listOnline.includes(email) === true) {
           setIsActiveOther(true);
         } else {
@@ -79,6 +75,7 @@ export default function ProfilePage(props) {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
       // const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
+      console.log(response);
       setUser(response);
     } else {
       setUser(null);
@@ -112,6 +109,7 @@ export default function ProfilePage(props) {
       },
     });
   };
+
   const handleConfirmFriend = async () => {
     const response = await Axios.Friends.acceptFriend(user);
     if (response.status === 200) {
@@ -184,7 +182,7 @@ export default function ProfilePage(props) {
                   </Typography>
                 </Box>
                 <Box sx={{ mr: 4 }}>
-                  {account?.email === user?.email ? (
+                  {account?.email === user?.email && (
                     <Button
                       variant="contained"
                       sx={{
@@ -199,83 +197,93 @@ export default function ProfilePage(props) {
                         Chỉnh sửa thông tin
                       </Typography>
                     </Button>
-                  ) : (
+                  )}
+                  {user.status === 1 && (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#f97c2e",
+                        borderRadius: 2,
+                        mr: 2,
+                      }}
+                      onClick={handleAddFriend}
+                    >
+                      <Iconify icon={"material-symbols:person-add"} />
+                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                        Thêm bạn
+                      </Typography>
+                    </Button>
+                  )}
+                  {user.status === 2 && (
                     <>
-                      {user.status ? (
-                        <>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              background: "#D8DADF",
-                              color: "black",
-                              borderRadius: 2,
-                              mr: 2,
-                            }}
-                          >
-                            <Iconify icon={"bi:person-check-fill"} />
-                            <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                              Bạn bè
-                            </Typography>
-                          </Button>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#D8DADF",
+                          color: "black",
+                          borderRadius: 2,
+                          mr: 2,
+                        }}
+                      >
+                        <Iconify icon={"bi:person-check-fill"} />
+                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                          Bạn bè
+                        </Typography>
+                      </Button>
 
-                          <Button
-                            variant="contained"
-                            sx={{
-                              background: "#D8DADF",
-                              color: "black",
-                              borderRadius: 2,
-                            }}
-                            onClick={(e) => {
-                              handleOnClick(
-                                e,
-                                user?.avatar,
-                                user?.fullName,
-                                isActiveOther
-                              );
-                            }}
-                          >
-                            <Iconify icon={"mdi:facebook-messenger"} />
-                            <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                              Nhắn tin
-                            </Typography>
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          {user.status === false ? (
-                            <Button
-                              variant="contained"
-                              sx={{
-                                background: "#f97c2e",
-                                borderRadius: 2,
-                                mr: 2,
-                              }}
-                              onClick={handleConfirmFriend}
-                            >
-                              <Iconify icon={"material-symbols:person-add"} />
-                              <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                                Chấp nhận
-                              </Typography>
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="contained"
-                              sx={{
-                                background: "#f97c2e",
-                                borderRadius: 2,
-                                mr: 2,
-                              }}
-                              onClick={handleAddFriend}
-                            >
-                              <Iconify icon={"material-symbols:person-add"} />
-                              <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                                Thêm bạn
-                              </Typography>
-                            </Button>
-                          )}
-                        </>
-                      )}
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#D8DADF",
+                          color: "black",
+                          borderRadius: 2,
+                        }}
+                        onClick={(e) => {
+                          handleOnClick(
+                            e,
+                            user?.avatar,
+                            user?.fullName,
+                            isActiveOther
+                          );
+                        }}
+                      >
+                        <Iconify icon={"mdi:facebook-messenger"} />
+                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                          Nhắn tin
+                        </Typography>
+                      </Button>
                     </>
+                  )}
+                  {user.status === 3 && (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#f97c2e",
+                        borderRadius: 2,
+                        mr: 2,
+                      }}
+                    >
+                      <Iconify icon={"material-symbols:person-add"} />
+                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                        Huỷ
+                      </Typography>
+                    </Button>
+                  )}
+                  {user.status === 4 && (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        background: "#f97c2e",
+                        borderRadius: 2,
+                        mr: 2,
+                      }}
+                      onClick={handleConfirmFriend}
+                    >
+                      <Iconify icon={"material-symbols:person-add"} />
+                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                        Chấp nhận
+                      </Typography>
+                    </Button>
                   )}
                 </Box>
               </Box>
@@ -342,7 +350,7 @@ export default function ProfilePage(props) {
               <TabPanel value="1">
                 <Infomation user={user} />
               </TabPanel>
-              {user.status === true || account?.email === user?.email ? (
+              {user.status === 2 || account?.email === user?.email ? (
                 <>
                   <TabPanel value="2">
                     <ListFriend />

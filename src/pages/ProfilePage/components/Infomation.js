@@ -91,7 +91,7 @@ export default function Infomation(props) {
         </Box>
       </Box>
 
-      {props.user.status ||
+      {props.user.status === 2 ||
         (account?.email === props.user.email && (
           <>
             <Typography sx={{ fontWeight: "bold", fontSize: "20" }}>
