@@ -82,7 +82,7 @@ export default function GroupPage() {
           {account.role === "Sinh viên" ? (
             <Box sx={{ mt: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                Nhóm do bạn đã tham gia
+                Nhóm bạn đã tham gia
               </Typography>
               <Box sx={{ height: "570px", overflowY: "scroll" }}>
                 {groups.map((group) => (

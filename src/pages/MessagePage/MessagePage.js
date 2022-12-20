@@ -59,107 +59,13 @@ export default function MessagePage(props) {
   const messageRef = useRef();
   const ref = useRef(null);
   const socket = props.socket.socket;
-  let group = location.state.group;
-
-  useEffect(() => {
-    try {
-      socket.on("server-send-listSocket", function (dataOnline) {
-        console.log("run server-send-listSocket -MessagePage");
-        const fetDataMessage = async () => {
-          try {
-            setRoom(roomId);
-            socket.emit("join_room", roomId);
-            const data = {
-              page: currPage,
-              limit: limit,
-              roomId: roomId,
-            };
-            const response = await Asios.Messages.getMessage(data);
-            setRoom(roomId);
-            const arr = [];
-            setListContacts(group.listContacts);
-
-            for (let index = 0; index < group.listContacts.length; index++) {
-              const element = group.listContacts[index];
-              if (element[1] === account.studentCode) {
-                const data = {
-                  contactId: element[0],
-                };
-                setcontactId(element[0]);
-                const responseUpdateviewed =
-                  await Asios.Messages.updateviewedStatus(data);
-                if (responseUpdateviewed) {
-                  await socket.emit("isSeen");
-                }
-                // break;
-              } else {
-                arr.push(element[0]);
-              }
-            }
-            setListcontactId(arr);
-
-            try {
-              const listContent = [];
-              const listOnline = [];
-              for (let index = 0; index < dataOnline.length; index++) {
-                const element2 = dataOnline;
-                listOnline.push(element2[index].email);
-              }
-              console.log("listOnline", listOnline);
-              for (let index = 0; index < response.data.length; index++) {
-                const listContentObject = {};
-                const element = response.data[index];
-                listContentObject.isAdmin = element.isAdmin;
-                listContentObject.avatar = element.avatar;
-                listContentObject.createdDate = element.createdDate;
-                listContentObject.fullName = element.fullName;
-                listContentObject.statusCreated = element.statusCreated;
-                listContentObject.studentCode = element.studentCode;
-                listContentObject.email = element.email;
-                listContentObject.messageRecall = element.messageRecall;
-                listContentObject.userId = element.userId;
-
-                if (element.statusCreated === false) {
-                  if (element.studentCode === account.studentCode) {
-                    listContentObject.content = "";
-                  } else {
-                    listContentObject.content = element.content;
-                    setUserIdOther(element.userId);
-                    setEmailOther(element.email);
-                  }
-                } else {
-                  listContentObject.content = element.content;
-                }
-                try {
-                  for (let i = 0; i < 1; i++) {
-                    var isActive;
-                    if (listOnline.includes(element.email) === true) {
-                      isActive = true;
-                      if (
-                        element.email === account.email &&
-                        listOnline.length < 2
-                      ) {
-                        setIsActiveOther(false);
-                      } else {
-                        setIsActiveOther(true);
-                      }
-                    } else {
-                      isActive = false;
-                    }
-                    listContentObject.isActive = isActive;
-                  }
-                  listContent.push(listContentObject);
-                } catch (error) {}
-                //
-              }
-              setMessageList(listContent.reverse());
-            } catch (error) {}
-          } catch (error) {}
-        };
-        fetDataMessage();
-      });
-    } catch (error) {}
-  });
+  let group;
+  let listOnline;
+  try {
+    group = location.state.group
+    console.log("group-----messss-->",group);
+    listOnline = props.socket.listOnline;
+  } catch (error) {}
 
   useEffect(() => {
     setUserTyping("");
@@ -170,41 +76,12 @@ export default function MessagePage(props) {
     getMessage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
-  //phan trang
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const data = {
-  //       page: currPage,
-  //       limit: limit,
-  //       roomId: roomId,
-  //     };
-  //     const response = await Asios.Messages.getMessage(data);
-  //     if (!response.data.length) {
-  //       setLastList(true);
-  //       return;
-  //     }
-  //     setPrevPage(currPage);
-  //     const listContent = [];
-  //     for (let index = 0; index < response.data.length; index++) {
-  //       const listContentObject = {};
-  //       const element = response.data[index];
-  //       listContentObject.isAdmin = element.isAdmin;
-  //       listContentObject.avatar = element.avatar;
-  //       listContentObject.content = element.content;
-  //       listContentObject.createdDate = element.createdDate;
-  //       listContentObject.fullName = element.fullName;
-  //       listContentObject.statusCreated = element.statusCreated;
-  //       listContentObject.studentCode = element.studentCode;
-  //       listContentObject.email = element.email;
-  //       listContent.push(listContentObject);
-  //     }
-  //     setMessageList([...listContent.reverse(), ...messageList]);
-  //   };
-  //   if (!lastList && prevPage !== currPage) {
-  //     fetchData();
-  //   }
-  // }, [currPage, lastList, prevPage, messageList, limit, roomId]);
-  //
+
+  useEffect(() => {
+    getMessage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listOnline]);
+
   useEffect(() => {
     try {
       socket.on("recevie_message", (data) => {
@@ -216,13 +93,15 @@ export default function MessagePage(props) {
   const getMessage = async () => {
     try {
       setRoom(roomId);
-      socket.emit("join_room", roomId);
+      socket.emit("join_room", roomId * 192.168199);
       const data = {
         page: currPage,
         limit: limit,
         roomId: roomId,
       };
+
       const response = await Asios.Messages.getMessage(data);
+
       setRoom(roomId);
       const arr = [];
       setListContacts(group.listContacts);
@@ -247,15 +126,18 @@ export default function MessagePage(props) {
         }
       }
       setListcontactId(arr);
-
+      let listOnlines = [];
+      let listOnls = [];
       try {
         const listContent = [];
-        const listOnline = [];
-        for (let index = 0; index < group.listOnline.length; index++) {
-          const element2 = group.listOnline[index];
-          listOnline.push(element2.email);
+
+        for (let index = 0; index < listOnline.length; index++) {
+          const element2 = listOnline[index];
+          listOnlines.push(element2.email);
+          listOnls.push(element2.email);
         }
-        listOnline.splice(listOnline.indexOf(account.email), 1);
+
+        listOnlines.splice(listOnlines.indexOf(account.email), 1);
 
         for (let index = 0; index < response.data.length; index++) {
           const listContentObject = {};
@@ -276,6 +158,7 @@ export default function MessagePage(props) {
             } else {
               listContentObject.content = element.content;
               setUserIdOther(element.userId);
+
               setEmailOther(element.email);
             }
           } else {
@@ -284,23 +167,36 @@ export default function MessagePage(props) {
           try {
             for (let i = 0; i < 1; i++) {
               var isActive;
-              if (listOnline.includes(element.email) === true) {
+              if (listOnlines.includes(element.email) === true) {
                 isActive = true;
-                if (element.email === account.email && listOnline.length < 2) {
+                console.log("listOnline meeesss 123------", listOnlines);
+                if (element.email === account.email ) {
+                  console.log("false");
                   setIsActiveOther(false);
+
                 } else {
+                  console.log("true");
                   setIsActiveOther(true);
+
                 }
               } else {
                 isActive = false;
               }
               listContentObject.isActive = isActive;
             }
+
+            listOnlines = [];
+            for (let j = 0; j < listOnls.length; j++) {
+              const el = listOnls[j];
+              listOnlines.push(el);
+            }
+
             listContent.push(listContentObject);
           } catch (error) {}
           //
         }
-        console.log("---", listContent);
+
+        console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {
@@ -336,8 +232,9 @@ export default function MessagePage(props) {
 
   const sendMessage = async () => {
     try {
+      await createMessage();
       let messageContent = {
-        room: room,
+        room: room * 192.168199,
         content: {
           studentCode: account.studentCode,
           content: message,
@@ -349,7 +246,7 @@ export default function MessagePage(props) {
           userId: account.userId,
         },
       };
-      await createMessage();
+
       await socket.emit("send_message", messageContent);
       setMessageList([...messageList, messageContent.content]);
       setMessage("");

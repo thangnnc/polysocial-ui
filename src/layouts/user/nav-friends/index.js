@@ -51,74 +51,11 @@ const scrollbar = {
 };
 export default function NavFriend(props) {
   let socket = props.socket.socket.socket;
-  const [listFriends, setListFriend] = useState([]);
+
+  let listFriends=props.socket.socket.listFriends
+  // const [listFriends, setListFriend] = useState([]);
   const navigate = useNavigate();
-  const [listOnline, setListOnline] = useState();
-
-  useEffect(() => {
-    try {
-      socket.on("server-send-listSocket", function (data) {
-        console.log("run server-send-listSocket NavFriend");
-
-        setListOnline(data);
-        getAllFriend(data);
-      });
-    } catch (error) {}
-  });
-  
-  const getAllFriend = async (onl) => {
-    const mySetOnline = new Set();
-    for (let i = 0; i < onl.length; i++) {
-      const element2 = onl;
-      mySetOnline.add(element2[i].email);
-    }
-    const listFriends = [];
-    const response = await Axios.Friends.getAllFriend();
-
-    for (let index = 0; index < response.length; index++) {
-      const listFrindObject = {};
-      const element = response[index];
-      listFrindObject.avatarUserConfirm = element.avatarUserConfirm;
-      listFrindObject.avatarUserInvite = element.avatarUserInvite;
-      listFrindObject.friendAvatar = element.friendAvatar;
-      listFrindObject.friendEmail = element.friendEmail;
-      listFrindObject.friendName = element.friendName;
-      listFrindObject.fullNameUserConfirm = element.fullNameUserConfirm;
-      listFrindObject.fullNameUserInvite = element.fullNameUserInvite;
-      listFrindObject.groupId = element.groupId;
-      var listContact = [];
-      for (let i = 0; i < element.listContact.length; i++) {
-        var arr = [];
-        const element2 = element.listContact[i];
-        arr.push(element2.contactId);
-        arr.push(element2.studentCode);
-        arr.push(element.friendAvatar);
-        arr.push(element.friendName);
-        arr.push(element2.email);
-        listContact.push(arr);
-      }
-      listFrindObject.listContact = listContact;
-
-      listFrindObject.roomId = element.roomId;
-      listFrindObject.status = element.status;
-      listFrindObject.userConfirmId = element.userConfirmId;
-      listFrindObject.userInviteId = element.userInviteId;
-      if (mySetOnline.has(element.friendEmail)) {
-        listFrindObject.isActive = true;
-      } else {
-        listFrindObject.isActive = false;
-      }
-      listFriends.push(listFrindObject);
-    }
-    // console.log("list friend- ", listFriends);
-    setListFriend(listFriends);
-  };
-
-  // const getAllFriend = async () => {
-  //   const response = await Axios.Friends.getAllFriend();
-  //   // console.log("--->", response);
-  //   setListFriend(response);
-  // };
+  let listOnline = props.socket.socket.listOnline
   const pathMessage = "/message/room/";
 
   const handleOnClick = async (

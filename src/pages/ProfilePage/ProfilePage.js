@@ -51,7 +51,7 @@ export default function ProfilePage(props) {
 
   useEffect(() => {
     try {
-      socket.on("server-send-listSocket", function (dataOnline) {
+      socket.on("server-send-listSocket-room", function (dataOnline) {
         console.log("run server-send-listSocket ProfilePage");
         setOnline(dataOnline);
 

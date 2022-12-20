@@ -2,13 +2,17 @@ import { Box, ImageListItem, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function ListGroupJoin(props) {
+  console.log("-----",props)
+  const roomId = props.group.roomId;
   return (
     <Link
       to={`/groups/detail/${props.group.groupId}`}
+      state={{ roomId: roomId }}
       style={{
         color: "inherit",
         textDecoration: "none",
       }}
+      
     >
       <Box
         sx={{

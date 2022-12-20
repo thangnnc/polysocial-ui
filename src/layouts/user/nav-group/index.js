@@ -14,6 +14,7 @@ import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
 import useLogin from "../../../utils/Login/useLogin";
 import Axios from "./../../../utils/Axios/index";
+import { useLocation } from 'react-router-dom'
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -36,6 +37,14 @@ export default function NavGroup() {
   const { groupId } = useParams();
   const { account } = useLogin();
   const [group, setGroup] = useState([]);
+  const location = useLocation()
+  const { roomId } = location.state
+  try {
+  console.log("group----------",roomId)
+    
+  } catch (error) {
+    
+  }
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
   let navGroupConfig = [
@@ -62,7 +71,7 @@ export default function NavGroup() {
       icon: icon("la:user-friends"),
     },    {
       title: "Nhắn tin",
-      path: `/message/room/${!group.roomId ? "1" : group.roomId}`,
+      path: `/message/room/${roomId}`,
       icon: icon("la:user-friends"),
     },
     {
