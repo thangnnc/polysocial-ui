@@ -22,6 +22,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
       listArr.push(arr);
     }
   } catch (error) {}
+
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
     console.log(response);
@@ -30,6 +31,15 @@ export default function FriendSearchBox({ searchData, sockets }) {
       toast.success("Gửi lời mời kết bạn thành công");
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
+    }
+  };
+
+  const handleConfirmFriend = async () => {
+    const response = await Axios.Friends.acceptFriend(searchData);
+    if (response.status === 200) {
+      toast.success("Đã thêm bạn thành công");
+    } else {
+      toast.error("Đã thêm bạn thất bại");
     }
   };
 
@@ -69,15 +79,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
             </Typography>
           </Box>
         </Box>
-        {!status ? (
-          <Button
-            className="btn-orange"
-            variant="contained"
-            sx={{ borderRadius: 50 }}
-          >
-            Huỷ
-          </Button>
-        ) : (
+        {status === 1 && (
           <Button
             className="btn-orange"
             variant="contained"
@@ -85,6 +87,34 @@ export default function FriendSearchBox({ searchData, sockets }) {
             onClick={handleAddFriend}
           >
             Kết Bạn
+          </Button>
+        )}
+        {status === 2 && (
+          <Button
+            className="btn-orange"
+            variant="contained"
+            sx={{ borderRadius: 50 }}
+          >
+            Bạn bè
+          </Button>
+        )}
+        {status === 3 && (
+          <Button
+            className="btn-orange"
+            variant="contained"
+            sx={{ borderRadius: 50 }}
+          >
+            Huỷ
+          </Button>
+        )}
+        {status === 4 && (
+          <Button
+            className="btn-orange"
+            variant="contained"
+            sx={{ borderRadius: 50 }}
+            onClick={handleConfirmFriend}
+          >
+            Chấp nhận
           </Button>
         )}
       </Box>
