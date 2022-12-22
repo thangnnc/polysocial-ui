@@ -117,6 +117,7 @@ export default function ManagementGroup(props) {
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroups();
+    console.log("repsppspspsppsspsps",response)
     const responseDelete = await Axios.Groups.getAllGroupsFalse();
     if (response.content) {
       setGroups(response.content);

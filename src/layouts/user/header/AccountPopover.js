@@ -23,11 +23,11 @@ export default function AccountPopover() {
   let MENU_OPTIONS = [
     {
       label: "Thông tin tài khoản",
-      path: "/profile",
+      path: `/my-profile/${account.userId}`,
       icon: "eva:person-fill",
     },
   ];
-
+  
   if (account.role !== "Sinh viên") {
     MENU_OPTIONS = [
       {

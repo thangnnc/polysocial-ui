@@ -2,11 +2,13 @@ import { Box, Button, Card, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
+import useLogin from "../../utils/Login/useLogin";
 import Axios from "./../../utils/Axios/index";
 
 export default function AddFriendPage(props) {
   const socket = props.socket.socket;
   const [showRequestFriend, setShowRequestFriend] = useState([]);
+  const { account } = useLogin();
 
   useEffect(() => {
     getRequestFriend();
@@ -15,7 +17,6 @@ export default function AddFriendPage(props) {
   useEffect(()=>{
    try {
     socket.on("request-accept", function () {
-      console.log("request-accept")
       getRequestFriend();
     })
    } catch (error) {
@@ -23,16 +24,26 @@ export default function AddFriendPage(props) {
    }
   })
 
+  useEffect(() => {
+    try {
+      socket.on("request-delete", function () {
+        console.log("reset_delete")
+        getRequestFriend();
+      });
+    } catch (error) {}
+  });
+
   const getRequestFriend = async () => {
     const response = await Axios.Friends.getAllRequestAddFriend();
+  console.log("showRequestFriend",response)
+
     setShowRequestFriend(response);
   };
-
-  const addFriendHandle = async (e, data) => {
+  const addFriendHandle = async (e, data,id) => {
     const response = await Axios.Friends.acceptFriend(data);
     if (response.status === 200) {
       await getRequestFriend();
-      await socket.emit("accept-friend-request");
+      await socket.emit("accept_friend",id);
       toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
@@ -87,7 +98,7 @@ export default function AddFriendPage(props) {
               borderRadius: 2,
               my: 3,
             }}
-            onClick={(e) => addFriendHandle(e, request)}
+            onClick={(e) => addFriendHandle(e, request,request.userInviteId)}
           >
             Chấp nhận
           </Button>

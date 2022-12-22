@@ -32,7 +32,6 @@ export default function NavUser(props) {
   useEffect(() => {
     try {
       socket.on("request-accept", function () {
-        console.log("runnnnnn")
         getRequestFriend();
       });
     } catch (error) {}
@@ -40,8 +39,8 @@ export default function NavUser(props) {
 
   useEffect(() => {
     try {
-      socket.on("reset_friend", function () {
-        console.log("runnnnnn reset_friend")
+      socket.on("request-delete", function () {
+        console.log("reset_delete")
         getRequestFriend();
       });
     } catch (error) {}
@@ -71,12 +70,12 @@ export default function NavUser(props) {
       path: "/groups",
       icon: icon("ri:team-fill"),
     },
-    {
-      title: "Bài Tập",
-      path: "/exercise",
-      icon: icon("ph:exam-fill"),
-      notiCount: 2,
-    },
+    // {
+    //   title: "Bài Tập",
+    //   path: "/exercise",
+    //   icon: icon("ph:exam-fill"),
+    //   notiCount: 2,
+    // },
   ];
 
   return (

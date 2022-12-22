@@ -2,14 +2,16 @@ import { Avatar, Button, Divider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useLogin from "../../../../utils/Login/useLogin";
 import Axios from "./../../../../utils/Axios/index";
 
-export default function FriendSearchBox({ searchData, sockets }) {
+export default function FriendSearchBox({ searchData, sockets,onchange }) {
   const socket = sockets.sockets;
+  const { account } = useLogin();
+  // console.log("searchData--->",searchData)
 
-  const { avatar, fullName, email, status, userId, roomId, listContact } =
+  const { avatar, fullName, email, status, userId, roomId, listContact,userInviteId,userConfirmId } =
     searchData;
-
   var listArr = [];
   try {
     for (let i = 0; i < listContact.length; i++) {
@@ -25,18 +27,35 @@ export default function FriendSearchBox({ searchData, sockets }) {
 
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
-    console.log(response);
     if (response.status === 200) {
-      await socket.emit("add-friend");
+      await socket.emit("add-friend",userId);
+      onchange(); 
       toast.success("Gửi lời mời kết bạn thành công");
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
     }
   };
 
+  const handleDeleteFriend = async () => {
+    const data = {
+      userInviteId:searchData.userInviteId,
+      userConfirmId:searchData.userConfirmId
+    }
+    const response = await Axios.Friends.deleteAllRequestAddFriend(data);
+    if (response.status === 200) {
+      onchange(); 
+      await socket.emit("delete-friend",userId);
+      toast.success("Huỷ lời mời kết bạn thành công");
+    }else{
+      toast.success("Huỷ lời mời kết bạn thất bại");
+    }
+  };
+
   const handleConfirmFriend = async () => {
     const response = await Axios.Friends.acceptFriend(searchData);
     if (response.status === 200) {
+      onchange(); 
+      await socket.emit("accept_friend",userId);
       toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
@@ -79,7 +98,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
             </Typography>
           </Box>
         </Box>
-        {status === 1 && (
+        {status === 2 && userInviteId===undefined && userConfirmId === undefined &&(
           <Button
             className="btn-orange"
             variant="contained"
@@ -89,7 +108,7 @@ export default function FriendSearchBox({ searchData, sockets }) {
             Kết Bạn
           </Button>
         )}
-        {status === 2 && (
+        {status === 1 &&(
           <Button
             className="btn-orange"
             variant="contained"
@@ -98,16 +117,17 @@ export default function FriendSearchBox({ searchData, sockets }) {
             Bạn bè
           </Button>
         )}
-        {status === 3 && (
+        {status === 0 && userInviteId===account.userId && (
           <Button
             className="btn-orange"
             variant="contained"
             sx={{ borderRadius: 50 }}
+            onClick={handleDeleteFriend}
           >
             Huỷ
           </Button>
         )}
-        {status === 4 && (
+        {status === 0 && userConfirmId===account.userId && (
           <Button
             className="btn-orange"
             variant="contained"

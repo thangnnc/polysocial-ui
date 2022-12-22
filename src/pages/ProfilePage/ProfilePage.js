@@ -24,6 +24,7 @@ export default function ProfilePage(props) {
   let profilePage;
   try {
     profilePage = location.state;
+
   } catch (error) {}
   let isActive;
   let email;
@@ -35,7 +36,6 @@ export default function ProfilePage(props) {
     roomId = profilePage.roomId;
     listContacts = profilePage.listContacts;
   } catch (error) {}
-
   const { account } = useLogin();
   const { userId } = useParams();
   const [user, setUser] = useState({});
@@ -75,20 +75,68 @@ export default function ProfilePage(props) {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
       // const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
-      console.log(response);
+      // console.log(response);
       setUser(response);
     } else {
       setUser(null);
     }
   };
 
+  useEffect(()=>{
+    try {
+     socket.on("request-accept", function () {
+      getOneUser(userId);
+     })
+    } catch (error) {
+     
+    }
+   })
+
+   useEffect(()=>{
+    try {
+     socket.on("reset_ProfilePage", function () {
+      getOneUser(userId);
+     })
+    } catch (error) {
+     
+    }
+   })
+ 
+ 
+   useEffect(() => {
+     try {
+       socket.on("request-delete", function () {
+         console.log("reset_delete")
+         getOneUser(userId);
+       });
+     } catch (error) {}
+   });
+
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(user);
     if (response.status === 200) {
+      await socket.emit("add-friend",user.userId);
+
       toast.success("Gửi lời mời kết bạn thành công");
       getOneUser(userId);
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
+    }
+  };
+
+  const handleDeleteFriend = async (users) => {
+    const data = {
+      userInviteId:user.userInviteId,
+      userConfirmId:user.userConfirmId
+    }
+
+    const response = await Axios.Friends.deleteAllRequestAddFriend(data);
+    if (response.status === 200) {
+      await socket.emit("delete-friend",user.userId);
+      getOneUser(userId);
+      toast.success("Huỷ lời mời kết bạn thành công");
+    }else{
+      toast.success("Huỷ lời mời kết bạn thất bại");
     }
   };
 
@@ -113,8 +161,9 @@ export default function ProfilePage(props) {
   const handleConfirmFriend = async () => {
     const response = await Axios.Friends.acceptFriend(user);
     if (response.status === 200) {
-      toast.success("Đã thêm bạn thành công");
       getOneUser(userId);
+      await socket.emit("accept_friend",user.userId);
+      toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
     }
@@ -198,7 +247,7 @@ export default function ProfilePage(props) {
                       </Typography>
                     </Button>
                   )}
-                  {user.status === 1 && (
+                  {user.status === 2 && account.userId!==user.userId && (
                     <Button
                       variant="contained"
                       sx={{
@@ -214,7 +263,7 @@ export default function ProfilePage(props) {
                       </Typography>
                     </Button>
                   )}
-                  {user.status === 2 && (
+                  {user.status === 1 && (
                     <>
                       <Button
                         variant="contained"
@@ -228,6 +277,22 @@ export default function ProfilePage(props) {
                         <Iconify icon={"bi:person-check-fill"} />
                         <Typography sx={{ fontWeight: "bold", ml: 1 }}>
                           Bạn bè
+                        </Typography>
+                      </Button>
+                      
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#D8DADF",
+                          color: "black",
+                          borderRadius: 2,
+                          mr: 2,
+                        }}
+                        onClick={handleDeleteFriend}
+                      >
+                        <Iconify icon={"bi:person-check-fill"} />
+                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                          Huỷ kết bạn
                         </Typography>
                       </Button>
 
@@ -254,7 +319,7 @@ export default function ProfilePage(props) {
                       </Button>
                     </>
                   )}
-                  {user.status === 3 && (
+                  {user.status === 0 && user.userConfirmId !== account.userId && (
                     <Button
                       variant="contained"
                       sx={{
@@ -262,6 +327,7 @@ export default function ProfilePage(props) {
                         borderRadius: 2,
                         mr: 2,
                       }}
+                      onClick={handleDeleteFriend}
                     >
                       <Iconify icon={"material-symbols:person-add"} />
                       <Typography sx={{ fontWeight: "bold", ml: 1 }}>
@@ -269,7 +335,7 @@ export default function ProfilePage(props) {
                       </Typography>
                     </Button>
                   )}
-                  {user.status === 4 && (
+                  {user.status === 0 && user.userConfirmId === account.userId && (
                     <Button
                       variant="contained"
                       sx={{
@@ -350,7 +416,7 @@ export default function ProfilePage(props) {
               <TabPanel value="1">
                 <Infomation user={user} />
               </TabPanel>
-              {user.status === 2 || account?.email === user?.email ? (
+              {user.status === 1 || account?.email === user?.email ? (
                 <>
                   <TabPanel value="2">
                     <ListFriend />

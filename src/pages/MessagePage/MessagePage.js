@@ -38,7 +38,7 @@ const scrollbar = {
 
 export default function MessagePage(props) {
   const { roomId } = useParams();
-  const location = useLocation();
+  let location = useLocation();
   const [room, setRoom] = useState([]);
   const listInnerRef = useRef();
   const [currPage, setCurrPage] = useState(1);
@@ -63,8 +63,12 @@ export default function MessagePage(props) {
   let listOnline;
   try {
     group = location.state.group;
+    // console.log("pug------------",group)
+
     listOnline = props.socket.listOnline;
   } catch (error) {}
+
+  useEffect(() => {}, [location]);
 
   useEffect(() => {
     setUserTyping("");
@@ -167,14 +171,17 @@ export default function MessagePage(props) {
             for (let i = 0; i < 1; i++) {
               var isActive;
               if (listOnlines.includes(element.email) === true) {
-                isActive = true;
                 console.log("listOnline meeesss 123------", listOnlines);
-                if (element.email === account.email) {
-                  console.log("false");
-                  setIsActiveOther(false);
-                } else {
-                  console.log("true");
-                  setIsActiveOther(true);
+
+                isActive = true;
+                for (let index = 0; index < listOnlines.length; index++) {
+                  const element1 = listOnlines[index];
+                  if (element1 === account.email) {
+                    setIsActiveOther(false);
+                  } else {
+                      setIsActiveOther(true);
+                      break;
+                  }
                 }
               } else {
                 isActive = false;

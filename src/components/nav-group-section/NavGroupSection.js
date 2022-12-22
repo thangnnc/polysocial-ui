@@ -11,12 +11,12 @@ NavGroupSection.propTypes = {
   data: PropTypes.array,
 };
 
-export default function NavGroupSection({ data = [], ...other }) {
+export default function NavGroupSection({ data = [],state, ...other }) {
   return (
     <Box {...other}>
       <List disablePadding sx={{ p: 0 }}>
         {data.map((item) => (
-          <NavItem key={item.title} item={item} />
+          <NavItem key={item.title} item={item} group={state}/>
         ))}
       </List>
     </Box>
@@ -29,13 +29,16 @@ NavItem.propTypes = {
   item: PropTypes.object,
 };
 
-function NavItem({ item }) {
+function NavItem({ item,group }) {
   const { title, path, icon, info, notiCount = 0 } = item;
 
   return (
     <StyledNavItem
       component={RouterLink}
-      to={path}
+      to={{
+        pathname:path,
+      }}
+      state={{group}}
       sx={{
         fontWeight: "fontWeightBold",
         "&:hover": {

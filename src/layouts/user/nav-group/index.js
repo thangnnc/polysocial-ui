@@ -8,13 +8,12 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 // import { toast } from "react-toastify";
 import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
 import useLogin from "../../../utils/Login/useLogin";
 import Axios from "./../../../utils/Axios/index";
-import { useLocation } from "react-router-dom";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -36,31 +35,26 @@ const BoxNav = styled("div")(({ theme }) => ({
 export default function NavGroup(props) {
   const { groupId } = useParams();
   const { account } = useLogin();
-  const [group, setGroup] = useState([]);
-  const location = useLocation();
+  const [groups, setGroups] = useState([]);
+  const [group, setGroup] = useState();
+  // const location = useLocation();
   // const [showRequestMember, setShowRequestMember] = useState([]);
   const [count, setCount] = useState(0);
+  const [roomId, setRoomId] = useState();
   let socket;
+  let listOnline;
   try {
+    listOnline = props.socket.socket.listOnline;
     socket = props.socket.socket.socket;
   } catch (error) {}
 
   useEffect(() => {
     try {
       socket.on("accept-member", function () {
-        console.log("runnnnnn");
         getRequestMember(groupId);
       });
     } catch (error) {}
   });
-
-  let roomId;
-  try {
-    roomId = location.state;
-  } catch (error) {}
-  try {
-    console.log("group----------", roomId);
-  } catch (error) {}
 
   useEffect(() => {
     getRequestMember(groupId);
@@ -120,13 +114,32 @@ export default function NavGroup(props) {
 
   useEffect(() => {
     getAllData(groupId);
-  }, [groupId]);
+  }, [listOnline !== undefined]);
 
   const getAllData = async (groupId) => {
     const response = await Axios.Groups.getOneGroup(groupId);
     if (response) {
-      setGroup(response);
-      console.log("repppp", response);
+      setGroups(response);
+      // console.log("repppp", response);
+      const listNameGr = {};
+      listNameGr.avatar = response.avatar;
+      listNameGr.isActive = true;
+      const listContact = [];
+      for (let index = 0; index < response.listContact.length; index++) {
+        const arr = [];
+        const element = response.listContact[index];
+        arr.push(element.userId);
+        arr.push(element.studentCode);
+        arr.push(element.avatar);
+        arr.push(element.fullName);
+        arr.push(element.email);
+        listContact.push(arr);
+      }
+      listNameGr.listContacts = listContact;
+      listNameGr.listOnline = listOnline;
+      listNameGr.name = response.name;
+      setGroup(listNameGr);
+      setRoomId(response.roomId);
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");
@@ -142,7 +155,7 @@ export default function NavGroup(props) {
             height: "20vh",
             objectFit: "cover",
           }}
-          src={group.avatar}
+          src={groups.avatar}
           alt="avatar group"
         />
       </ImageListItem>
@@ -159,7 +172,7 @@ export default function NavGroup(props) {
       >
         <Box>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            Nhóm {group.name} - {group.className}
+            Nhóm {groups.name} - {groups.className}
           </Typography>
           <Box
             sx={{
@@ -172,7 +185,7 @@ export default function NavGroup(props) {
               variant="subtitle2"
               sx={{ color: "#9b9b9b", paddingLeft: 1, paddingTop: 0.5 }}
             >
-              Nhóm kín - {group.totalMember} thành viên
+              Nhóm kín - {groups.totalMember} thành viên
             </Typography>
           </Box>
         </Box>
@@ -243,7 +256,7 @@ export default function NavGroup(props) {
         </Button>
       </Stack>
       <Box sx={{ paddingTop: 3 }}>
-        <NavGroupSection data={navGroupConfig} />
+        <NavGroupSection data={navGroupConfig} state={group}/>
       </Box>
     </BoxNav>
   );
