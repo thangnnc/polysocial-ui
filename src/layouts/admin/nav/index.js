@@ -103,6 +103,7 @@ export default function Nav({ openNav, onCloseNav }) {
       </Box>
 
       <Box sx={{ mb: 4, mx: 2.5 }}>
+        áda
         <Link underline="none">
           <StyledAccount sx={{ display: "block", textAlign: "center" }}>
             <Avatar

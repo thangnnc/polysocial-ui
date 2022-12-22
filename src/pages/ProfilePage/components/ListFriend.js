@@ -28,7 +28,7 @@ export default function ListFriend() {
           >
             <AvatarStatus
               alt="Avatar"
-              isActive={true}
+              isActive={false}
               src={friend.friendAvatar}
               sx={{ width: 54, height: 54 }}
             />

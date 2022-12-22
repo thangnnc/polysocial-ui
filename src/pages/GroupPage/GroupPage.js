@@ -53,6 +53,7 @@ export default function GroupPage(props) {
     if (response) {
       setGroups(response);
       setGroupsTeacher(responseTeacher);
+      console.log("p---",response)
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");

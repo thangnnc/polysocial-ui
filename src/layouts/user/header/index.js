@@ -74,7 +74,6 @@ export default function Header(props) {
   useEffect(() => {
     try {
       socket.on("reset_getAllNotification", function () {
-        console.log("reset-getAllNotification");
         getAllNotification();
       });
     } catch (error) {}

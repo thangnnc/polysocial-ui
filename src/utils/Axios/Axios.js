@@ -83,9 +83,10 @@ class Axios {
     return response.data;
   }
 
-  static async delete(url, headers) {
+  static async delete(url, data,headers) {
     const response = await axios
-      .delete(`${Config.URL}${url}`, {
+      .delete(`${Config.URL}${url}`,{
+        data,
         headers: {
           ...headers,
           ...Config.HEADERS,

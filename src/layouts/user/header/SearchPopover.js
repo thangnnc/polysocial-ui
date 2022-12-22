@@ -26,6 +26,12 @@ const scrollbar = {
 };
 
 export default function SearchPopover(sockets) {
+  let socket;
+  try {
+    socket = sockets.sockets;
+  } catch (error) {
+    
+  }
   const [open, setOpen] = useState(false);
   const [isFocusPopup, setFocusPopup] = useState(false);
   const [searchList, setSearchList] = useState([]);
@@ -34,10 +40,31 @@ export default function SearchPopover(sockets) {
     getData();
   }, []);
 
+  const handleChange = () => {
+    getData();
+  };
+
+  useEffect(() => {
+    try {
+      socket.on("request-accept", function () {
+        // console.log("request-accept");
+        getData();
+      });
+    } catch (error) {}
+  });
+
+  useEffect(() => {
+    try {
+      socket.on("request-delete", function () {
+        // console.log("request-delete");
+        getData();
+      });
+    } catch (error) {}
+  });
+
+
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");
-    // console.log('getData',response);
-
     setSearchList(response);
   };
 
@@ -62,7 +89,7 @@ export default function SearchPopover(sockets) {
 
   const handleSearch = async (e) => {
     const response = await Axios.Friends.searchUserByKeywork(e.target.value);
-    console.log("handleSearch", response);
+    // console.log("handleSearch", response);
     setSearchList(response);
   };
 
@@ -109,6 +136,7 @@ export default function SearchPopover(sockets) {
                 key={index}
                 searchData={searchData}
                 sockets={sockets}
+                onchange={handleChange}
               />
             ))}
           </CardContent>

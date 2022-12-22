@@ -30,9 +30,8 @@ function App() {
       const response = await Axios.Messages.getNameGroupDESC(data1);
       for (let index = 0; index < response.data.length; index++) {
         const element = response.data[index];
-        listRoomId.push(element.roomId);
+        listRoomId.push(element.roomId*192.168199);
       }
-
       setListResponse(response);
     };
     if (account) {
@@ -47,7 +46,7 @@ function App() {
       if (account) {
         const CONNECTTION_PORT = "localhost:3002";
         setsocket(
-          io(CONNECTTION_PORT).emit("connectUser", account.email, listRoomId)
+          io(CONNECTTION_PORT).emit("connectUser", account, listRoomId)
         );
       } else {
       }
@@ -168,22 +167,22 @@ function App() {
   useEffect(() => {
     try {
       socket.on("reset_nameGroup", function (listSocket) {
-        console.log("reset_nameGroup");
-        fetchNameGroup(listSocket);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("reset_friend", function (listSocket) {
-        console.log("reset_friend");
         getAllFriend(listSocket);
 
         fetchNameGroup(listSocket);
       });
     } catch (error) {}
   });
+
+  // useEffect(() => {
+  //   try {
+  //     socket.on("reset_delete_nameGroup", function (listSocket) {
+  //       getAllFriend(listSocket);
+
+  //       fetchNameGroup(listSocket);
+  //     });
+  //   } catch (error) {}
+  // });
 
   const fetchNameGroup = async (listSocket) => {
     // setListOnline(listSocket);
