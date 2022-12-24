@@ -40,6 +40,7 @@ export default function GroupPage(props) {
   const [groupsTeacher, setGroupsTeacher] = useState([]);
   const [listeningCreateGroup, setListeningCreateGroup] = useState(false);
 
+  const [listPostDTO, setListPost] = useState([]);
 
   try {
     socket = props.socket.socket;
