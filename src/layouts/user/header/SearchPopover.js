@@ -29,9 +29,7 @@ export default function SearchPopover(sockets) {
   let socket;
   try {
     socket = sockets.sockets;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
   const [open, setOpen] = useState(false);
   const [isFocusPopup, setFocusPopup] = useState(false);
   const [searchList, setSearchList] = useState([]);
@@ -61,7 +59,6 @@ export default function SearchPopover(sockets) {
     } catch (error) {}
   }, [listeningRequestAccept]);
 
-
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");
     setSearchList(response);
@@ -88,7 +85,6 @@ export default function SearchPopover(sockets) {
 
   const handleSearch = async (e) => {
     const response = await Axios.Friends.searchUserByKeywork(e.target.value);
-    // console.log("handleSearch", response);
     setSearchList(response);
   };
 

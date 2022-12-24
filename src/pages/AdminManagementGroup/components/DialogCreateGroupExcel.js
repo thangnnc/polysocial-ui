@@ -23,9 +23,14 @@ const styleInputFullField = {
   mb: 3,
 };
 
-export const DialogCreateGroupExcel = ({ open, setOpen, groups, onChange,propsSocket }) => {
+export const DialogCreateGroupExcel = ({
+  open,
+  setOpen,
+  groups,
+  onChange,
+  propsSocket,
+}) => {
   const socket = propsSocket.socket.socket;
-  // console.log("prooo--->", propsSocket.socket.socket);
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [groupId, setGroupId] = useState("");
@@ -71,7 +76,7 @@ export const DialogCreateGroupExcel = ({ open, setOpen, groups, onChange,propsSo
               <Autocomplete
                 name="groupId"
                 options={groups}
-                getOptionLabel={(option) => option?.name}
+                getOptionLabel={(option) => option?.name || option?.groupName}
                 onChange={handleChange}
                 renderInput={(params) => (
                   <TextField

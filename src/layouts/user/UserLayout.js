@@ -56,7 +56,7 @@ export default function UserLayout(props) {
 
       <Box sx={{ display: "flex", width: "100%", pl: 8 }}>
         <BoxNav>
-          <NavUser socket={props}/>
+          <NavUser socket={props} />
         </BoxNav>
 
         <Main>

@@ -8,7 +8,6 @@ import Axios from "./../../../../utils/Axios/index";
 export default function FriendSearchBox({ searchData, sockets,onchange }) {
   const socket = sockets.sockets;
   const { account } = useLogin();
-  // console.log("searchData--->",searchData)
 
   const { avatar, fullName, email, status, userId, roomId, listContact,userInviteId,userConfirmId } =
     searchData;
