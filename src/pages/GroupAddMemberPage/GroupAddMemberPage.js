@@ -1,13 +1,17 @@
 import { Box, Button, Card, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 
 export default function GroupAddMemberPage(props) {
   let socket;
+  // let location = useLocation();
+  let roomId
   try {
+    // roomId = location.state.group.roomId*192.168199;
+    // console.log("gro-----",roomId)
     socket = props.socket.socket
   } catch (error) {
     
@@ -21,7 +25,7 @@ export default function GroupAddMemberPage(props) {
 
   const getRequestMember = async (groupId) => {
     const response = await Axios.Groups.getMemberJoinGroup(groupId);
-    // console.log("r4epsssss",response)
+    console.log("r4epsssss",response)
     // console.log("r4epsssss",response.length)
     setShowRequestMember(response);
   };
@@ -40,6 +44,7 @@ export default function GroupAddMemberPage(props) {
     const response = await Axios.Groups.addMemberJoinGroup(groupId, userId);
     if (response.status === 200) {
       socket.emit("add-member");
+      // socket.emit("add-member",roomId);
       toast.success("Đã thêm thành viên thành công");
       getRequestMember(groupId);
     } else {
@@ -52,7 +57,7 @@ export default function GroupAddMemberPage(props) {
       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
         Lời mời vào nhóm học tập
       </Typography>
-      {showRequestMember.map((item, index) => (
+      {showRequestMember?.map((item, index) => (
         <Card
           sx={{
             my: 2,

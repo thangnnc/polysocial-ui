@@ -2,6 +2,7 @@ import { Box, Card, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
+import useLogin from "../../utils/Login/useLogin";
 import SearchBar from "../GroupMemberPage/components/SearchBar";
 import Axios from "./../../utils/Axios/index";
 
@@ -9,6 +10,7 @@ export default function GroupMemberPage() {
   const { groupId } = useParams();
   const [members, setMember] = useState([]);
   const [teacher, setTeacher] = useState({});
+  const { account } = useLogin();
 
   useEffect(() => {
     getAllData(groupId);
@@ -19,6 +21,17 @@ export default function GroupMemberPage() {
     const responseTeacher = await Axios.Groups.getTeacherGroup(groupId);
     setMember(response);
     setTeacher(responseTeacher);
+  };
+
+  const deleteMember = async (userId) => {
+    const data={
+      userId:userId,
+      groupId:groupId
+    }
+    console.log("groupId", groupId);
+    console.log("userId", userId);
+    const response = await Axios.Groups.deleteStudentGroup(data);
+    console.log("response---->",response)
   };
 
   return (
@@ -99,6 +112,22 @@ export default function GroupMemberPage() {
                     >
                       {member.email}
                     </Typography>
+                    <Box
+                      sx={{ ml: 2 }}
+                      onClick={() => deleteMember(member.userId)}
+                    >
+                      <Typography
+                        style={{ backgroundColor: "red" }}
+                        variant="h6"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        {account.role === "Giảng viên"
+                          ? "Xoá khỏi nhóm"
+                          : "" || account.role === "Đào tạo"
+                          ? "Xoá khỏi nhóm"
+                          : ""}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
               ))}
