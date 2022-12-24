@@ -9,6 +9,9 @@ export default function HomePage(props) {
   let socket;
   const { account } = useLogin();
   const [listPostDTO, setListPost] = useState([]);
+  const [listeningPost, setListeningPost] = useState(false);
+
+
   try {
     socket=props.socket.socket
   } catch (error) {
@@ -19,13 +22,31 @@ export default function HomePage(props) {
     fetchData();
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   try {
+  //     socket.on("Server-response-like-comment", function (listSocket) {
+  //       fetchData();
+  //     });
+  //   } catch (error) {}
+  // });
+
+    ///listeningPost
     try {
-      socket.on("Server-response-like-comment", function (listSocket) {
-        fetchData();
+      socket.on("Server_response_like_comment", () => {
+        setListeningPost(true);
       });
     } catch (error) {}
-  });
+  
+    useEffect(() => {
+      try {
+        if (listeningPost) {
+          fetchData();
+          setListeningPost(false);
+        }
+      } catch (error) {}
+    }, [listeningPost]);
+    //-------------------------------------------------------------------------------------------------------------
+  
 
   const fetchData = async () => {
     const response = await Axios.Posts.getAllByAllPost(0, 100);

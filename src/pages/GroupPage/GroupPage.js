@@ -41,6 +41,8 @@ export default function GroupPage(props) {
   const [listeningCreateGroup, setListeningCreateGroup] = useState(false);
 
   const [listPostDTO, setListPost] = useState([]);
+  const [listeningPost, setListeningPost] = useState(false);
+
 
   try {
     socket = props.socket.socket;
@@ -81,14 +83,24 @@ export default function GroupPage(props) {
     }
   };
 
-  //
-  useEffect(() => {
-    try {
-      socket.on("reset_private_room", function () {
-        getAllData();
+
+     ///listeningPost
+     try {
+      socket.on("Server_response_like_comment", () => {
+        setListeningPost(true);
       });
     } catch (error) {}
-  });
+  
+    useEffect(() => {
+      try {
+        if (listeningPost) {
+          fetchData();
+          setListeningPost(false);
+        }
+      } catch (error) {}
+    }, [listeningPost]);
+    //-------------------------------------------------------------------------------------------------------------
+  
 
   useEffect(() => {
     fetchData();
@@ -171,7 +183,7 @@ export default function GroupPage(props) {
           }}
         >
           <Box sx={{ width: "60%" }}>
-            <Post posts={listPostDTO} onChange={handleChange} />
+            <Post posts={listPostDTO} onChange={handleChange} socket={socket} />
           </Box>
         </Box>
       </Box>
