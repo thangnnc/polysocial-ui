@@ -22,7 +22,6 @@ function App() {
   const [listOnline, setListOnline] = useState();
   const [listFriends, setListFriend] = useState([]);
   // const [status, setStatus] = useState(false);
-
   //messgage
   const listRoomId = [];
   useEffect(() => {
@@ -30,7 +29,7 @@ function App() {
       const response = await Axios.Messages.getNameGroupDESC(data1);
       for (let index = 0; index < response.data.length; index++) {
         const element = response.data[index];
-        listRoomId.push(element.roomId*192.168199);
+        listRoomId.push(element.roomId * 192.168199);
       }
       setListResponse(response);
     };
@@ -125,13 +124,6 @@ function App() {
           mySetOnline.add(element2.at(4));
         }
         const listOnline = [];
-
-        // if (onl === undefined) {
-        //   for (let index = 0; index < listOnline.length; index++) {
-        //     const element2 = listOnline[index];
-        //     listOnline.push(element2.email);
-        //   }
-        // } else {
         for (let index = 0; index < onl.length; index++) {
           const element2 = onl[index];
           listOnline.push(element2.email);
@@ -166,7 +158,13 @@ function App() {
 
   useEffect(() => {
     try {
-      socket.on("reset_nameGroup", function (listSocket) {
+      socket.on("reset_nameGroup", function (listSocket) {});
+    } catch (error) {}
+  });
+
+  useEffect(() => {
+    try {
+      socket.on("reset_ProfilePage_delete", function (listSocket) {
         getAllFriend(listSocket);
 
         fetchNameGroup(listSocket);
@@ -174,23 +172,10 @@ function App() {
     } catch (error) {}
   });
 
-  // useEffect(() => {
-  //   try {
-  //     socket.on("reset_delete_nameGroup", function (listSocket) {
-  //       getAllFriend(listSocket);
-
-  //       fetchNameGroup(listSocket);
-  //     });
-  //   } catch (error) {}
-  // });
-
   const fetchNameGroup = async (listSocket) => {
-    // setListOnline(listSocket);
-
     const arr = [];
     const response = await Axios.Messages.getNameGroupDESC(data1);
     for (let index = 0; index < response.data.length; index++) {
-      // console.log("gionggggggg");
       const listNameGr = {};
       const element = response.data[index];
       const names = element.name.split(",");

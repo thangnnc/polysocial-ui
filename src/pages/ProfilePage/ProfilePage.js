@@ -75,7 +75,7 @@ export default function ProfilePage(props) {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
       // const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
-      // console.log(response);
+      console.log(response);
       setUser(response);
     } else {
       setUser(null);
@@ -101,6 +101,18 @@ export default function ProfilePage(props) {
      
     }
    })
+
+   useEffect(()=>{
+    try {
+     socket.on("reset_ProfilePage_delete", function () {
+      getOneUser(userId);
+     })
+    } catch (error) {
+     
+    }
+   })
+
+   
  
  
    useEffect(() => {
@@ -124,20 +136,15 @@ export default function ProfilePage(props) {
     }
   };
 
-  const handleDeleteFriend = async (users) => {
-    const data = {
-      userInviteId:user.userInviteId,
-      userConfirmId:user.userConfirmId
-    }
-
-    const response = await Axios.Friends.deleteAllRequestAddFriend(data);
-    if (response.status === 200) {
+  const handleDeleteFriend = async () => {
+    const response = await Axios.Friends.deleteOneAllRequestAddFriend({userId:userId});
+    // if (response.status === 200) {
       await socket.emit("delete-friend",user.userId);
       getOneUser(userId);
       toast.success("Huỷ lời mời kết bạn thành công");
-    }else{
-      toast.success("Huỷ lời mời kết bạn thất bại");
-    }
+    // }else{
+      // toast.success("Huỷ lời mời kết bạn thất bại");
+    // }
   };
 
   const pathMessage = "/message/room/";

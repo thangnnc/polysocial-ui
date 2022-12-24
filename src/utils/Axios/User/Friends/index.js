@@ -7,6 +7,10 @@ class Friends {
   // Delete add friend request
   static deleteAllRequestAddFriend = async (data) =>
     Axios.delete("/user/delete-request-add-friend", data);
+    
+    // Delete one friend request
+  static deleteOneAllRequestAddFriend = async (data) =>
+  Axios.put("/user/unfriend", data);
   // Post accept friend
   static acceptFriend = async (data) => Axios.post("/user/accept-friend", data);
   // Post add friend

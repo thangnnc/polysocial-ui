@@ -71,6 +71,16 @@ export default function Header(props) {
     setNotifications(response);
   };
 
+  useEffect(()=>{
+    try {
+     socket.on("reset_ProfilePage_delete", function () {
+      getAllNotification();
+     })
+    } catch (error) {
+     
+    }
+   })
+
   useEffect(() => {
     try {
       socket.on("reset_getAllNotification", function () {

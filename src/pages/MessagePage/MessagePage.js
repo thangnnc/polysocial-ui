@@ -56,7 +56,7 @@ export default function MessagePage(props) {
   const [userIdOther, setUserIdOther] = useState();
   const [isActiveOther, setIsActiveOther] = useState();
   const [emailOther, setEmailOther] = useState();
-  const messageRef = useRef();
+  const messageRef = useRef(null);
   const ref = useRef(null);
   const socket = props.socket.socket;
   let group;
@@ -84,6 +84,24 @@ export default function MessagePage(props) {
     getMessage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOnline]);
+  
+  useEffect(() => {
+    try {
+      socket.on("recevie_message", (data) => {
+        setMessageList([...messageList, data]);
+      });
+    } catch (error) {}
+  }, [listOnline]);
+
+  // useEffect(() => {
+  //   try {
+  //     socket.on("reset_room_message", () => {
+  //       getMessage();
+  //     });
+  //   } catch (error) {}
+  // },);
+
+  
 
   useEffect(() => {
     try {
@@ -108,7 +126,7 @@ export default function MessagePage(props) {
       setRoom(roomId);
       const arr = [];
       setListContacts(group.listContacts);
-      console.log("run get message", group.listContacts);
+      // console.log("run get message", group.listContacts);
 
       for (let index = 0; index < group.listContacts.length; index++) {
         const element = group.listContacts[index];
@@ -171,7 +189,7 @@ export default function MessagePage(props) {
             for (let i = 0; i < 1; i++) {
               var isActive;
               if (listOnlines.includes(element.email) === true) {
-                console.log("listOnline meeesss 123------", listOnlines);
+                // console.log("listOnline meeesss 123------", listOnlines);
 
                 isActive = true;
                 for (let index = 0; index < listOnlines.length; index++) {
@@ -200,7 +218,7 @@ export default function MessagePage(props) {
           //
         }
 
-        console.log("messs---", listContent);
+        // console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {
@@ -270,14 +288,14 @@ export default function MessagePage(props) {
     }
   };
 
-  const onScroll = () => {
-    if (listInnerRef.current) {
-      const { scrollTop } = listInnerRef.current;
-      if (scrollTop === 0) {
-        setCurrPage(currPage + 1);
-      }
-    }
-  };
+  // const onScroll = () => {
+  //   if (listInnerRef.current) {
+  //     const { scrollTop } = listInnerRef.current;
+  //     if (scrollTop === 0) {
+  //       setCurrPage(currPage + 1);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -303,11 +321,11 @@ export default function MessagePage(props) {
                 sx={{ width: "46px", height: "46px" }}
               />
             }
-            action={
-              <IconButton nButton aria-label="settings">
-                <MoreVertIcon />
-              </IconButton>
-            }
+            // action={
+            //   <IconButton nButton aria-label="settings">
+            //     <MoreVertIcon />
+            //   </IconButton>
+            // }
             title={<Typography fontWeight={700}>{group.name}</Typography>}
             subheader={isActiveOther ? "Đang hoạt động" : "Không hoạt động"}
           />
@@ -324,7 +342,7 @@ export default function MessagePage(props) {
             overflowX: "hidden",
             ...scrollbar,
           }}
-          onScroll={onScroll}
+          // onScroll={onScroll}
           ref={listInnerRef}
         >
           {messageList.map((value, key) => {
@@ -333,15 +351,6 @@ export default function MessagePage(props) {
                 <AlertMessage
                   message={value.statusCreated ? "" : value.content}
                 />
-                {/* <AlertMessage
-                  message={
-                    value.statusCreated
-                      ? value.statusCreated+ 0.1 < value.statusCreated 
-                        ? "11:00"
-                        : ""
-                      : ""
-                  }
-                /> */}
 
                 <MyMessage
                   message={
@@ -377,15 +386,6 @@ export default function MessagePage(props) {
                   roomId={roomId}
                   listContacts={listContacts}
                 />
-                {/* <TimeLineMessage message={"16:00"} /> */}
-                {/* <MyMessage message={"Em ăn cơm chưa?"} showAvatar /> */}
-                {/* <OtherMessage account={friend} message={"Chưa"} /> */}
-                {/* <OtherMessage
-                    account={friend}
-                    message={"Anh chở e đi ăn đi <3"}
-                    showAvatar
-                  /> */}
-                {/* <MyMessage message={"Méo :V"} showAvatar /> */}
               </div>
             );
           })}
@@ -397,7 +397,7 @@ export default function MessagePage(props) {
         <Divider />
         {/* Gửi tin nhắn */}
         <CardActions>
-          <Button
+          {/* <Button
             size="large"
             color="inherit"
             sx={{ minWidth: 0, ml: "0 !important" }}
@@ -413,7 +413,7 @@ export default function MessagePage(props) {
             sx={{ minWidth: 0, ml: "0 !important" }}
           >
             <Iconify icon="material-symbols:image" width={28} />
-          </Button>
+          </Button> */}
           <TextField
             className="rounded"
             size="small"

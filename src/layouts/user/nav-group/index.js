@@ -105,11 +105,11 @@ export default function NavGroup(props) {
       path: `/groups/detail/exercise/${groupId}`,
       icon: icon("material-symbols:nest-clock-farsight-analog-outline"),
     },
-    {
-      title: "Rời nhóm",
-      path: `/groups/detail/leave/${groupId}`,
-      icon: icon("ic:round-log-out"),
-    },
+    // {
+    //   title: "Rời nhóm",
+    //   path: `/groups/detail/leave/${groupId}`,
+    //   icon: icon("ic:round-log-out"),
+    // },
   ];
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function NavGroup(props) {
     const response = await Axios.Groups.getOneGroup(groupId);
     if (response) {
       setGroups(response);
-      // console.log("repppp", response);
+      // console.log("repppp", response)
       const listNameGr = {};
       listNameGr.avatar = response.avatar;
       listNameGr.isActive = true;
@@ -138,6 +138,8 @@ export default function NavGroup(props) {
       listNameGr.listContacts = listContact;
       listNameGr.listOnline = listOnline;
       listNameGr.name = response.name;
+      listNameGr.roomId = response.roomId;
+      
       setGroup(listNameGr);
       setRoomId(response.roomId);
       // toast.success("Lấy dữ liệu thành công");
