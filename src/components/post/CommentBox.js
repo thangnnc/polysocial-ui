@@ -19,7 +19,7 @@ export default function CommentBox({
   const createComment = async () => {
     const response = await Axios.Comments.createComment(itemInputComment);
     if (response.status === 200) {
-      socket.emit("Client-request-comment");
+      socket.emit("Client_request_create_like_comment");
       onChange();
     }
   };

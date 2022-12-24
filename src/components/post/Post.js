@@ -50,7 +50,7 @@ export default function Post({ posts, onChange, socket }) {
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
-      socket.emit("Client-request-like");
+      socket.emit("Client_request_create_like_comment");
       onChange();
     }
   };

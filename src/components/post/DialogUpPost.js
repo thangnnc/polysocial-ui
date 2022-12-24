@@ -34,7 +34,7 @@ export default function DialogUpPost({ open, handleClose, onChange,socket }) {
     if (responseCreate) {
       itemInputPost.files = [];
       toast.success("Tạo bài viết thành công");
-      await socket.emit("Client-request-createPost");
+      await socket.emit("Client_request_create_like_comment");
       onChange();
     } else {
       toast.error("Tạo bài viết thất bại");
