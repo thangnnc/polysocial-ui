@@ -1,6 +1,7 @@
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Card, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Iconify from "../../components/iconify/Iconify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../utils/Login/useLogin";
 import SearchBar from "../GroupMemberPage/components/SearchBar";
@@ -24,14 +25,13 @@ export default function GroupMemberPage() {
   };
 
   const deleteMember = async (userId) => {
-    const data={
-      userId:userId,
-      groupId:groupId
-    }
-    console.log("groupId", groupId);
-    console.log("userId", userId);
+    const data = {
+      userId: userId,
+      groupId: groupId,
+    };
     const response = await Axios.Groups.deleteStudentGroup(data);
-    console.log("response---->",response)
+    getAllData(groupId);
+    console.log("response---->", response);
   };
 
   return (
@@ -84,51 +84,55 @@ export default function GroupMemberPage() {
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               Thành viên
             </Typography>
-            <Box sx={{ height: "390px", overflowY: "scroll" }}>
+            <Box sx={{ height: "385px", overflowY: "scroll" }}>
               {members.map((member, index) => (
                 <Box
-                  sx={{ display: "flex", alignItems: "center", my: 2 }}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    my: 2,
+                  }}
                   key={index}
                 >
-                  <AvatarStatus
-                    alt="Avatar"
-                    isActive={true}
-                    src={member.avatar}
-                    sx={{ width: 54, height: 54 }}
-                  />
-                  <Box sx={{ ml: 2 }}>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ fontWeight: "bold" }}
-                      noWrap
-                      fontSize={16}
-                    >
-                      {member.fullName}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                      noWrap
-                    >
-                      {member.email}
-                    </Typography>
-                    <Box
-                      sx={{ ml: 2 }}
-                      onClick={() => deleteMember(member.userId)}
-                    >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <AvatarStatus
+                      alt="Avatar"
+                      isActive={true}
+                      src={member.avatar}
+                      sx={{ width: 54, height: 54 }}
+                    />
+                    <Box sx={{ ml: 2 }}>
                       <Typography
-                        style={{ backgroundColor: "red" }}
-                        variant="h6"
+                        variant="subtitle2"
                         sx={{ fontWeight: "bold" }}
+                        noWrap
+                        fontSize={16}
                       >
-                        {account.role === "Giảng viên"
-                          ? "Xoá khỏi nhóm"
-                          : "" || account.role === "Đào tạo"
-                          ? "Xoá khỏi nhóm"
-                          : ""}
+                        {member.fullName}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
+                        noWrap
+                      >
+                        {member.email}
                       </Typography>
                     </Box>
                   </Box>
+                  {account.role !== "Sinh viên" && (
+                    <IconButton
+                      aria-label="Example"
+                      sx={{
+                        backgroundColor: "#f5f5f5",
+                        color: "black",
+                        mr: 2,
+                      }}
+                      onClick={() => deleteMember(member.userId)}
+                    >
+                      <Iconify icon={"ic:round-delete"} />
+                    </IconButton>
+                  )}
                 </Box>
               ))}
             </Box>

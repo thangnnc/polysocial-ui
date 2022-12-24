@@ -7,6 +7,7 @@ import ListGroupJoin from "./components/ListGroupJoin";
 import ListGroupTeacherJoin from "./components/ListGroupTeacherJoin";
 import Axios from "./../../utils/Axios/index";
 import useLogin from "../../utils/Login/useLogin";
+import Post from "../../components/post/Post";
 // import { toast } from "react-toastify";
 
 const APP_BAR_MOBILE = 64;
@@ -37,12 +38,11 @@ export default function GroupPage(props) {
   const { account } = useLogin();
   const [groups, setGroups] = useState([]);
   const [groupsTeacher, setGroupsTeacher] = useState([]);
+  const [listPostDTO, setListPost] = useState([]);
 
   try {
-    socket=props.socket.socket;
-  } catch (error) {
-    
-  }
+    socket = props.socket.socket;
+  } catch (error) {}
   useEffect(() => {
     getAllData();
   }, []);
@@ -53,14 +53,14 @@ export default function GroupPage(props) {
     if (response) {
       setGroups(response);
       setGroupsTeacher(responseTeacher);
-      console.log("p---",response)
+      console.log("p---", response);
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");
     }
   };
 
-  // 
+  //
   useEffect(() => {
     try {
       socket.on("reset_private_room", function () {
@@ -69,10 +69,24 @@ export default function GroupPage(props) {
     } catch (error) {}
   });
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const response = await Axios.Posts.getAllByAllPost(0, 100);
+    if (response) {
+      setListPost(response.listPostDTO);
+    }
+  };
+
+  const handleChange = () => {
+    fetchData();
+  };
 
   return (
     <StyledRoot>
-      <Header socket={props}/>
+      <Header socket={props} />
       <Box sx={{ display: "flex", width: "100%" }}>
         <BoxNav>
           <Box
@@ -94,7 +108,7 @@ export default function GroupPage(props) {
             </IconButton>
           </Box>
 
-          <SearchBar socket={props}/>
+          <SearchBar socket={props} />
 
           {account.role === "Sinh viên" ? (
             <Box sx={{ mt: 3 }}>
@@ -103,26 +117,41 @@ export default function GroupPage(props) {
               </Typography>
               <Box sx={{ height: "570px", overflowY: "scroll" }}>
                 {groups.map((group) => (
-                  <ListGroupJoin key={group.groupId} group={group} socket={props}/>
+                  <ListGroupJoin
+                    key={group.groupId}
+                    group={group}
+                    socket={props}
+                  />
                 ))}
               </Box>
             </Box>
-          ):(<Box sx={{ mt: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Nhóm do bạn quản lý
-            </Typography>
-            <Box sx={{ height: "570px", overflowY: "scroll" }}>
-              {groupsTeacher.map((groupTeacher) => (
-                <ListGroupTeacherJoin
-                  key={groupTeacher.groupId}
-                  group={groupTeacher}
-                />
-              ))}
+          ) : (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                Nhóm do bạn quản lý
+              </Typography>
+              <Box sx={{ height: "570px", overflowY: "scroll" }}>
+                {groupsTeacher.map((groupTeacher) => (
+                  <ListGroupTeacherJoin
+                    key={groupTeacher.groupId}
+                    group={groupTeacher}
+                  />
+                ))}
+              </Box>
             </Box>
-          </Box>)}
+          )}
         </BoxNav>
-        <Box sx={{ width: "78%", mt: 10 }}>
-          <h1 style={{ padding: 20 }}>Group Page</h1>
+        <Box
+          sx={{
+            width: "78%",
+            mt: 10,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Box sx={{ width: "60%" }}>
+            <Post posts={listPostDTO} onChange={handleChange} />
+          </Box>
         </Box>
       </Box>
     </StyledRoot>

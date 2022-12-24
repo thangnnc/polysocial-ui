@@ -35,12 +35,14 @@ import { DialogCreateGroup } from "./components/DialogCreateGroup";
 import { DialogCreateGroupExcel } from "./components/DialogCreateGroupExcel";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Link } from "react-router-dom";
+import useLogin from "../../utils/Login/useLogin";
 // import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "name", label: "Tên Nhóm Học Tập", alignRight: false },
+  { id: "className", label: "Tên Lớp Học Tập", alignRight: false },
   { id: "description", label: "Mô Tả", alignRight: false },
   { id: "totalMember", label: "Tổng TV", alignRight: false },
   { id: "status", label: "Trạng Thái", alignRight: false },
@@ -111,19 +113,36 @@ export default function ManagementGroup(props) {
 
   const [value, setValue] = useState("1");
 
+  const { account } = useLogin();
+
   useEffect(() => {
     getAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getAllData = async () => {
-    const response = await Axios.Groups.getAllGroups();
-    const responseDelete = await Axios.Groups.getAllGroupsFalse();
-    if (response.content) {
-      setGroups(response.content);
-      setGroupsDelete(responseDelete.content);
-      // toast.success("Lấy dữ liệu thành công");
+    if (account.role === "Đào tạo") {
+      const response = await Axios.Groups.getAllGroups();
+      const responseDelete = await Axios.Groups.getAllGroupsFalse();
+      if (response.content) {
+        setGroups(response.content);
+        console.log(response.content);
+        setGroupsDelete(responseDelete.content);
+        // toast.success("Lấy dữ liệu thành công");
+      } else {
+        // toast.error("Lấy dữ liệu thất bại");
+      }
     } else {
-      // toast.error("Lấy dữ liệu thất bại");
+      const response = await Axios.Groups.getAllGroupTeacher();
+      const responseDelete = await Axios.Groups.getAllGroupsFalse();
+      if (response) {
+        setGroups(response);
+        console.log(response);
+        setGroupsDelete(responseDelete.content);
+        // toast.success("Lấy dữ liệu thành công");
+      } else {
+        // toast.error("Lấy dữ liệu thất bại");
+      }
     }
   };
 
@@ -329,9 +348,13 @@ export default function ManagementGroup(props) {
                                   style={{ paddingLeft: 20 }}
                                 >
                                   <Typography variant="subtitle2" noWrap>
-                                    {row.name}
+                                    {row.name || row.groupName}
                                   </Typography>
                                 </Stack>
+                              </TableCell>
+
+                              <TableCell align="left" sx={{ width: "15%" }}>
+                                {row.className}
                               </TableCell>
 
                               <TableCell align="left" sx={{ width: "25%" }}>

@@ -7,7 +7,6 @@ import useLogin from "../../../utils/Login/useLogin";
 import Axios from "../../../utils/Axios";
 import { useEffect, useState } from "react";
 
-
 export default function NavUser(props) {
   const { account } = useLogin();
   const [count, setCount] = useState(0);
@@ -15,9 +14,7 @@ export default function NavUser(props) {
   let socket;
   try {
     socket = props.socket.socket.socket;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 
   const getRequestFriend = async () => {
     const response = await Axios.Friends.getAllRequestAddFriend();
@@ -28,7 +25,6 @@ export default function NavUser(props) {
     getRequestFriend();
   }, []);
 
-  
   useEffect(() => {
     try {
       socket.on("request-accept", function () {
@@ -40,7 +36,7 @@ export default function NavUser(props) {
   useEffect(() => {
     try {
       socket.on("request-delete", function () {
-        console.log("reset_delete")
+        console.log("reset_delete");
         getRequestFriend();
       });
     } catch (error) {}
@@ -97,7 +93,12 @@ export default function NavUser(props) {
           />
         </Box>
         <Box sx={{ width: "75%" }}>
-          <Typography variant="subtitle2" noWrap fontSize={16}>
+          <Typography
+            variant="subtitle2"
+            noWrap
+            fontSize={16}
+            fontWeight="bold"
+          >
             {account.fullName}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
