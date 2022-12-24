@@ -50,7 +50,6 @@ const Main = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function UserLayout(props) {
-  // console.log("UserLayout",props)
   return (
     <StyledRoot>
       <Header socket={props} />

@@ -37,6 +37,8 @@ export default function GroupPage(props) {
   const { account } = useLogin();
   const [groups, setGroups] = useState([]);
   const [groupsTeacher, setGroupsTeacher] = useState([]);
+  const [listeningCreateGroup, setListeningCreateGroup] = useState(false);
+
 
   try {
     socket=props.socket.socket;
@@ -47,13 +49,32 @@ export default function GroupPage(props) {
     getAllData();
   }, []);
 
+    ///listeningCreateGroup
+    try {
+      socket.on("reset_create_group_successful", (data) => {
+        setListeningCreateGroup(true);
+      });
+    } catch (error) {}
+  
+    useEffect(() => {
+      try {
+        if (listeningCreateGroup) {
+          getAllData();
+          setListeningCreateGroup(false);
+        }
+      } catch (error) {}
+    }, [listeningCreateGroup]);
+    //-------------------------------------------------------------------------------------------------------------
+  
+
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroupStudent();
     const responseTeacher = await Axios.Groups.getAllGroupTeacher();
     if (response) {
       setGroups(response);
       setGroupsTeacher(responseTeacher);
-      console.log("p---",response)
+      // console.log("v--",response)
+      // console.log("getAllData--",responseTeacher)
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");

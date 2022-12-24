@@ -43,7 +43,7 @@ export const DialogCreateGroupExcel = ({ open, setOpen, groups, onChange,propsSo
     if (response) {
       toast.success("Thêm thành viên thành công");
       // console.log("responseeeeeee",response)
-      await socket.emit("create-group");
+      await socket.emit("add_member_group");
       setOpen(false);
       onChange();
     } else {

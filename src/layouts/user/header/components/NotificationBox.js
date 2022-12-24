@@ -8,7 +8,7 @@ import {
 import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMessage";
 import Asios from "../../../../utils/Axios";
 
-export default function NotificationBox({ notification, onchange }) {
+export default function NotificationBox({ notification, socket }) {
   const { avatar, title, content, status, dateTime, notificationId } =
     notification;
 
@@ -17,7 +17,7 @@ export default function NotificationBox({ notification, onchange }) {
       notificationId
     );
     if(response.status === 200){
-      onchange(); 
+      socket.emit("reset_one_user_get_One_Notification");
     }
   };
 

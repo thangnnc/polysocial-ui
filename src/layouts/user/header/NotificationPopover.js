@@ -30,21 +30,19 @@ const scrollbar = {
   },
 };
 
-export default function NotificationPopover({ notifications, onchange }) {
+export default function NotificationPopover({ notifications, socket }) {
   const [open, setOpen] = useState(false);
-  let count =0;
+  let count = 0;
   try {
     for (let index = 0; index < notifications.content.length; index++) {
       const element = notifications.content[index];
-      if(element.status===false){
-        count=count+1;
-      }else{
-        count=count+0;
+      if (element.status === false) {
+        count = count + 1;
+      } else {
+        count = count + 0;
       }
     }
-  } catch (error) {
-    
-  }
+  } catch (error) {}
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -53,16 +51,9 @@ export default function NotificationPopover({ notifications, onchange }) {
     setOpen(null);
   };
 
-  const updateAllNotification = async (notificationId) => {
-    const response = await Asios.Notifications.updateAllNotifications();
-    if(response.status === 200){
-      onchange(); 
-    }else{
-      
-    }
+  const updateAllNotification = async () => {
+    socket.emit("reset_one_user_getAllNotification");
   };
-
-
 
   return (
     <>
@@ -122,7 +113,9 @@ export default function NotificationPopover({ notifications, onchange }) {
 
           <Button
             onClick={updateAllNotification}
-          color="warning" sx={{ mr: 1 }}>
+            color="warning"
+            sx={{ mr: 1 }}
+          >
             Đánh dấu đã đọc tất cả
           </Button>
         </Box>
@@ -137,7 +130,7 @@ export default function NotificationPopover({ notifications, onchange }) {
         >
           <Divider />
           {notifications.content?.map((notification, index) => (
-            <NotificationBox key={index} notification={notification} onchange={onchange}/>
+            <NotificationBox key={index} notification={notification} socket={socket} />
           ))}
         </List>
       </Popover>

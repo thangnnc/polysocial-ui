@@ -72,7 +72,7 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
 
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
-      await socket.emit("create-group");
+      await socket.emit("create_group");
       setOpen(false);
       onChange();
     } else {

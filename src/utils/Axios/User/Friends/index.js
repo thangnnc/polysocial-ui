@@ -19,7 +19,8 @@ class Friends {
   static searchUserByKeywork = async (keyword) =>
     Axios.get(`/user/search-keyword?keyword=${keyword}`);
   // Get all friend
-  static getAllFriend = async () => Axios.get("/user/get-all-friend");
+  static getAllFriend = async (userId) =>
+  Axios.get(`/user/get-all-friend?userId=${userId}`);
   // Get one friend
   static getOneFriend = async (userId, friendId) =>
     Axios.get(`/user/get-friend?userId=${userId}&friendId=${friendId}`);

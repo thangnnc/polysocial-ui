@@ -28,7 +28,7 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
     if (response.status === 200) {
-      await socket.emit("add-friend",userId);
+      await socket.emit("add_friend",userId);
       onchange(); 
       toast.success("Gửi lời mời kết bạn thành công");
     } else {
@@ -44,7 +44,7 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
     const response = await Axios.Friends.deleteAllRequestAddFriend(data);
     if (response.status === 200) {
       onchange(); 
-      await socket.emit("delete-friend",userId);
+      await socket.emit("add_friend",userId);
       toast.success("Huỷ lời mời kết bạn thành công");
     }else{
       toast.success("Huỷ lời mời kết bạn thất bại");

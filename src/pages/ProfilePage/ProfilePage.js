@@ -43,30 +43,51 @@ export default function ProfilePage(props) {
   const [value, setValue] = useState("1");
   const [isEdit, setIsEdit] = useState(false);
   const [isActiveOther, setIsActiveOther] = useState(isActive);
+  const [listeningAccept, setListeningAccept] = useState(false);
+  const [listSocket, setListSocket] = useState();
+
+
   const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+   ///listeningAccept
+   try {
+    socket.on("successful_accept", (data) => {
+      setListSocket(data);
+      setListeningAccept(true);
+    });
+  } catch (error) {}
+
   useEffect(() => {
     try {
-      socket.on("server-send-listSocket-room", function (dataOnline) {
-        console.log("run server-send-listSocket ProfilePage");
-        const listOnline = [];
-        for (let index = 0; index < dataOnline.length; index++) {
-          const element2 = dataOnline;
-          listOnline.push(element2[index].email);
-        }
-        listOnline.splice(listOnline.indexOf(account.email), 1);
-        if (listOnline.includes(email) === true) {
-          setIsActiveOther(true);
-        } else {
-          setIsActiveOther(false);
-        }
-      });
+      if (listeningAccept) {
+        getOneUser(userId);
+        setListeningAccept(false);
+      }
     } catch (error) {}
-  });
+  }, [listeningAccept]);
+
+  // useEffect(() => {
+  //   try {
+  //     socket.on("server-send-listSocket-room", function (dataOnline) {
+  //       console.log("run server-send-listSocket ProfilePage");
+  //       const listOnline = [];
+  //       for (let index = 0; index < dataOnline.length; index++) {
+  //         const element2 = dataOnline;
+  //         listOnline.push(element2[index].email);
+  //       }
+  //       listOnline.splice(listOnline.indexOf(account.email), 1);
+  //       if (listOnline.includes(email) === true) {
+  //         setIsActiveOther(true);
+  //       } else {
+  //         setIsActiveOther(false);
+  //       }
+  //     });
+  //   } catch (error) {}
+  // });
 
   useEffect(() => {
     getOneUser(userId);
