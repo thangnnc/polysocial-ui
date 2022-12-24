@@ -29,9 +29,9 @@ export default function Infomation(props) {
       </Typography>
 
       <Box sx={{ mt: 1, display: "flex", width: "100%" }}>
-        <Box sx={{ width: "30%" }}>
+        <Box sx={{ width: "30%",display: "flex", alignItems: "center" }}>
           <Avatar
-            sx={{ width: 200, height: 200 }}
+            sx={{ width: 150, height: 150 }}
             variant="square"
             src={props.user.avatar}
             alt={props.user.fullName}

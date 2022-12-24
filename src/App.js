@@ -15,18 +15,23 @@ import Axios from "./utils/Axios";
 function App() {
   const { account } = useLogin();
   const [socket, setsocket] = useState();
-  const data1 = { userId: 1 };
+  // const data1 = ;
   const [listResponse, setListResponse] = useState();
   const [count, setCount] = useState(0);
   const [groupList, setGroupList] = useState([]);
   const [listOnline, setListOnline] = useState();
   const [listFriends, setListFriend] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [listening, setListening] = useState(false);
+  const [listSocket, setListSocket] = useState();
+
+
   // const [status, setStatus] = useState(false);
   //messgage
   const listRoomId = [];
   useEffect(() => {
     const getRoomId = async () => {
-      const response = await Axios.Messages.getNameGroupDESC(data1);
+      const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
       for (let index = 0; index < response.data.length; index++) {
         const element = response.data[index];
         listRoomId.push(element.roomId * 192.168199);
@@ -53,18 +58,77 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  try {
+    socket.on('server-send-listSocket-room', (data) => {
+      setListening(true);
+      setListSocket(data);
+    });
+  } catch (error) {
+    
+  }
+
+  useEffect(() => {
+    if (listening) {
+      // socket.on("server-send-listSocket-room", function (data) {
+        console.log("server-send-listSocket-room",listSocket)
+        setListOnline(listSocket);
+        // fetchNameGroup(data);
+        // getNameGroupDESC({ userId: 1 }, data);
+        // getAllFriend(data);
+        // getAllNotification();
+      // });
+    }
+  }, [listening]);
+
+  // useEffect(() => {
+  //   if (account) {
+  //     try {
+  //       socket.on("server-send-listSocket-room", function (data) {
+  //         console.log("server-send-listSocket-room",data)
+  //         setListOnline(data);
+  //         // fetchNameGroup(data);
+  //         // getNameGroupDESC({ userId: 1 }, data);
+  //         // getAllFriend(data);
+  //         // getAllNotification();
+  //       });
+  //     } catch (error) {}
+  //   } else {
+  //   }
+  // });
+
   useEffect(() => {
     if (account) {
       try {
-        socket.on("server-send-listSocket-room", function (data) {
-          setListOnline(data);
-          fetchNameGroup(data);
-          getNameGroupDESC(data1, data);
-          getAllFriend(data);
+       
+        socket.on("server_send_disconnect_listSocket", function (data) {
+          console.log("server_send_disconnect_listSocket",data)
+          // setListOnline(data);
+          // fetchNameGroup(data);
+          // getNameGroupDESC({ userId: 1 }, data);
+          // getAllFriend(data);
+          // getAllNotification();
         });
       } catch (error) {}
     } else {
     }
+  });
+
+  
+
+  useEffect(() => {
+    try {
+      socket.on("reset_nameGroup", function (listSocket) {});
+    } catch (error) {}
+  });
+
+  useEffect(() => {
+    try {
+      socket.on("reset_ProfilePage_delete", function (listSocket) {
+        getAllFriend(listSocket);
+
+        fetchNameGroup(listSocket);
+      });
+    } catch (error) {}
   });
 
   const getNameGroupDESC = async (data1, onl) => {
@@ -156,25 +220,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    try {
-      socket.on("reset_nameGroup", function (listSocket) {});
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("reset_ProfilePage_delete", function (listSocket) {
-        getAllFriend(listSocket);
-
-        fetchNameGroup(listSocket);
-      });
-    } catch (error) {}
-  });
-
   const fetchNameGroup = async (listSocket) => {
     const arr = [];
-    const response = await Axios.Messages.getNameGroupDESC(data1);
+    const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
     for (let index = 0; index < response.data.length; index++) {
       const listNameGr = {};
       const element = response.data[index];
@@ -302,6 +350,11 @@ function App() {
       listFriends.push(listFrindObject);
     }
     setListFriend(listFriends);
+  };
+
+  const getAllNotification = async () => {
+    const response = await Axios.Notifications.getAllNotifications();
+    setNotifications(response);
   };
 
   //
