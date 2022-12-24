@@ -19,7 +19,7 @@ import AlertMessage from "./components/AlertMessage";
 import EnteringMessage from "./components/EnteringMessage";
 import { Link, useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
-import Asios from "../../utils/Axios";
+import Axios from "../../utils/Axios";
 import useLogin from "../../utils/Login/useLogin";
 
 const scrollbar = {
@@ -56,6 +56,10 @@ export default function MessagePage(props) {
   const [userIdOther, setUserIdOther] = useState();
   const [isActiveOther, setIsActiveOther] = useState();
   const [emailOther, setEmailOther] = useState();
+  const [listeningConnect, setListeningConnect] = useState(false);
+  // const [listOnline, setListOnline] = useState();
+
+
   const messageRef = useRef(null);
   const ref = useRef(null);
   const socket = props.socket.socket;
@@ -63,10 +67,28 @@ export default function MessagePage(props) {
   let listOnline;
   try {
     group = location.state.group;
-    // console.log("pug------------",group)
+    // console.log("pug------------",group )
 
     listOnline = props.socket.listOnline;
   } catch (error) {}
+
+  // useEffect(() => {
+  //   console.log("pug------------",props)
+
+  // }, [props.socket.listOnline!==undefined]);
+
+  // try {
+  //   socket.on("server_send_listSocket", (data) => {
+  //     setListeningConnect(true);
+  //     setListOnline(data);
+  //   });
+  // } catch (error) {}
+
+  // useEffect(() => {
+  //   if (listeningConnect) {
+  //     getMessage();
+  //   }
+  // }, [listeningConnect]);
 
   useEffect(() => {}, [location]);
 
@@ -84,7 +106,7 @@ export default function MessagePage(props) {
     getMessage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOnline]);
-  
+
   useEffect(() => {
     try {
       socket.on("recevie_message", (data) => {
@@ -100,8 +122,6 @@ export default function MessagePage(props) {
   //     });
   //   } catch (error) {}
   // },);
-
-  
 
   useEffect(() => {
     try {
@@ -121,26 +141,27 @@ export default function MessagePage(props) {
         roomId: roomId,
       };
 
-      const response = await Asios.Messages.getMessage(data);
-
+      const response = await Axios.Messages.getMessage(data);
       setRoom(roomId);
       const arr = [];
       setListContacts(group.listContacts);
-      // console.log("run get message", group.listContacts);
 
       for (let index = 0; index < group.listContacts.length; index++) {
         const element = group.listContacts[index];
-        if (element[1] === account.studentCode) {
-          const data = {
-            contactId: element[0],
-          };
+
+        if (element[4] === account.email) {
+        // console.log("elemet-> ",element[0])
+
+          // const data = {
+          //   contactId: element[0],
+          // };
           setcontactId(element[0]);
-          const responseUpdateviewed = await Asios.Messages.updateviewedStatus(
-            data
-          );
-          if (responseUpdateviewed) {
-            await socket.emit("isSeen");
-          }
+          // const responseUpdateviewed = await Asios.Messages.updateviewedStatus(
+          //   data
+          // );
+          // if (responseUpdateviewed) {
+            // await socket.emit("isSeen");
+          // }
           // break;
         } else {
           arr.push(element[0]);
@@ -189,16 +210,14 @@ export default function MessagePage(props) {
             for (let i = 0; i < 1; i++) {
               var isActive;
               if (listOnlines.includes(element.email) === true) {
-                // console.log("listOnline meeesss 123------", listOnlines);
-
                 isActive = true;
                 for (let index = 0; index < listOnlines.length; index++) {
                   const element1 = listOnlines[index];
                   if (element1 === account.email) {
                     setIsActiveOther(false);
                   } else {
-                      setIsActiveOther(true);
-                      break;
+                    setIsActiveOther(true);
+                    break;
                   }
                 }
               } else {
@@ -215,10 +234,9 @@ export default function MessagePage(props) {
 
             listContent.push(listContentObject);
           } catch (error) {}
-          //
         }
 
-        // console.log("messs---", listContent);
+        console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {
@@ -282,7 +300,7 @@ export default function MessagePage(props) {
       roomId: room,
       listcontactId: listcontactId,
     };
-    const response = await Asios.Messages.createMessage(data);
+    const response = await Axios.Messages.createMessage(data);
     if (response) {
       // await getNameGroupDESC();
     }

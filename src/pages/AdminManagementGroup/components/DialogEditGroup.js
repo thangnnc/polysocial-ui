@@ -110,7 +110,10 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
               <TextField
                 name="name"
                 label="Tên nhóm học tập"
-                value={!groupEdit.name ? "" : groupEdit.name}
+                value={
+                  (!groupEdit.name ? "" : groupEdit.name) ||
+                  (!groupEdit.groupName ? "" : groupEdit.groupName)
+                }
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, name: e.target.value })
                 }
@@ -131,7 +134,7 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
                 name="totalMember"
                 label="Số lượng thành viên"
                 placeholder="Nhập số lượng thành viên "
-                value={!groupEdit.totalMember ? "" : groupEdit.totalMember}
+                value={!groupEdit.totalMember === 0 ? 0 : groupEdit.totalMember}
                 onChange={(e) =>
                   setGroupEdit({ ...groupEdit, totalMember: e.target.value })
                 }

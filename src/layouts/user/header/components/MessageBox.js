@@ -2,9 +2,9 @@ import { Box, ListItem, ListItemAvatar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AvatarStatus from "../../../../utils/AvatarStatus/AvatarStatus";
 import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMessage";
+import Axios from "../../../../utils/Axios";
 
-export default function MessageBox({ roomChat,listOnline }) {
-  // console.log('MessageBox-------->',listOnline)
+export default function MessageBox({ roomChat, listOnline,socket }) {
   const navigate = useNavigate();
   const {
     roomId,
@@ -15,23 +15,36 @@ export default function MessageBox({ roomChat,listOnline }) {
     isActive,
     listContacts,
     status,
+    contactId,
   } = roomChat;
   const pathMessage = "/message/room/";
 
-  const handleOnClick = async (e, listContacts, avatar, name,isActive) => {
+  const handleOnClick = async (
+    e,
+    listContacts,
+    avatar,
+    name,
+    isActive,
+    contactId
+  ) => {
     let group = {};
     group.listContacts = listContacts;
     group.name = name;
     group.avatar = avatar;
     group.isActive = isActive;
-    group.listOnline = listOnline
+    group.listOnline = listOnline;
+    const responseUpdateviewed = await Axios.Messages.updateviewedStatus({
+      contactId: contactId,
+    });
+    if (responseUpdateviewed) {
+      await socket.emit("isSeen");
+    }
     navigate(pathMessage + roomId, {
       state: {
         group: group,
       },
     });
   };
-
 
   return (
     <ListItem
@@ -47,7 +60,7 @@ export default function MessageBox({ roomChat,listOnline }) {
           : { borderBottom: "1px solid #ed6c02", py: 1.5 }
       }
       onClick={(e) => {
-        handleOnClick(e, listContacts, avatar, name,!isActive);
+        handleOnClick(e, listContacts, avatar, name, !isActive, contactId);
       }}
     >
       <ListItemAvatar sx={{ mt: 0 }}>

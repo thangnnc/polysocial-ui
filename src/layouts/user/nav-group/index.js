@@ -120,7 +120,6 @@ export default function NavGroup(props) {
     const response = await Axios.Groups.getOneGroup(groupId);
     if (response) {
       setGroups(response);
-      // console.log("repppp", response)
       const listNameGr = {};
       listNameGr.avatar = response.avatar;
       listNameGr.isActive = true;

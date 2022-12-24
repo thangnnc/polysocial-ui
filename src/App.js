@@ -19,28 +19,28 @@ function App() {
   const [listResponse, setListResponse] = useState();
   const [count, setCount] = useState(0);
   const [groupList, setGroupList] = useState([]);
-  const [listOnline, setListOnline] = useState();
+  // const [listOnline, setListOnline] = useState();
   const [listFriends, setListFriend] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [listening, setListening] = useState(false);
+  const [showRequestFriend, setShowRequestFriend] = useState([]);
   const [listSocket, setListSocket] = useState();
+  const [listeningConnect, setListeningConnect] = useState(false);
+  const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
+  const [listeningDisconnect, setListeningDisconnect] = useState(false);
+  const [listeningAccept, setListeningAccept] = useState(false);
+  const [listeningAllNotification, setListeningAllNotification] =
+    useState(false);
+  const [listeningOneNotification, setListeningOneNotification] =
+    useState(false);
+  const [listeningNameMessage, setListeningNameMessage] = useState(false);
+  const [listeningCreateMemberGroup, setListeningCreateMemberGroup] =
+    useState(false);
+  const [listeningCreateGroup, setListeningCreateGroup] = useState(false);
 
-
-  // const [status, setStatus] = useState(false);
-  //messgage
   const listRoomId = [];
   useEffect(() => {
-    const getRoomId = async () => {
-      const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
-      for (let index = 0; index < response.data.length; index++) {
-        const element = response.data[index];
-        listRoomId.push(element.roomId * 192.168199);
-      }
-      setListResponse(response);
-    };
     if (account) {
       getRoomId();
-    } else {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -57,88 +57,189 @@ function App() {
     } catch (error) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  //listeningSocket
   try {
-    socket.on('server-send-listSocket-room', (data) => {
-      setListening(true);
+    socket.on("server_send_listSocket", (data) => {
+      setListeningConnect(true);
+      setListSocket(data);
+      // setListOnline(data);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    if (listeningConnect) {
+      fetchNameGroup(listSocket);
+      getRequestFriend();
+      // getNameGroupDESC({ userId: 1 }, listSocket);
+      getAllFriend(listSocket);
+      getAllNotification();
+      setListeningConnect(false);
+    }
+  }, [listeningConnect]);
+  //-------------------------------------------------------------------------------------------------------------
+  ///listeningCreateGroup
+  try {
+    socket.on("reset_create_group_successful", (data) => {
+      setListeningCreateGroup(true);
       setListSocket(data);
     });
-  } catch (error) {
-    
-  }
-
-  useEffect(() => {
-    if (listening) {
-      // socket.on("server-send-listSocket-room", function (data) {
-        console.log("server-send-listSocket-room",listSocket)
-        setListOnline(listSocket);
-        // fetchNameGroup(data);
-        // getNameGroupDESC({ userId: 1 }, data);
-        // getAllFriend(data);
-        // getAllNotification();
-      // });
-    }
-  }, [listening]);
-
-  // useEffect(() => {
-  //   if (account) {
-  //     try {
-  //       socket.on("server-send-listSocket-room", function (data) {
-  //         console.log("server-send-listSocket-room",data)
-  //         setListOnline(data);
-  //         // fetchNameGroup(data);
-  //         // getNameGroupDESC({ userId: 1 }, data);
-  //         // getAllFriend(data);
-  //         // getAllNotification();
-  //       });
-  //     } catch (error) {}
-  //   } else {
-  //   }
-  // });
-
-  useEffect(() => {
-    if (account) {
-      try {
-       
-        socket.on("server_send_disconnect_listSocket", function (data) {
-          console.log("server_send_disconnect_listSocket",data)
-          // setListOnline(data);
-          // fetchNameGroup(data);
-          // getNameGroupDESC({ userId: 1 }, data);
-          // getAllFriend(data);
-          // getAllNotification();
-        });
-      } catch (error) {}
-    } else {
-    }
-  });
-
-  
+  } catch (error) {}
 
   useEffect(() => {
     try {
-      socket.on("reset_nameGroup", function (listSocket) {});
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("reset_ProfilePage_delete", function (listSocket) {
-        getAllFriend(listSocket);
-
+      if (listeningCreateGroup) {
         fetchNameGroup(listSocket);
-      });
-    } catch (error) {}
-  });
+        getAllNotification();
 
-  const getNameGroupDESC = async (data1, onl) => {
+        setListeningCreateGroup(false);
+      }
+    } catch (error) {}
+  }, [listeningCreateGroup]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  //-------------------------------------------------------------------------------------------------------------
+  ///listeningCreateMemberGroup
+  try {
+    socket.on("reset_member_group_successful", (data) => {
+      setListeningCreateMemberGroup(true);
+      setListSocket(data);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningCreateMemberGroup) {
+        // roomDESC(listSocket);
+        fetchNameGroup(listSocket);
+        getAllNotification();
+        setListeningCreateMemberGroup(false);
+      }
+    } catch (error) {}
+  }, [listeningCreateMemberGroup]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  ///listeningNameMessage
+  try {
+    socket.on("recevie_message_name", (data) => {
+      setListeningNameMessage(true);
+      setListSocket(data);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningNameMessage) {
+        // roomDESC(listSocket);
+        fetchNameGroup(listSocket);
+        getAllNotification();
+        setListeningNameMessage(false);
+      }
+    } catch (error) {}
+  }, [listeningNameMessage]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  //listeningDisconnect
+  try {
+    socket.on("server_disconnect_listSocket", (data) => {
+      setListeningDisconnect(true);
+      setListSocket(data);
+      // setListOnline(data);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    if (listeningDisconnect) {
+      //code==
+      setListeningDisconnect(false);
+    }
+  }, [listeningDisconnect]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  ///listeningAccept
+  try {
+    socket.on("successful_accept", (data) => {
+      setListSocket(data);
+      setListeningAccept(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningAccept) {
+        getAllNotification();
+        getAllFriend(listSocket);
+        getRequestFriend(); //
+        // roomDESC(listSocket);
+        fetchNameGroup(listSocket);
+        setListeningAccept(false);
+      }
+    } catch (error) {}
+  }, [listeningAccept]);
+
+  //-------------------------------------------------------------------------------------------------------------
+
+  ///listeningRequestAccept
+  try {
+    socket.on("request_accept", (data) => {
+      setListeningRequestAccept(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningRequestAccept) {
+        getAllNotification();
+        getRequestFriend(); //
+        setListeningRequestAccept(false);
+      }
+    } catch (error) {}
+  }, [listeningRequestAccept]);
+  //-------------------------------------------------------------------------------------------------------------
+  ///listeningAllNotification
+  try {
+    socket.on("reset_one_account_getAllNotification", (data) => {
+      setListeningAllNotification(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningAllNotification) {
+        updateAllNotification();
+        setListeningAllNotification(false);
+      }
+    } catch (error) {}
+  }, [listeningAllNotification]);
+  //-------------------------------------------------------------------------------------------------------------
+  ///listeningOneNotification
+  try {
+    socket.on("reset_one_account_get_One_All_Notification", (data) => {
+      setListeningOneNotification(true);
+    });
+  } catch (error) {}
+  useEffect(() => {
+    try {
+      if (listeningOneNotification) {
+        getAllNotification();
+        setListeningOneNotification(false);
+      }
+    } catch (error) {}
+  }, [listeningOneNotification]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  const getRequestFriend = async () => {
+    const response = await Axios.Friends.getAllRequestAddFriend();
+    setShowRequestFriend(response);
+  };
+
+  const roomDESC = async (onl) => {
     if (account) {
-      // console.log("run getNameGroupDESC APP");
+      const responseDESC = await Axios.Messages.getNameGroupDESC({ userId: 1 });
       const arr = [];
       try {
-        for (let index = 0; index < listResponse.data.length; index++) {
+        for (let index = 0; index < responseDESC.data.length; index++) {
           const listNameGr = {};
-          const element = listResponse.data[index];
+          const element = responseDESC.data[index];
           const names = element.name.split(",");
           const n = account.fullName;
           const getName = names.filter((name) => name !== n);
@@ -160,6 +261,9 @@ function App() {
 
           listNameGr.totalMember = element.totalMember;
           listNameGr.status = element.status;
+          listNameGr.userId = element.userId;
+          listNameGr.contactId = element.contactId;
+
           if (getName[0] === account.fullName) {
             listNameGr.name = element.name;
           } else {
@@ -210,12 +314,119 @@ function App() {
         listContentObject.roomId = element.roomId;
         listContentObject.status = element.status;
         listContentObject.totalMember = element.totalMember;
+
         listContent.push(listContentObject);
         if (element.status === false) {
           counts++;
         }
       }
       setCount(counts);
+      console.log("listConetnt", listContent);
+      setGroupList(listContent);
+    }
+  };
+
+  const getRoomId = async () => {
+    const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
+    for (let index = 0; index < response.data.length; index++) {
+      const element = response.data[index];
+      listRoomId.push(element.roomId * 192.168199);
+    }
+
+    setListResponse(response);
+  };
+
+  const getNameGroupDESC = async (data1, onl) => {
+    if (account) {
+      const arr = [];
+      try {
+        for (let index = 0; index < listResponse.data.length; index++) {
+          const listNameGr = {};
+          const element = listResponse.data[index];
+          const names = element.name.split(",");
+          const n = account.fullName;
+          const getName = names.filter((name) => name !== n);
+
+          try {
+            const Avatar = element.avatar.split(",");
+            const ns = account.avatar;
+            const getAvatar = Avatar.filter((name) => name !== ns);
+
+            if (getAvatar[0] === account.avatar) {
+              listNameGr.avatar = element.avatar;
+            } else {
+              listNameGr.avatar = getAvatar[0];
+            }
+          } catch (error) {}
+
+          listNameGr.roomId = element.roomId;
+          listNameGr.lastMessage = element.lastMessage;
+
+          listNameGr.totalMember = element.totalMember;
+          listNameGr.status = element.status;
+          listNameGr.userId = element.userId;
+          listNameGr.contactId = element.contactId;
+
+          if (getName[0] === account.fullName) {
+            listNameGr.name = element.name;
+          } else {
+            listNameGr.name = getName[0];
+          }
+          listNameGr.listContacts = element.listContacts;
+          listNameGr.lastUpDateDate = element.lastUpDateDate;
+          listNameGr.messageRecall = element.messageRecall;
+          arr.push(listNameGr);
+        }
+      } catch (error) {}
+      var counts = 0;
+
+      const listContent = [];
+      for (let index = 0; index < arr.length; index++) {
+        const listContentObject = {};
+        const element = arr[index];
+        listContentObject.avatar = element.avatar;
+        listContentObject.lastMessage = element.lastMessage;
+        listContentObject.lastUpDateDate = element.lastUpDateDate;
+        listContentObject.listContacts = element.listContacts;
+
+        const mySetOnline = new Set();
+        for (let index = 0; index < element.listContacts.length; index++) {
+          const element2 = element.listContacts[index];
+          mySetOnline.add(element2.at(4));
+        }
+        const listOnline = [];
+        for (let index = 0; index < onl.length; index++) {
+          const element2 = onl[index];
+          listOnline.push(element2.email);
+        }
+        // }
+
+        for (let index = 0; index < listOnline.length; index++) {
+          mySetOnline.delete(account.email);
+          if (mySetOnline.has(listOnline[index])) {
+            listContentObject.isActive = false;
+            break;
+          } else {
+            listContentObject.isActive = true;
+          }
+        }
+        if (listOnline.length === 0) {
+          listContentObject.isActive = true;
+        }
+        listContentObject.name = element.name;
+        listContentObject.roomId = element.roomId;
+        listContentObject.status = element.status;
+        listContentObject.totalMember = element.totalMember;
+        listContentObject.userId = element.userId;
+        listContentObject.contactId = element.contactId;
+        listContent.push(listContentObject);
+        if (element.status === false) {
+          counts++;
+        }
+      }
+      setCount(counts);
+      console.log("listConetnt 2", listContent);
+
       setGroupList(listContent);
     }
   };
@@ -247,6 +458,11 @@ function App() {
 
       listNameGr.totalMember = element.totalMember;
       listNameGr.status = element.status;
+      listNameGr.userId = element.userId;
+      listNameGr.contactId = element.contactId;
+      listNameGr.userId = element.userId;
+      listNameGr.contactId = element.contactId;
+
       if (getName[0] === account.fullName) {
         listNameGr.name = element.name;
       } else {
@@ -296,12 +512,17 @@ function App() {
       listContentObject.roomId = element.roomId;
       listContentObject.status = element.status;
       listContentObject.totalMember = element.totalMember;
+      listContentObject.userId = element.userId;
+      listContentObject.contactId = element.contactId;
+
       listContent.push(listContentObject);
       if (element.status === false) {
         counts++;
       }
     }
     setCount(counts);
+    console.log("listConetnt 3", listContent);
+
     setGroupList(listContent);
   };
 
@@ -312,8 +533,7 @@ function App() {
       mySetOnline.add(element2[i].email);
     }
     const listFriends = [];
-    const response = await Axios.Friends.getAllFriend();
-
+    const response = await Axios.Friends.getAllFriend(account.userId);
     for (let index = 0; index < response.length; index++) {
       const listFrindObject = {};
       const element = response[index];
@@ -357,6 +577,14 @@ function App() {
     setNotifications(response);
   };
 
+  const updateAllNotification = async () => {
+    const response = await Axios.Notifications.updateAllNotifications();
+    if (response.status === 200) {
+      getAllNotification();
+    } else {
+    }
+  };
+
   //
   return (
     <BrowserRouter>
@@ -367,8 +595,10 @@ function App() {
           groupList={groupList}
           count={count}
           listFriends={listFriends}
-          listOnline={listOnline}
+          listOnline={listSocket}
           listResponse={listResponse}
+          notifications={notifications}
+          showRequestFriend={showRequestFriend}
         />
       </ThemeProvider>
       <ToastContainer />

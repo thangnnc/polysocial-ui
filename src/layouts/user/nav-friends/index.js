@@ -48,7 +48,7 @@ const scrollbar = {
   },
 };
 export default function NavFriend(props) {
-  // let socket = props.socket.socket.socket;
+  // let socket = props.socket.socket.socket; 
 
   let listFriends = props.socket.socket.listFriends;
   const navigate = useNavigate();

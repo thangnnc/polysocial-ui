@@ -4,15 +4,16 @@ import React, { useEffect, useState } from "react";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../../utils/Axios/index";
 
-export default function ListFriend() {
+export default function ListFriend(props) {
+  const { userId } = props;
   const [listFriends, setListFriend] = useState([]);
 
   useEffect(() => {
-    getAllFriend();
-  }, []);
+    getAllFriend(userId);
+  }, [userId]);
 
-  const getAllFriend = async () => {
-    const response = await Axios.Friends.getAllFriend();
+  const getAllFriend = async (userId) => {
+    const response = await Axios.Friends.getAllFriend(userId);
     setListFriend(response);
   };
   return (

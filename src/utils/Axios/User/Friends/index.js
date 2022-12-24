@@ -7,10 +7,10 @@ class Friends {
   // Delete add friend request
   static deleteAllRequestAddFriend = async (data) =>
     Axios.delete("/user/delete-request-add-friend", data);
-    
-    // Delete one friend request
+
+  // Delete one friend request
   static deleteOneAllRequestAddFriend = async (data) =>
-  Axios.put("/user/unfriend", data);
+    Axios.put("/user/unfriend", data);
   // Post accept friend
   static acceptFriend = async (data) => Axios.post("/user/accept-friend", data);
   // Post add friend
@@ -19,7 +19,8 @@ class Friends {
   static searchUserByKeywork = async (keyword) =>
     Axios.get(`/user/search-keyword?keyword=${keyword}`);
   // Get all friend
-  static getAllFriend = async () => Axios.get("/user/get-all-friend");
+  static getAllFriend = async (userId) =>
+  Axios.get(`/user/get-all-friend?userId=${userId}`);
   // Get one friend
   static getOneFriend = async (userId, friendId) =>
     Axios.get(`/user/get-friend?userId=${userId}&friendId=${friendId}`);

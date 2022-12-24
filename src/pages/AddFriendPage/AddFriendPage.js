@@ -7,43 +7,43 @@ import Axios from "./../../utils/Axios/index";
 
 export default function AddFriendPage(props) {
   const socket = props.socket.socket;
-  const [showRequestFriend, setShowRequestFriend] = useState([]);
+
+  // const [showRequestFriend, setShowRequestFriend] = useState();
   const { account } = useLogin();
+  // useEffect(() => {
+  //   setShowRequestFriend(props.socket.showRequestFriend);
+  // }, [props.socket.showRequestFriend]);
+  let showRequestFriend = props.socket.showRequestFriend;
+  // useEffect(()=>{
+  //  try {
+  //   socket.on("request-accept", function () {
+  //     getRequestFriend();
+  //   })
+  //  } catch (error) {
 
-  useEffect(() => {
-    getRequestFriend();
-  }, []);
+  //  }
+  // })
 
-  useEffect(()=>{
-   try {
-    socket.on("request-accept", function () {
-      getRequestFriend();
-    })
-   } catch (error) {
-    
-   }
-  })
+  // useEffect(() => {
+  //   try {
+  //     socket.on("request-delete", function () {
+  //       console.log("reset_delete")
+  //       getRequestFriend();
+  //     });
+  //   } catch (error) {}
+  // });
 
-  useEffect(() => {
-    try {
-      socket.on("request-delete", function () {
-        console.log("reset_delete")
-        getRequestFriend();
-      });
-    } catch (error) {}
-  });
+  // const getRequestFriend = async () => {
+  //   const response = await Axios.Friends.getAllRequestAddFriend();
+  //   console.log("showRequestFriend", response);
+  //   setShowRequestFriend(response);
+  // };
 
-  const getRequestFriend = async () => {
-    const response = await Axios.Friends.getAllRequestAddFriend();
-  console.log("showRequestFriend",response)
-
-    setShowRequestFriend(response);
-  };
-  const addFriendHandle = async (e, data,id) => {
+  const addFriendHandle = async (e, data, id) => {
     const response = await Axios.Friends.acceptFriend(data);
     if (response.status === 200) {
-      await getRequestFriend();
-      await socket.emit("accept_friend",id);
+      // await getRequestFriend();
+      await socket.emit("accept_friend", id);
       toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
@@ -55,7 +55,7 @@ export default function AddFriendPage(props) {
       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
         Lời mời kết bạn
       </Typography>
-      {showRequestFriend.map((request, index) => (
+      {showRequestFriend?.map((request, index) => (
         <Card
           sx={{
             my: 2,
@@ -98,7 +98,7 @@ export default function AddFriendPage(props) {
               borderRadius: 2,
               my: 3,
             }}
-            onClick={(e) => addFriendHandle(e, request,request.userInviteId)}
+            onClick={(e) => addFriendHandle(e, request, request.userInviteId)}
           >
             Chấp nhận
           </Button>

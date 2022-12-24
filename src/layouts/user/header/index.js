@@ -41,7 +41,7 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
-  // console.log("groupList",props.socket.socket.groupList)
+  // console.log("groupList",props.socket.socket)
   const { account } = useLogin();
 
   let groupList;
@@ -62,32 +62,33 @@ export default function Header(props) {
   // const [online, setOnline] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    getAllNotification();
-  }, []);
+  // useEffect(() => {
+  //   getAllNotification();
+  // }, []);
 
   const getAllNotification = async () => {
     const response = await Asios.Notifications.getAllNotifications();
+    console.log("runnn");
     setNotifications(response);
   };
 
-  useEffect(()=>{
-    try {
-     socket.on("reset_ProfilePage_delete", function () {
-      getAllNotification();
-     })
-    } catch (error) {
+  // useEffect(()=>{
+  //   try {
+  //    socket.on("reset_ProfilePage_delete", function () {
+  //     getAllNotification();
+  //    })
+  //   } catch (error) {
      
-    }
-   })
+  //   }
+  //  })
 
-  useEffect(() => {
-    try {
-      socket.on("reset_getAllNotification", function () {
-        getAllNotification();
-      });
-    } catch (error) {}
-  });
+  // useEffect(() => {
+  //   try {
+  //     socket.on("reset_getAllNotification", function () {
+  //       getAllNotification();
+  //     });
+  //   } catch (error) {}
+  // });
 
   const handleChange = () => {
     getAllNotification();
@@ -138,8 +139,8 @@ export default function Header(props) {
               />
 
               <NotificationPopover
-                notifications={notifications}
-                onchange={handleChange}
+                notifications={props.socket.socket.notifications}
+                socket = {props.socket.socket.socket}
               />
             </Box>
 

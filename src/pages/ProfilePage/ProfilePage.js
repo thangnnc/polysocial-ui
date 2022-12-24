@@ -1,9 +1,18 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Button, Card, CardContent, Tab, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Popover,
+  Tab,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Iconify from "../../components/iconify/Iconify";
-import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
+// import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 import Infomation from "./components/Infomation";
 import ListFriend from "./components/ListFriend";
@@ -24,8 +33,6 @@ export default function ProfilePage(props) {
   let profilePage;
   try {
     profilePage = location.state;
-    // console.log("profile",profilePage)
-
   } catch (error) {}
   let isActive;
   let email;
@@ -40,33 +47,68 @@ export default function ProfilePage(props) {
   const { account } = useLogin();
   const { userId } = useParams();
   const [user, setUser] = useState({});
+  const [userDetails, setUserDetails] = useState({});
   const [value, setValue] = useState("1");
   const [isEdit, setIsEdit] = useState(false);
   const [isActiveOther, setIsActiveOther] = useState(isActive);
+  const [listeningAccept, setListeningAccept] = useState(false);
+  const [listSocket, setListSocket] = useState();
+
+
   const navigate = useNavigate();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+   ///listeningAccept
+   try {
+    socket.on("successful_accept", (data) => {
+      setListSocket(data);
+      setListeningAccept(true);
+    });
+  } catch (error) {}
+
   useEffect(() => {
     try {
-      socket.on("server-send-listSocket-room", function (dataOnline) {
-        console.log("run server-send-listSocket ProfilePage");
-        const listOnline = [];
-        for (let index = 0; index < dataOnline.length; index++) {
-          const element2 = dataOnline;
-          listOnline.push(element2[index].email);
-        }
-        listOnline.splice(listOnline.indexOf(account.email), 1);
-        if (listOnline.includes(email) === true) {
-          setIsActiveOther(true);
-        } else {
-          setIsActiveOther(false);
-        }
-      });
+      if (listeningAccept) {
+        getOneUser(userId);
+        setListeningAccept(false);
+      }
     } catch (error) {}
-  });
+  }, [listeningAccept]);
+
+  // useEffect(() => {
+  //   try {
+  //     socket.on("server-send-listSocket-room", function (dataOnline) {
+  //       console.log("run server-send-listSocket ProfilePage");
+  //       const listOnline = [];
+  //       for (let index = 0; index < dataOnline.length; index++) {
+  //         const element2 = dataOnline;
+  //         listOnline.push(element2[index].email);
+  //       }
+  //       listOnline.splice(listOnline.indexOf(account.email), 1);
+  //       if (listOnline.includes(email) === true) {
+  //         setIsActiveOther(true);
+  //       } else {
+  //         setIsActiveOther(false);
+  //       }
+  //     });
+  //   } catch (error) {}
+  // });
 
   useEffect(() => {
     getOneUser(userId);
@@ -75,60 +117,50 @@ export default function ProfilePage(props) {
   const getOneUser = async (userId) => {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
-      // const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
-      console.log(response);
+      const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
+      setUserDetails(responseDetail);
       setUser(response);
     } else {
       setUser(null);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     try {
-     socket.on("request-accept", function () {
-      getOneUser(userId);
-     })
-    } catch (error) {
-     
-    }
-   })
+      socket.on("request-accept", function () {
+        getOneUser(userId);
+      });
+    } catch (error) {}
+  });
 
-   useEffect(()=>{
+  useEffect(() => {
     try {
-     socket.on("reset_ProfilePage", function () {
-      getOneUser(userId);
-     })
-    } catch (error) {
-     
-    }
-   })
+      socket.on("reset_ProfilePage", function () {
+        getOneUser(userId);
+      });
+    } catch (error) {}
+  });
 
-   useEffect(()=>{
+  useEffect(() => {
     try {
-     socket.on("reset_ProfilePage_delete", function () {
-      getOneUser(userId);
-     })
-    } catch (error) {
-     
-    }
-   })
+      socket.on("reset_ProfilePage_delete", function () {
+        getOneUser(userId);
+      });
+    } catch (error) {}
+  });
 
-   
- 
- 
-   useEffect(() => {
-     try {
-       socket.on("request-delete", function () {
-         console.log("reset_delete")
-         getOneUser(userId);
-       });
-     } catch (error) {}
-   });
+  useEffect(() => {
+    try {
+      socket.on("request-delete", function () {
+        getOneUser(userId);
+      });
+    } catch (error) {}
+  });
 
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(user);
     if (response.status === 200) {
-      await socket.emit("add-friend",user.userId);
+      await socket.emit("add-friend", user.userId);
 
       toast.success("Gửi lời mời kết bạn thành công");
       getOneUser(userId);
@@ -138,27 +170,29 @@ export default function ProfilePage(props) {
   };
 
   const handleDeleteFriend = async () => {
-    const response = await Axios.Friends.deleteOneAllRequestAddFriend({userId:userId});
+    const response = await Axios.Friends.deleteOneAllRequestAddFriend({
+      userId: userId,
+    });
     // if (response.status === 200) {
-      await socket.emit("delete-friend",user.userId);
-      getOneUser(userId);
-      toast.success("Huỷ kết mời kết bạn thành công");
+    await socket.emit("delete-friend", user.userId);
+    getOneUser(userId);
+    toast.success("Huỷ kết mời kết bạn thành công");
     // }else{
-      // toast.success("Huỷ lời mời kết bạn thất bại");
+    // toast.success("Huỷ lời mời kết bạn thất bại");
     // }
   };
 
   const handleOneDeleteFriend = async () => {
     const data = {
-      userInviteId:user.userInviteId,
-      userConfirmId:user.userConfirmId
-    }
+      userInviteId: user.userInviteId,
+      userConfirmId: user.userConfirmId,
+    };
     const response = await Axios.Friends.deleteAllRequestAddFriend(data);
     if (response.status === 200) {
-      onchange(); 
-      await socket.emit("delete-friend",userId);
+      onchange();
+      await socket.emit("delete-friend", userId);
       toast.success("Huỷ lời mời kết bạn thành công");
-    }else{
+    } else {
       toast.success("Huỷ lời mời kết bạn thất bại");
     }
   };
@@ -185,14 +219,16 @@ export default function ProfilePage(props) {
     const response = await Axios.Friends.acceptFriend(user);
     if (response.status === 200) {
       getOneUser(userId);
-      await socket.emit("accept_friend",user.userId);
+      await socket.emit("accept_friend", user.userId);
       toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
     }
   };
 
-
+  const handleChangeUser = () => {
+    getOneUser(userId);
+  };
 
   return (
     <Box
@@ -229,11 +265,15 @@ export default function ProfilePage(props) {
                 }}
               >
                 <Box sx={{ position: "absolute", mt: 14, ml: 4 }}>
-                  <AvatarStatus
+                  <Avatar
                     src={user?.avatar}
                     alt={user?.fullName}
                     isActive={isActiveOther}
-                    sx={{ width: 130, height: 130 }}
+                    sx={{
+                      width: 130,
+                      height: 130,
+                      border: "2px solid #ff7f30",
+                    }}
                   />
                 </Box>
               </Box>
@@ -272,7 +312,7 @@ export default function ProfilePage(props) {
                       </Typography>
                     </Button>
                   )}
-                  {user.status === 2 && account.userId!==user.userId && (
+                  {user.status === 2 && account.userId !== user.userId && (
                     <Button
                       variant="contained"
                       sx={{
@@ -297,35 +337,63 @@ export default function ProfilePage(props) {
                           color: "black",
                           borderRadius: 2,
                           mr: 2,
+                          "&:hover": {
+                            background: "#D8DADF",
+                          },
                         }}
+                        aria-describedby={id}
+                        onClick={handleClick}
                       >
                         <Iconify icon={"bi:person-check-fill"} />
                         <Typography sx={{ fontWeight: "bold", ml: 1 }}>
                           Bạn bè
                         </Typography>
                       </Button>
-                      
-                      <Button
-                        variant="contained"
-                        sx={{
-                          background: "#D8DADF",
-                          color: "black",
-                          borderRadius: 2,
-                          mr: 2,
+                      <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
                         }}
-                        onClick={handleDeleteFriend}
+                        sx={{
+                          "& .MuiPopover-paper": {
+                            mt: 1,
+                            height: "max-content",
+                            borderRadius: 1,
+                            ml: 4,
+                          },
+                        }}
                       >
-                        <Iconify icon={"bi:person-check-fill"} />
-                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                          Huỷ kết bạn
-                        </Typography>
-                      </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "100%",
+                            background: "initial",
+                            color: "black",
+                            boxShadow: "none",
+                            mr: 2,
+                            p: 1,
+                            "&:hover": {
+                              background: "#D8DADF",
+                            },
+                          }}
+                          onClick={handleDeleteFriend}
+                        >
+                          <Iconify icon={"bi:person-check-fill"} />
+                          <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                            Huỷ kết bạn
+                          </Typography>
+                        </Button>
+                      </Popover>
 
                       <Button
                         variant="contained"
                         sx={{
-                          background: "#D8DADF",
-                          color: "black",
+                          background: "#1b74e4",
+                          color: "white",
                           borderRadius: 2,
                         }}
                         onClick={(e) => {
@@ -344,38 +412,40 @@ export default function ProfilePage(props) {
                       </Button>
                     </>
                   )}
-                  {user.status === 0 && user.userConfirmId !== account.userId && (
-                    <Button
-                      variant="contained"
-                      sx={{
-                        background: "#f97c2e",
-                        borderRadius: 2,
-                        mr: 2,
-                      }}
-                      onClick={handleOneDeleteFriend}
-                    >
-                      <Iconify icon={"material-symbols:person-add"} />
-                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                        Huỷ
-                      </Typography>
-                    </Button>
-                  )}
-                  {user.status === 0 && user.userConfirmId === account.userId && (
-                    <Button
-                      variant="contained"
-                      sx={{
-                        background: "#f97c2e",
-                        borderRadius: 2,
-                        mr: 2,
-                      }}
-                      onClick={handleConfirmFriend}
-                    >
-                      <Iconify icon={"material-symbols:person-add"} />
-                      <Typography sx={{ fontWeight: "bold", ml: 1 }}>
-                        Chấp nhận
-                      </Typography>
-                    </Button>
-                  )}
+                  {user.status === 0 &&
+                    user.userConfirmId !== account.userId && (
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#f97c2e",
+                          borderRadius: 2,
+                          mr: 2,
+                        }}
+                        onClick={handleOneDeleteFriend}
+                      >
+                        <Iconify icon={"material-symbols:person-add"} />
+                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                          Huỷ
+                        </Typography>
+                      </Button>
+                    )}
+                  {user.status === 0 &&
+                    user.userConfirmId === account.userId && (
+                      <Button
+                        variant="contained"
+                        sx={{
+                          background: "#f97c2e",
+                          borderRadius: 2,
+                          mr: 2,
+                        }}
+                        onClick={handleConfirmFriend}
+                      >
+                        <Iconify icon={"material-symbols:person-add"} />
+                        <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                          Chấp nhận
+                        </Typography>
+                      </Button>
+                    )}
                 </Box>
               </Box>
             </Box>
@@ -439,12 +509,12 @@ export default function ProfilePage(props) {
               }}
             >
               <TabPanel value="1">
-                <Infomation user={user} />
+                <Infomation user={user} userDetails={userDetails} />
               </TabPanel>
               {user.status === 1 || account?.email === user?.email ? (
                 <>
                   <TabPanel value="2">
-                    <ListFriend />
+                    <ListFriend userId={user.userId} />
                   </TabPanel>
                 </>
               ) : (
@@ -478,7 +548,13 @@ export default function ProfilePage(props) {
         </Box>
       </Box>
 
-      <DialogEditAccount open={isEdit} setOpen={setIsEdit} user={user} />
+      <DialogEditAccount
+        open={isEdit}
+        setOpen={setIsEdit}
+        user={user}
+        userDetails={userDetails}
+        onchange={handleChangeUser}
+      />
     </Box>
   );
 }

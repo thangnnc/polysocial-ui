@@ -32,14 +32,10 @@ const styleAvatar = {
 };
 
 export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
-  // const socket = propsSocket.socket.socket;
-  // console.log("prooo--->", propsSocket.socket.socket);
   let socket;
   try {
     socket = propsSocket.socket.socket;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
   const [groupCreate, setGroupCreate] = useState({});
   const [src, setSrc] = useState();
   const [admins, setAdmins] = useState([]);
@@ -72,7 +68,7 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
 
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
-      await socket.emit("create-group");
+      await socket.emit("create_group");
       setOpen(false);
       onChange();
     } else {

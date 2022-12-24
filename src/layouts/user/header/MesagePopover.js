@@ -117,7 +117,7 @@ export default function MessagesPopover({groupList,count,listOnline,socket }) {
         >
           <Divider />
           {groupList?.map((roomChat, index) => (
-            <MessageBox key={index} roomChat={roomChat} listOnline={listOnline} />
+            <MessageBox key={index} roomChat={roomChat} listOnline={listOnline} socket={socket}/>
           ))}
         </List>
       </Popover>
