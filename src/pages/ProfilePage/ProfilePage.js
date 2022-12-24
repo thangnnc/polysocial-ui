@@ -24,6 +24,7 @@ export default function ProfilePage(props) {
   let profilePage;
   try {
     profilePage = location.state;
+    // console.log("profile",profilePage)
 
   } catch (error) {}
   let isActive;
@@ -141,10 +142,25 @@ export default function ProfilePage(props) {
     // if (response.status === 200) {
       await socket.emit("delete-friend",user.userId);
       getOneUser(userId);
-      toast.success("Huỷ lời mời kết bạn thành công");
+      toast.success("Huỷ kết mời kết bạn thành công");
     // }else{
       // toast.success("Huỷ lời mời kết bạn thất bại");
     // }
+  };
+
+  const handleOneDeleteFriend = async () => {
+    const data = {
+      userInviteId:user.userInviteId,
+      userConfirmId:user.userConfirmId
+    }
+    const response = await Axios.Friends.deleteAllRequestAddFriend(data);
+    if (response.status === 200) {
+      onchange(); 
+      await socket.emit("delete-friend",userId);
+      toast.success("Huỷ lời mời kết bạn thành công");
+    }else{
+      toast.success("Huỷ lời mời kết bạn thất bại");
+    }
   };
 
   const pathMessage = "/message/room/";
@@ -175,6 +191,8 @@ export default function ProfilePage(props) {
       toast.error("Đã thêm bạn thất bại");
     }
   };
+
+
 
   return (
     <Box
@@ -334,7 +352,7 @@ export default function ProfilePage(props) {
                         borderRadius: 2,
                         mr: 2,
                       }}
-                      onClick={handleDeleteFriend}
+                      onClick={handleOneDeleteFriend}
                     >
                       <Iconify icon={"material-symbols:person-add"} />
                       <Typography sx={{ fontWeight: "bold", ml: 1 }}>
