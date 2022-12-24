@@ -33,7 +33,6 @@ export default function ProfilePage(props) {
   let profilePage;
   try {
     profilePage = location.state;
-    // console.log("profile",profilePage)
   } catch (error) {}
   let isActive;
   let email;
@@ -132,7 +131,6 @@ export default function ProfilePage(props) {
   useEffect(() => {
     try {
       socket.on("request-delete", function () {
-        console.log("reset_delete");
         getOneUser(userId);
       });
     } catch (error) {}

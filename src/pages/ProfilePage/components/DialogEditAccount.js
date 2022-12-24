@@ -56,7 +56,6 @@ export const DialogEditAccount = ({
 }) => {
   const [userEdit, setUserEdit] = useState(userDetails);
   const updateUser = async () => {
-    console.log(userEdit);
     const response = await Axios.Accounts.updateUser(userEdit);
     if (response) {
       toast.success("Cập nhật người dùng thành công");

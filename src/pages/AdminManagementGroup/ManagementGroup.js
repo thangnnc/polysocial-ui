@@ -126,7 +126,6 @@ export default function ManagementGroup(props) {
       const responseDelete = await Axios.Groups.getAllGroupsFalse();
       if (response.content) {
         setGroups(response.content);
-        console.log(response.content);
         setGroupsDelete(responseDelete.content);
         // toast.success("Lấy dữ liệu thành công");
       } else {
@@ -137,7 +136,6 @@ export default function ManagementGroup(props) {
       const responseDelete = await Axios.Groups.getAllGroupsFalse();
       if (response) {
         setGroups(response);
-        console.log(response);
         setGroupsDelete(responseDelete.content);
         // toast.success("Lấy dữ liệu thành công");
       } else {

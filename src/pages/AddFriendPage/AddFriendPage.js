@@ -14,20 +14,18 @@ export default function AddFriendPage(props) {
     getRequestFriend();
   }, []);
 
-  useEffect(()=>{
-   try {
-    socket.on("request-accept", function () {
-      getRequestFriend();
-    })
-   } catch (error) {
-    
-   }
-  })
+  useEffect(() => {
+    try {
+      socket.on("request-accept", function () {
+        getRequestFriend();
+      });
+    } catch (error) {}
+  });
 
   useEffect(() => {
     try {
       socket.on("request-delete", function () {
-        console.log("reset_delete")
+        console.log("reset_delete");
         getRequestFriend();
       });
     } catch (error) {}
@@ -35,15 +33,13 @@ export default function AddFriendPage(props) {
 
   const getRequestFriend = async () => {
     const response = await Axios.Friends.getAllRequestAddFriend();
-  console.log("showRequestFriend",response)
-
     setShowRequestFriend(response);
   };
-  const addFriendHandle = async (e, data,id) => {
+  const addFriendHandle = async (e, data, id) => {
     const response = await Axios.Friends.acceptFriend(data);
     if (response.status === 200) {
       await getRequestFriend();
-      await socket.emit("accept_friend",id);
+      await socket.emit("accept_friend", id);
       toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
@@ -98,7 +94,7 @@ export default function AddFriendPage(props) {
               borderRadius: 2,
               my: 3,
             }}
-            onClick={(e) => addFriendHandle(e, request,request.userInviteId)}
+            onClick={(e) => addFriendHandle(e, request, request.userInviteId)}
           >
             Chấp nhận
           </Button>

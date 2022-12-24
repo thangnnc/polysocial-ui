@@ -41,7 +41,6 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
-  // console.log("groupList",props.socket.socket.groupList)
   const { account } = useLogin();
 
   let groupList;
@@ -71,15 +70,13 @@ export default function Header(props) {
     setNotifications(response);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     try {
-     socket.on("reset_ProfilePage_delete", function () {
-      getAllNotification();
-     })
-    } catch (error) {
-     
-    }
-   })
+      socket.on("reset_ProfilePage_delete", function () {
+        getAllNotification();
+      });
+    } catch (error) {}
+  });
 
   useEffect(() => {
     try {

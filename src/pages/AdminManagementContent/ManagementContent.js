@@ -80,7 +80,6 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function ManagementContent(props) {
-  console.log("ptoo",props)
   const [open, setOpen] = useState(null);
 
   const [isEdit, setIsEdit] = useState(false);

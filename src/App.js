@@ -80,22 +80,6 @@ function App() {
     }
   }, [listening]);
 
-  // useEffect(() => {
-  //   if (account) {
-  //     try {
-  //       socket.on("server-send-listSocket-room", function (data) {
-  //         console.log("server-send-listSocket-room",data)
-  //         setListOnline(data);
-  //         // fetchNameGroup(data);
-  //         // getNameGroupDESC({ userId: 1 }, data);
-  //         // getAllFriend(data);
-  //         // getAllNotification();
-  //       });
-  //     } catch (error) {}
-  //   } else {
-  //   }
-  // });
-
   useEffect(() => {
     if (account) {
       try {
@@ -133,7 +117,6 @@ function App() {
 
   const getNameGroupDESC = async (data1, onl) => {
     if (account) {
-      // console.log("run getNameGroupDESC APP");
       const arr = [];
       try {
         for (let index = 0; index < listResponse.data.length; index++) {

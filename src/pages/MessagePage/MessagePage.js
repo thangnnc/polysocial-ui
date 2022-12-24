@@ -63,8 +63,6 @@ export default function MessagePage(props) {
   let listOnline;
   try {
     group = location.state.group;
-    // console.log("pug------------",group)
-
     listOnline = props.socket.listOnline;
   } catch (error) {}
 
@@ -84,7 +82,7 @@ export default function MessagePage(props) {
     getMessage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOnline]);
-  
+
   useEffect(() => {
     try {
       socket.on("recevie_message", (data) => {
@@ -100,8 +98,6 @@ export default function MessagePage(props) {
   //     });
   //   } catch (error) {}
   // },);
-
-  
 
   useEffect(() => {
     try {
@@ -126,7 +122,6 @@ export default function MessagePage(props) {
       setRoom(roomId);
       const arr = [];
       setListContacts(group.listContacts);
-      // console.log("run get message", group.listContacts);
 
       for (let index = 0; index < group.listContacts.length; index++) {
         const element = group.listContacts[index];
@@ -189,16 +184,14 @@ export default function MessagePage(props) {
             for (let i = 0; i < 1; i++) {
               var isActive;
               if (listOnlines.includes(element.email) === true) {
-                // console.log("listOnline meeesss 123------", listOnlines);
-
                 isActive = true;
                 for (let index = 0; index < listOnlines.length; index++) {
                   const element1 = listOnlines[index];
                   if (element1 === account.email) {
                     setIsActiveOther(false);
                   } else {
-                      setIsActiveOther(true);
-                      break;
+                    setIsActiveOther(true);
+                    break;
                   }
                 }
               } else {
@@ -215,10 +208,7 @@ export default function MessagePage(props) {
 
             listContent.push(listContentObject);
           } catch (error) {}
-          //
         }
-
-        // console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {

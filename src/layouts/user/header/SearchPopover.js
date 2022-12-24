@@ -29,9 +29,7 @@ export default function SearchPopover(sockets) {
   let socket;
   try {
     socket = sockets.sockets;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
   const [open, setOpen] = useState(false);
   const [isFocusPopup, setFocusPopup] = useState(false);
   const [searchList, setSearchList] = useState([]);
@@ -47,7 +45,6 @@ export default function SearchPopover(sockets) {
   useEffect(() => {
     try {
       socket.on("request-accept", function () {
-        // console.log("request-accept");
         getData();
       });
     } catch (error) {}
@@ -56,16 +53,13 @@ export default function SearchPopover(sockets) {
   useEffect(() => {
     try {
       socket.on("request-delete", function () {
-        // console.log("request-delete");
         getData();
       });
     } catch (error) {}
   });
 
-
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");
-    // console.log("handleSearch", response);
 
     setSearchList(response);
   };
@@ -91,7 +85,6 @@ export default function SearchPopover(sockets) {
 
   const handleSearch = async (e) => {
     const response = await Axios.Friends.searchUserByKeywork(e.target.value);
-    // console.log("handleSearch", response);
     setSearchList(response);
   };
 

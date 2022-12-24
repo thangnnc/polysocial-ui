@@ -32,8 +32,6 @@ const styleAvatar = {
 };
 
 export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
-  // const socket = propsSocket.socket.socket;
-  // console.log("prooo--->", propsSocket.socket.socket);
   let socket;
   try {
     socket = propsSocket.socket.socket;

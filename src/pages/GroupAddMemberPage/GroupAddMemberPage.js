@@ -1,21 +1,15 @@
 import { Box, Button, Card, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 
 export default function GroupAddMemberPage(props) {
   let socket;
-  // let location = useLocation();
-  let roomId
   try {
-    // roomId = location.state.group.roomId*192.168199;
-    // console.log("gro-----",roomId)
-    socket = props.socket.socket
-  } catch (error) {
-    
-  }
+    socket = props.socket.socket;
+  } catch (error) {}
   const { groupId } = useParams();
   const [showRequestMember, setShowRequestMember] = useState([]);
 
@@ -25,20 +19,17 @@ export default function GroupAddMemberPage(props) {
 
   const getRequestMember = async (groupId) => {
     const response = await Axios.Groups.getMemberJoinGroup(groupId);
-    console.log("r4epsssss",response)
-    // console.log("r4epsssss",response.length)
     setShowRequestMember(response);
   };
-  
+
   useEffect(() => {
     try {
       socket.on("accept-member", function () {
-        console.log("runnnnnn")
+        console.log("runnnnnn");
         getRequestMember(groupId);
       });
     } catch (error) {}
   });
-  
 
   const addFriendHandle = async (userId) => {
     const response = await Axios.Groups.addMemberJoinGroup(groupId, userId);
