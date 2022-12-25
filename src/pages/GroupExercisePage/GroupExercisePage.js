@@ -39,12 +39,33 @@ export default function GroupExercisePage() {
 
   const [isEdit, setIsEdit] = useState(false);
 
+  const [isCount, setCount] = useState({});
+
+  const [checkExId, setCheckExId] = useState(0);
+
   useEffect(() => {
     getAllData(groupId);
   }, [groupId]);
 
-  const handleExpandClick = () => {
+  useEffect(() => {
+    getCountData(checkExId);
+  }, [checkExId]);
+
+  const handleExpandClick = (exId) => {
+    getCountData(exId);
     setExpanded(!expanded);
+    setCheckExId(exId);
+  };
+
+  const getCountData = async (exId) => {
+    const response = await Axios.Exersice.getCountExercise(exId);
+    console.log(response);
+    if (response) {
+      setCount(response);
+      // toast.success("Lấy dữ liệu bài tập thành công");
+    } else {
+      // toast.error("Lấy dữ liệu bài tập thất bại!");
+    }
   };
 
   const getAllData = async (groupId) => {
@@ -107,7 +128,8 @@ export default function GroupExercisePage() {
                   noWrap
                   fontSize={16}
                   expand={expanded ? exercise.exId : undefined}
-                  onClick={handleExpandClick}
+                  onClick={() => handleExpandClick(exercise.exId)}
+                  // onClick={handleExpandClick}
                   aria-expanded={expanded ? exercise.exId : undefined}
                   aria-label="show"
                 >
@@ -127,7 +149,7 @@ export default function GroupExercisePage() {
             />
             <Collapse
               key={exercise.exId}
-              in={expanded}
+              in={exercise.exId === checkExId ? expanded : false}
               timeout="auto"
               unmountOnExit
             >
@@ -158,7 +180,7 @@ export default function GroupExercisePage() {
                         component={"p"}
                         style={{ fontSize: 25, fontWeight: 700 }}
                       >
-                        0
+                        {isCount.countTaskSubmit}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -173,7 +195,7 @@ export default function GroupExercisePage() {
                         component={"p"}
                         style={{ fontSize: 25, fontWeight: 700 }}
                       >
-                        0
+                        {isCount.countTaskNotSubmit}
                       </Typography>
                       <Typography
                         variant="body2"
