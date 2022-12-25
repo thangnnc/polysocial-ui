@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   InputAdornment,
   TextField,
   Typography,
@@ -19,6 +20,9 @@ const styleInputFullField = {
 
 export default function ChangePassword(props) {
   const { logout } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setNewShowPassword] = useState(false);
+  const [showConfirmPassword, setConfirmShowPassword] = useState(false);
 
   const [user, setUser] = useState({
     userId: props.user.userId,
@@ -71,7 +75,7 @@ export default function ChangePassword(props) {
           sx={styleInputFullField}
         />
 
-        <TextField
+        {/* <TextField
           name="password"
           label="Mật khẩu"
           placeholder="Nhập mật khẩu"
@@ -88,12 +92,45 @@ export default function ChangePassword(props) {
           }}
           autoComplete="none"
           sx={styleInputFullField}
+        /> */}
+
+        <TextField
+          name="password"
+          label="Mật khẩu"
+          type={showPassword ? "text" : "password"}
+          placeholder="Nhập mật khẩu"
+          variant="standard"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon={"bxs:lock"} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          autoComplete="none"
+          onChange={(e) => {
+            setUser({ ...user, oldPassword: e.target.value });
+          }}
+          sx={styleInputFullField}
         />
       </Box>
       <Box>
         <TextField
           name="newpassword"
           label="Mật khẩu mới"
+          type={showNewPassword ? "text" : "password"}
           placeholder="Nhập mật khẩu mới"
           onChange={(e) => {
             setUser({ ...user, newPassword: e.target.value });
@@ -105,6 +142,18 @@ export default function ChangePassword(props) {
                 <Iconify icon={"material-symbols:password"} />
               </InputAdornment>
             ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setNewShowPassword(!showNewPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={showNewPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
           autoComplete="none"
           sx={styleInputFullField}
@@ -113,6 +162,7 @@ export default function ChangePassword(props) {
         <TextField
           name="confirmpassword"
           label="Nhập lại mật khẩu mới"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Nhập lại mật khẩu mới"
           onChange={(e) => {
             setUser({ ...user, confirmPassword: e.target.value });
@@ -122,6 +172,20 @@ export default function ChangePassword(props) {
             startAdornment: (
               <InputAdornment position="start">
                 <Iconify icon={"material-symbols:password"} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setConfirmShowPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={
+                      showConfirmPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                    }
+                  />
+                </IconButton>
               </InputAdornment>
             ),
           }}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 // @mui
 import {
-  Link,
   Stack,
   IconButton,
   InputAdornment,
@@ -25,6 +24,7 @@ import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import { RegisterDialog } from "../components/RegisterDialog";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -77,10 +77,10 @@ export const LoginForm = (props) => {
     if (response.status === 200 && response.data) {
       setAccount(response.data);
       window.location = "/home";
-      toast.success("Đăng nhập thành công!")
+      toast.success("Đăng nhập thành công!");
       return true;
     } else {
-      toast.error("Sai tên đăng nhập hoặc tài khoản!")
+      toast.error("Sai tên đăng nhập hoặc tài khoản!");
     }
     setShowLoading(() => false);
   };
@@ -135,7 +135,7 @@ export const LoginForm = (props) => {
     if (
       !(data.email.includes("fpt.edu.vn") || data.email.includes("fe.fpt.vn"))
     ) {
-      toast.warning("Hãy đăng nhập vào tài khoản FPT!")
+      toast.warning("Hãy đăng nhập vào tài khoản FPT!");
       return;
     }
     setUserInfo((user) => ({
@@ -216,7 +216,11 @@ export const LoginForm = (props) => {
             control={<Checkbox name="remember" />}
             label="Ghi nhớ tài khoản"
           />
-          <Link variant="subtitle2" underline="hover">
+          <Link
+            to={"/forgot-password"}
+            variant="subtitle2"
+            style={{ textDecoration: "none", color: "#1b74e4" }}
+          >
             Quên mật khẩu?
           </Link>
         </Stack>
