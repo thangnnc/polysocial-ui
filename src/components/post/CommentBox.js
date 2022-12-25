@@ -1,4 +1,4 @@
-import { Box, Button, List, TextField } from "@mui/material";
+import { Box, Button, List, TextField, Typography } from "@mui/material";
 // import CommentLoading from "./CommentLoading";
 import CommentLine from "./CommentLine";
 import Axios from "./../../utils/Axios/index";
@@ -20,6 +20,7 @@ export default function CommentBox({
     const response = await Axios.Comments.createComment(itemInputComment);
     if (response.status === 200) {
       socket.emit("Client_request_create_like_comment");
+      setItemInputComment({ ...itemInputComment, content: "" });
       onChange();
     }
   };
@@ -28,14 +29,23 @@ export default function CommentBox({
     <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
       <List disablePadding sx={{ p: 0 }}>
         {comments?.map((comment, index) => (
-          <CommentLine key={index} comment={comment} />
+          <CommentLine key={index} comment={comment} postId={postId} />
         ))}
-        {comments?.size === 0 && "Chưa có bình luận!"}
+        {comments?.length === 0 && (
+          <Typography
+            variant="body2"
+            fontWeight="bold"
+            sx={{ textAlign: "center" }}
+          >
+            Chưa có bình luận!
+          </Typography>
+        )}
       </List>
 
       <TextField
         className="rounded"
         size="medium"
+        value={itemInputComment.content}
         onChange={(e) =>
           setItemInputComment({ ...itemInputComment, content: e.target.value })
         }

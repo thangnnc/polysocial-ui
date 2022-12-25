@@ -37,7 +37,9 @@ const ButtonNormal = styled(Button)(() => ({
 
 export default function Post({ posts, onChange, socket }) {
   const [isShowCmt, setShowCmt] = useState(false);
+
   const { account } = useLogin();
+
   const isLike = [];
 
   const handleShowCmt = () => {
