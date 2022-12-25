@@ -100,6 +100,11 @@ export const DialogEditGroup = ({ open, setOpen, group, onChange }) => {
     };
 
     if (!deepObjectEqual(data, errors)) {
+      setErrors({
+        name: "",
+        className: "",
+        description: "",
+      });
       const response = await Axios.Groups.updateGroup(groupEdit);
       if (response) {
         toast.success("Cập nhật nhóm học tập thành công");
