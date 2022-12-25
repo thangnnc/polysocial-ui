@@ -195,7 +195,7 @@ export default function Post({ posts, onChange, socket }) {
                 userId={user.userId}
                 onChange={onChange}
                 socket={socket}
-                checkPostId={checkPostId}
+                checkPostIds={checkPostId}
               />
             </CardActions>
           </Card>

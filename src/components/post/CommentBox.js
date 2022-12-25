@@ -11,56 +11,49 @@ export default function CommentBox({
   postId,
   userId,
   onChange,
+  checkPostIds,
   socket,
-  checkPostId,
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (postId === checkPostId) {
+    if (postId === checkPostIds) {
       setIsOpen(true);
     }
-  }, [checkPostId, postId]);
+  }, [checkPostIds, postId]);
 
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
     content: "",
   });
-
   const ref = useRef(null);
   const [userTyping, setUserTyping] = useState([]);
   const [checkPostId, setCheckPostId] = useState();
   const [listeningTyping, setListeningTyping] = useState(false);
   const [listeningStopTyping, setListeningStopTyping] = useState(false);
-
   const createComment = async () => {
     const response = await Axios.Comments.createComment(itemInputComment);
     if (response.status === 200) {
-      await socket.emit("Client_request_create_like_comment",userId);
+      await socket.emit("Client_request_create_like_comment", userId);
       setItemInputComment({ ...itemInputComment, content: "" });
       onChange();
     }
   };
-
   useEffect(() => {
     setUserTyping("");
   }, []);
-
   //listeningStopTyping
   try {
     socket.on("stop_user_typing_comment", (data) => {
       setUserTyping(data);
-
       setListeningStopTyping(true);
     });
   } catch (error) {}
-
   useEffect(() => {
     if (listeningStopTyping) {
       setListeningStopTyping(false);
     }
   }, [listeningStopTyping]);
-
   //listeningTyping
   try {
     socket.on("user_typing_comment", (data, checkPostIds) => {
@@ -70,25 +63,20 @@ export default function CommentBox({
       setListeningTyping(true);
     });
   } catch (error) {}
-
   useEffect(() => {
     if (listeningTyping) {
       setListeningTyping(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningTyping]);
-
   const handleClick = () => {
     ref.current.focus();
     socket.emit("I'm_typing_comment", postId);
   };
-
   const handleClickOut = () => {
     console.log("stop");
-
     socket.emit("I_stopped_typing_comment", postId);
   };
-
   return (
     <Box
       key={postId}
@@ -121,9 +109,7 @@ export default function CommentBox({
       ) : (
         ""
       )}
-
       {checkPostId === postId ? userTyping : ""}
-
       <TextField
         className="rounded"
         size="medium"
