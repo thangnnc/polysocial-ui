@@ -9,18 +9,16 @@ import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMes
 import Asios from "../../../../utils/Axios";
 
 export default function NotificationBox({ notification, socket }) {
-  const { avatar, title, content, status, createdDate, notificationId } =
-    notification;
+  const { content, status, createdDate, notificationId, avatar } = notification;
 
   const updateNotification = async (notificationId) => {
     const response = await Asios.Notifications.updateNotifications(
       notificationId
     );
-    if(response.status === 200){
+    if (response.status === 200) {
       socket.emit("reset_one_user_get_One_Notification");
     }
   };
-
 
   return (
     <ListItem
