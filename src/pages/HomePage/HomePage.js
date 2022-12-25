@@ -42,6 +42,7 @@ export default function HomePage(props) {
     const response = await Axios.Posts.getAllByAllPost(0, 100);
     if (response) {
       setListPost(response.listPostDTO);
+      console.log("list-->",response.listPostDTO)
     }
   };
 

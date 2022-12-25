@@ -45,9 +45,8 @@ const AvatarCmt = styled(Avatar)(() => ({
   border: "2px solid #ff7f30",
 }));
 
-export default function RepComment({ data, open, onChange }) {
+export default function RepComment({ data, open, onChange,socket,userId }) {
   const { account } = useLogin();
-
   const [openCmt, setOpenCmt] = useState(null);
 
   const [repCmtId, setRepCmtId] = useState("");
@@ -70,6 +69,7 @@ export default function RepComment({ data, open, onChange }) {
   const replyComment = async () => {
     const response = await Axios.Comments.replyComment(itemInputComment);
     if (response.status === 200) {
+      await socket.emit("Client_request_create_like_comment",userId);
       setItemInputComment({ ...itemInputComment, content: "" });
       onChange();
     }
@@ -78,6 +78,7 @@ export default function RepComment({ data, open, onChange }) {
   const deleteConment = async () => {
     const response = await Axios.Comments.deleteComment(repCmtId);
     if (response.status === 200) {
+      await socket.emit("Client_request_create_like_comment");
       onChange();
     } else {
       toast.error("Xoá bình luận thất bại!");

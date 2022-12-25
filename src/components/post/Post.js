@@ -37,7 +37,6 @@ const ButtonNormal = styled(Button)(() => ({
 
 export default function Post({ posts, onChange, socket }) {
   const [isShowCmt, setShowCmt] = useState(false);
-
   const { account } = useLogin();
 
   const isLike = [];
@@ -46,13 +45,13 @@ export default function Post({ posts, onChange, socket }) {
     setShowCmt(true);
   };
 
-  const likeUnLike = async (postId) => {
+  const likeUnLike = async (postId,userId) => {
     const data = {
       postId: postId,
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
-      socket.emit("Client_request_create_like_comment");
+      socket.emit("Client_request_create_like_comment",userId);
       onChange();
     }
   };
@@ -169,12 +168,12 @@ export default function Post({ posts, onChange, socket }) {
                 })}
 
                 {isLike?.includes(account.studentCode && postId) ? (
-                  <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
+                  <ButtonLiked size="large" onClick={() => likeUnLike(postId,user.userId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích
                   </ButtonLiked>
                 ) : (
-                  <ButtonNormal size="large" onClick={() => likeUnLike(postId)}>
+                  <ButtonNormal size="large" onClick={() => likeUnLike(postId,user.userId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Thích
                   </ButtonNormal>
@@ -190,6 +189,7 @@ export default function Post({ posts, onChange, socket }) {
                 show={isShowCmt}
                 comments={listComment}
                 postId={postId}
+                userId={user.userId}
                 onChange={onChange}
                 socket={socket}
               />

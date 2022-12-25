@@ -9,7 +9,7 @@ import DateTimeOfMessage from "../../../../utils/DateTimeOfMessage/DateTimeOfMes
 import Asios from "../../../../utils/Axios";
 
 export default function NotificationBox({ notification, socket }) {
-  const { avatar, title, content, status, dateTime, notificationId } =
+  const { avatar, title, content, status, createdDate, notificationId } =
     notification;
 
   const updateNotification = async (notificationId) => {
@@ -41,9 +41,9 @@ export default function NotificationBox({ notification, socket }) {
       </ListItemAvatar>
       <Box>
         <Typography fontWeight={700} fontSize={15}>
-          {title}
-          {" - "}
-          <DateTimeOfMessage dateTime={dateTime} />
+          {/* {title} */}
+          {"  "}
+          <DateTimeOfMessage dateTime={createdDate} />
         </Typography>
         <Typography fontWeight={400} fontSize={14}>
           {content}

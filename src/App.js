@@ -58,6 +58,7 @@ function App() {
     useState(false);
 
   const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
+  const [listeningResetLike, setListeningResetLike] = useState(false);
 
   const listRoomId = [];
   useEffect(() => {
@@ -70,8 +71,8 @@ function App() {
   useEffect(() => {
     try {
       if (account) {
-        // const CONNECTTION_PORT = "localhost:3002";
-        const CONNECTTION_PORT = "https://polysocial-socket.up.railway.app";
+        const CONNECTTION_PORT = "localhost:3002";
+        // const CONNECTTION_PORT = "https://polysocial-socket.up.railway.app";
         setsocket(
           io(CONNECTTION_PORT).emit("connectUser", account, listRoomId)
         );
@@ -80,6 +81,22 @@ function App() {
     } catch (error) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  ///listeningResetLike
+  try {
+    socket.on("reset_like_notification", () => {
+      setListeningResetLike(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningResetLike) {
+        getAllNotification();
+        setListeningResetLike(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningResetLike]);
 
   ///listeningDeleteFriend
   try {

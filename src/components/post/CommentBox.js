@@ -2,12 +2,14 @@ import { Box, Button, List, TextField, Typography } from "@mui/material";
 // import CommentLoading from "./CommentLoading";
 import CommentLine from "./CommentLine";
 import Axios from "./../../utils/Axios/index";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import EnteringMessagePost from "./EnteringMessagePost";
 
 export default function CommentBox({
   show,
   comments,
   postId,
+  userId,
   onChange,
   socket,
 }) {
@@ -16,13 +18,66 @@ export default function CommentBox({
     content: "",
   });
 
+  const ref = useRef(null);
+  const [userTyping, setUserTyping] = useState([]);
+  const [checkPostId, setCheckPostId] = useState();
+  const [listeningTyping, setListeningTyping] = useState(false);
+  const [listeningStopTyping, setListeningStopTyping] = useState(false);
+
   const createComment = async () => {
     const response = await Axios.Comments.createComment(itemInputComment);
     if (response.status === 200) {
-      socket.emit("Client_request_create_like_comment");
+      await socket.emit("Client_request_create_like_comment",userId);
       setItemInputComment({ ...itemInputComment, content: "" });
       onChange();
     }
+  };
+
+  useEffect(() => {
+    setUserTyping("");
+  }, []);
+
+  //listeningStopTyping
+  try {
+    socket.on("stop_user_typing_comment", (data) => {
+      setUserTyping(data);
+
+      setListeningStopTyping(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    if (listeningStopTyping) {
+      setListeningStopTyping(false);
+    }
+  }, [listeningStopTyping]);
+
+  //listeningTyping
+  try {
+    socket.on("user_typing_comment", (data, checkPostIds) => {
+      // console.log("check-",checkPostId)
+      setCheckPostId(checkPostIds);
+      setUserTyping(data);
+      setListeningTyping(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    if (listeningTyping) {
+      setListeningTyping(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningTyping]);
+
+  const handleClick = () => {
+    ref.current.focus();
+    socket.emit("I'm_typing_comment", postId);
+  };
+
+  const handleClickOut = () => {
+    console.log("stop");
+
+    socket.emit("I_stopped_typing_comment", postId);
   };
 
   return (
@@ -34,6 +89,7 @@ export default function CommentBox({
             comment={comment}
             postId={postId}
             onChange={onChange}
+            socket={socket}
           />
         ))}
         {comments?.length === 0 && (
@@ -46,11 +102,21 @@ export default function CommentBox({
           </Typography>
         )}
       </List>
+      {checkPostId === postId && userTyping ? (
+        <EnteringMessagePost account={userTyping} />
+      ) : (
+        ""
+      )}
+
+      {checkPostId === postId ? userTyping : ""}
 
       <TextField
         className="rounded"
         size="medium"
         value={itemInputComment.content}
+        ref={ref}
+        onBlur={handleClickOut}
+        onFocus={handleClick}
         onChange={(e) =>
           setItemInputComment({ ...itemInputComment, content: e.target.value })
         }

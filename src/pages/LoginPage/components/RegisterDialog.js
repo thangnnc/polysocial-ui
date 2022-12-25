@@ -382,7 +382,6 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
       >
         <CircularProgress color="inherit" sx={{ zIndex: 999999 }} />
       </Backdrop>
-      s
     </div>
   );
 };

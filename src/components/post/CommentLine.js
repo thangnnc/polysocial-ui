@@ -42,7 +42,7 @@ const AvatarCmt = styled(Avatar)(() => ({
   border: "2px solid #ff7f30",
 }));
 
-export default function CommentLine({ comment, postId, onChange }) {
+export default function CommentLine({ comment, postId, onChange,socket }) {
   const { account } = useLogin();
 
   const [open, setOpen] = useState(null);
@@ -68,6 +68,7 @@ export default function CommentLine({ comment, postId, onChange }) {
   const deleteConment = async () => {
     const response = await Axios.Comments.deleteComment(comment.cmtId);
     if (response.status === 200) {
+      await socket.emit("Client_request_create_like_comment");
       setOpen(false);
       onChange();
     } else {
@@ -148,6 +149,8 @@ export default function CommentLine({ comment, postId, onChange }) {
         setOpen={setIsShow}
         data={dataRepCmt}
         onChange={onChange}
+        socket={socket}
+        userId={comment.userId}
       />
     </Box>
   );
