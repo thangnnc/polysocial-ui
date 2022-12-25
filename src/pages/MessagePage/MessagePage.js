@@ -98,6 +98,7 @@ export default function MessagePage(props) {
   try {
     group = location.state.group;
     listOnline = props.socket.listOnline;
+    // console.log("group",group)
   } catch (error) {}
 
   try {
@@ -319,7 +320,7 @@ export default function MessagePage(props) {
         },
       };
 
-      await socket.emit("send_message", messageContent);
+      await socket.emit("send_message", messageContent,roomId * 192.168199);
       setMessageList([...messageList, messageContent.content]);
       setMessage("");
     } catch (error) {}

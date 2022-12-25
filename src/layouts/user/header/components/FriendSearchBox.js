@@ -31,6 +31,7 @@ export default function FriendSearchBox({ searchData, sockets, onchange }) {
       arr.push(element2.studentCode);
       arr.push(element2.avatar);
       arr.push(element2.fullName);
+      arr.push(element2.email);
       listArr.push(arr);
     }
   } catch (error) {}

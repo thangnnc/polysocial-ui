@@ -12,7 +12,7 @@ export default function ListGroupSearch(props) {
   const handleJoinGroup = async (groupId) => {
     const response = await Axios.Groups.requestJoinGroup(groupId);
     if (response) {
-      socket.emit("request-group");
+      await socket.emit("request_group");
       alert("Gửi lời tham gia nhóm thành công");
     } else {
       alert("Gửi lời tham gia nhóm thất bại");
