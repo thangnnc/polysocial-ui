@@ -489,13 +489,13 @@ function App() {
     setNotifications(response);
   };
   useEffect(() => {
-    getAllNotificationDeadline(account.userId);
+    getAllNotificationDeadline(account?.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getAllNotificationDeadline = async () => {
     const response = await Axios.Notifications.getAllNotificationsDealine(
-      account.userId
+      account?.userId
     );
     setNotificationsDeadline(response);
   };

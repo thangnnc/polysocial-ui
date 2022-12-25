@@ -40,7 +40,6 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
-  console.log(props.socket.socket.notificationsDeadline);
   const { account } = useLogin();
 
   let groupList;
