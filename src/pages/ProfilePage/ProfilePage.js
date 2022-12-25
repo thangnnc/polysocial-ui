@@ -25,24 +25,21 @@ export default function ProfilePage(props) {
   const socket = props.socket.socket;
 
   const location = useLocation();
-  // const { isActive } = location.state;
-  // const { email } = location.state;
-  // const { roomId } = location.state;
-  // const { listContacts } = location.state;
-  const [online, setOnline] = useState([]);
   let profilePage;
   try {
     profilePage = location.state;
+    console.log("profile,",profilePage)
   } catch (error) {}
-  let isActive;
-  let email;
+  // let isActive;
+  let online;
   let roomId;
   let listContacts;
   try {
-    isActive = profilePage.isActive;
-    email = profilePage.email;
+    // isActive = profilePage.isActive;
+    // email = profilePage.email;
     roomId = profilePage.roomId;
     listContacts = profilePage.listContacts;
+    online=props.socket.listOnline
   } catch (error) {}
   const { account } = useLogin();
   const { userId } = useParams();
@@ -50,9 +47,11 @@ export default function ProfilePage(props) {
   const [userDetails, setUserDetails] = useState({});
   const [value, setValue] = useState("1");
   const [isEdit, setIsEdit] = useState(false);
-  const [isActiveOther, setIsActiveOther] = useState(isActive);
+  // const [isActiveOther, setIsActiveOther] = useState(isActive);
   const [listeningAccept, setListeningAccept] = useState(false);
-  const [listSocket, setListSocket] = useState();
+  // const [listSocket, setListSocket] = useState();
+  const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
+  const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
 
 
   const navigate = useNavigate();
@@ -74,10 +73,42 @@ export default function ProfilePage(props) {
     setValue(newValue);
   };
 
-   ///listeningAccept
-   try {
+      ///listeningDeleteFriend
+      try {
+        socket.on("request_delete_friend_profile", (data) => {
+          setListeningDeleteFriend(true);
+        });
+      } catch (error) {}
+    
+      useEffect(() => {
+        try {
+          if (listeningDeleteFriend) {
+            getOneUser(userId);
+            setListeningDeleteFriend(false);
+          }
+        } catch (error) {}
+      }, [listeningDeleteFriend]);
+      //-------------------------------------------------------------------------------------------------------------
+    
+  //
+  try {
+    socket.on("request_accept", function () {
+      setListeningRequestAccept(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningRequestAccept) {
+        getOneUser(userId);
+        setListeningRequestAccept(false);
+      }
+    } catch (error) {}
+  }, [listeningRequestAccept]);
+  //
+  ///listeningAccept
+  try {
     socket.on("successful_accept", (data) => {
-      setListSocket(data);
       setListeningAccept(true);
     });
   } catch (error) {}
@@ -90,25 +121,6 @@ export default function ProfilePage(props) {
       }
     } catch (error) {}
   }, [listeningAccept]);
-
-  // useEffect(() => {
-  //   try {
-  //     socket.on("server-send-listSocket-room", function (dataOnline) {
-  //       console.log("run server-send-listSocket ProfilePage");
-  //       const listOnline = [];
-  //       for (let index = 0; index < dataOnline.length; index++) {
-  //         const element2 = dataOnline;
-  //         listOnline.push(element2[index].email);
-  //       }
-  //       listOnline.splice(listOnline.indexOf(account.email), 1);
-  //       if (listOnline.includes(email) === true) {
-  //         setIsActiveOther(true);
-  //       } else {
-  //         setIsActiveOther(false);
-  //       }
-  //     });
-  //   } catch (error) {}
-  // });
 
   useEffect(() => {
     getOneUser(userId);
@@ -125,43 +137,10 @@ export default function ProfilePage(props) {
     }
   };
 
-  useEffect(() => {
-    try {
-      socket.on("request-accept", function () {
-        getOneUser(userId);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("reset_ProfilePage", function () {
-        getOneUser(userId);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("reset_ProfilePage_delete", function () {
-        getOneUser(userId);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on("request-delete", function () {
-        getOneUser(userId);
-      });
-    } catch (error) {}
-  });
-
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(user);
     if (response.status === 200) {
-      await socket.emit("add-friend", user.userId);
-
+      await socket.emit("add_friend", user.userId);
       toast.success("Gửi lời mời kết bạn thành công");
       getOneUser(userId);
     } else {
@@ -174,9 +153,9 @@ export default function ProfilePage(props) {
       userId: userId,
     });
     // if (response.status === 200) {
-    await socket.emit("delete-friend", user.userId);
+    await socket.emit("delete_friend", user.userId);
     getOneUser(userId);
-    toast.success("Huỷ kết mời kết bạn thành công");
+    toast.success("Huỷ kết bạn thành công");
     // }else{
     // toast.success("Huỷ lời mời kết bạn thất bại");
     // }
@@ -189,8 +168,8 @@ export default function ProfilePage(props) {
     };
     const response = await Axios.Friends.deleteAllRequestAddFriend(data);
     if (response.status === 200) {
-      onchange();
-      await socket.emit("delete-friend", userId);
+      await socket.emit("add_friend", user.userId);
+      getOneUser(userId);
       toast.success("Huỷ lời mời kết bạn thành công");
     } else {
       toast.success("Huỷ lời mời kết bạn thất bại");
@@ -268,7 +247,7 @@ export default function ProfilePage(props) {
                   <Avatar
                     src={user?.avatar}
                     alt={user?.fullName}
-                    isActive={isActiveOther}
+                    isActive={true}
                     sx={{
                       width: 130,
                       height: 130,
@@ -401,7 +380,7 @@ export default function ProfilePage(props) {
                             e,
                             user?.avatar,
                             user?.fullName,
-                            isActiveOther
+                            true
                           );
                         }}
                       >

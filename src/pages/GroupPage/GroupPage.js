@@ -42,7 +42,10 @@ export default function GroupPage(props) {
 
   const [listPostDTO, setListPost] = useState([]);
   const [listeningPost, setListeningPost] = useState(false);
-
+  const [listeningCreateMemberGroup, setListeningCreateMemberGroup] =
+    useState(false);
+  const [listeningDeleteMemberAll, setListeningDeleteMemberAll] =
+    useState(false);
 
   try {
     socket = props.socket.socket;
@@ -51,23 +54,56 @@ export default function GroupPage(props) {
     getAllData();
   }, []);
 
-    ///listeningCreateGroup
+  ///listeningCreateGroup
+  try {
+    socket.on("reset_create_group_successful", (data) => {
+      setListeningCreateGroup(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
     try {
-      socket.on("reset_create_group_successful", (data) => {
-        setListeningCreateGroup(true);
-      });
+      if (listeningCreateGroup) {
+        getAllData();
+        setListeningCreateGroup(false);
+      }
     } catch (error) {}
-  
-    useEffect(() => {
-      try {
-        if (listeningCreateGroup) {
-          getAllData();
-          setListeningCreateGroup(false);
-        }
-      } catch (error) {}
-    }, [listeningCreateGroup]);
-    //-------------------------------------------------------------------------------------------------------------
-  
+  }, [listeningCreateGroup]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  ///listeningDeleteMemberAll
+  try {
+    socket.on("reset_delete_member", () => {
+      setListeningDeleteMemberAll(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningDeleteMemberAll) {
+        getAllData();
+        setListeningDeleteMemberAll(false);
+      }
+    } catch (error) {}
+  }, [listeningDeleteMemberAll]);
+  //-------------------------------------------------------------------------------------------------------------
+
+  ///listeningCreateMemberGroup
+  try {
+    socket.on("reset_member_group_successful", (data) => {
+      setListeningCreateMemberGroup(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningCreateMemberGroup) {
+        getAllData();
+        setListeningCreateMemberGroup(false);
+      }
+    } catch (error) {}
+  }, [listeningCreateMemberGroup]);
+  //-------------------------------------------------------------------------------------------------------------
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroupStudent();
@@ -83,24 +119,22 @@ export default function GroupPage(props) {
     }
   };
 
+  ///listeningPost
+  try {
+    socket.on("Server_response_like_comment", () => {
+      setListeningPost(true);
+    });
+  } catch (error) {}
 
-     ///listeningPost
-     try {
-      socket.on("Server_response_like_comment", () => {
-        setListeningPost(true);
-      });
+  useEffect(() => {
+    try {
+      if (listeningPost) {
+        fetchData();
+        setListeningPost(false);
+      }
     } catch (error) {}
-  
-    useEffect(() => {
-      try {
-        if (listeningPost) {
-          fetchData();
-          setListeningPost(false);
-        }
-      } catch (error) {}
-    }, [listeningPost]);
-    //-------------------------------------------------------------------------------------------------------------
-  
+  }, [listeningPost]);
+  //-------------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
     fetchData();

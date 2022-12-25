@@ -34,6 +34,7 @@ export default function SearchPopover(sockets) {
   const [isFocusPopup, setFocusPopup] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
+  const [listeningRequestAcceptSuccessful, setListeningRequestAcceptsuccessful] = useState(false);
 
 
   useEffect(() => {
@@ -44,6 +45,22 @@ export default function SearchPopover(sockets) {
     getData();
   };
 
+  try {
+    socket.on("successful_accept", function () {
+      setListeningRequestAcceptsuccessful(true);
+    });
+  } catch (error) {}
+
+useEffect(() => {
+  try {
+    if (listeningRequestAcceptSuccessful) {
+      getData();
+      setListeningRequestAcceptsuccessful(false);
+    }
+  } catch (error) {}
+}, [listeningRequestAcceptSuccessful]);
+//
+
     try {
       socket.on("request_accept", function () {
         setListeningRequestAccept(true);
@@ -53,11 +70,12 @@ export default function SearchPopover(sockets) {
   useEffect(() => {
     try {
       if (listeningRequestAccept) {
-        console.log("request-accept");
         getData();
+        setListeningRequestAccept(false);
       }
     } catch (error) {}
   }, [listeningRequestAccept]);
+  //
 
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");

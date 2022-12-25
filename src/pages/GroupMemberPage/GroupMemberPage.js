@@ -7,11 +7,17 @@ import useLogin from "../../utils/Login/useLogin";
 import SearchBar from "../GroupMemberPage/components/SearchBar";
 import Axios from "./../../utils/Axios/index";
 
-export default function GroupMemberPage() {
+export default function GroupMemberPage(props) {
   const { groupId } = useParams();
   const [members, setMember] = useState([]);
   const [teacher, setTeacher] = useState({});
   const { account } = useLogin();
+  let socket;
+  try {
+    socket = props.socket.socket;
+  } catch (error) {
+    
+  }
 
   useEffect(() => {
     getAllData(groupId);
@@ -30,8 +36,10 @@ export default function GroupMemberPage() {
       groupId: groupId,
     };
     const response = await Axios.Groups.deleteStudentGroup(data);
-    getAllData(groupId);
-    console.log("response---->", response);
+    // if(response.status===200){
+      socket.emit("delete_member_group",userId)
+      getAllData(groupId);
+    // }
   };
 
   return (

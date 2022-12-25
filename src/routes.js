@@ -22,6 +22,7 @@ import GroupExerciseDetailPage from "./pages/GroupExerciseDetailPage/GroupExerci
 import AddFriendPage from "./pages/AddFriendPage/AddFriendPage";
 import GroupAddMemberPage from "./pages/GroupAddMemberPage/GroupAddMemberPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,10 @@ export default function Router(props) {
     {
       path: "/login",
       element: !account ? <LoginPage /> : <Navigate to="/home" />,
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPasswordPage />,
     },
     {
       path: "/",
@@ -87,7 +92,7 @@ export default function Router(props) {
         },
         {
           path: "/groups/detail/members/:groupId",
-          element: <GroupMemberPage />,
+          element: <GroupMemberPage socket={props}/>,
         },
         {
           path: "/groups/detail/feedback/:groupId",

@@ -68,7 +68,7 @@ export default function Header(props) {
 
   const getAllNotification = async () => {
     const response = await Asios.Notifications.getAllNotifications();
-    console.log("runnn");
+    // console.log("runnn");
     setNotifications(response);
   };
 
@@ -90,9 +90,9 @@ export default function Header(props) {
   //   } catch (error) {}
   // });
 
-  const handleChange = () => {
-    getAllNotification();
-  };
+  // const handleChange = () => {
+  //   getAllNotification();
+  // };
 
   return (
     <StyledRoot>

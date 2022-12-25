@@ -32,9 +32,12 @@ import Axios from "./../../utils/Axios/index";
 
 const TABLE_HEAD = [
   { id: "fullName", label: "Họ Và Tên", alignRight: false },
-  { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
+  // { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
-  { id: "status", label: "Trạng Thái", alignRight: false },
+  { id: "birthday", label: "Ngày Sinh", alignRight: false },
+  { id: "gender", label: "Giới Tính", alignRight: false },
+  { id: "address", label: "Địa Chỉ", alignRight: false },
+  { id: "role", label: "Vai trò", alignRight: false },
   { id: "" },
 ];
 
@@ -94,12 +97,18 @@ export default function ManagementUser() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const DATE_OPTIONS = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+
   useEffect(() => {
     getAllUser();
   }, []);
 
   const getAllUser = async () => {
-    const response = await Axios.Accounts.getAllUser();
+    const response = await Axios.Accounts.getAllUserDetails();
     if (response) {
       setUsers(response);
       // toast.success("Lấy dữ liệu thành công");
@@ -219,7 +228,7 @@ export default function ManagementUser() {
                     return (
                       <TableRow
                         hover
-                        key={row.studentCode}
+                        key={row.email}
                         tabIndex={-1}
                         role="checkbox"
                         selected={selectedUser}
@@ -251,16 +260,27 @@ export default function ManagementUser() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left" sx={{ width: "20%" }}>
-                          {row.studentCode}
-                        </TableCell>
-
-                        <TableCell align="left" sx={{ width: "25%" }}>
+                        <TableCell align="left" sx={{ width: "15%" }}>
                           {row.email}
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "15%" }}>
-                          {!row.status ? "Đang hoạt động" : "Đã khóa"}
+                          {new Date(row.birthday).toLocaleDateString(
+                            "en-US",
+                            DATE_OPTIONS
+                          )}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "10%" }}>
+                          {row.gender ? "Nam" : "Nữ"}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {row.address}
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "15%" }}>
+                          {row.roleName}
                         </TableCell>
 
                         <TableCell align="right" sx={{ width: "5%" }}>
@@ -342,14 +362,10 @@ export default function ManagementUser() {
           <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
           Chỉnh sửa
         </MenuItem>
-
-        <MenuItem sx={{ color: "error.main" }}>
-          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
-          Xóa
-        </MenuItem>
       </Popover>
 
       <DialogEditUser
+        key={user.userId}
         onChange={onlDailogChange}
         open={isEdit}
         setOpen={setIsEdit}
