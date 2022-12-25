@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function ListGroupJoin(props) {
   const roomId = props.group.roomId;
+
   return (
     <Link
       to={`/groups/detail/${props.group.groupId}`}

@@ -5,12 +5,10 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  IconButton,
   TextField,
   Typography,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Iconify from "../../components/iconify";
 import MyMessage from "./components/MyMessage";
@@ -38,69 +36,83 @@ const scrollbar = {
 
 export default function MessagePage(props) {
   const { roomId } = useParams();
+
   let location = useLocation();
-  // const [room, setRoom] = useState([]);
+
   const listInnerRef = useRef();
-  const [currPage, setCurrPage] = useState(1);
-  // const [prevPage, setPrevPage] = useState(1);
-  // const [lastList, setLastList] = useState(false);
+
   const limit = 20;
+
   const { account } = useLogin();
+
   const [messageList, setMessageList] = useState([{}]);
+
   const [listcontactId, setListcontactId] = useState([]);
+
   const [contactId, setcontactId] = useState([]);
+
   const [listContacts, setListContacts] = useState();
+
   const [message, setMessage] = useState("");
+
   const [userTyping, setUserTyping] = useState([]);
+
   const [accountTyping, setAccountTyping] = useState([]);
+
   const [userIdOther, setUserIdOther] = useState();
+
   const [isActiveOther, setIsActiveOther] = useState();
+
   const [emailOther, setEmailOther] = useState();
+
   const [listeningTyping, setListeningTyping] = useState(false);
+
   const [listeningStopTyping, setListeningStopTyping] = useState(false);
+
   const [dataSocket, setDataSocket] = useState();
+
   const [accountSocket, setAccountSocket] = useState();
+
   const [listeningDeleteMemberAll, setListeningDeleteMemberAll] =
-  useState(false);
+    useState(false);
 
   const messageRef = useRef(null);
+
   const ref = useRef(null);
+
   const socket = props.socket.socket;
+
   let group;
+
   let listOnline;
+
   try {
     group = location.state.group;
-    // console.log("pug------------",group )
-
     listOnline = props.socket.listOnline;
   } catch (error) {}
 
-  // useEffect(() => {}, [location]);
+  ///listeningDeleteMemberAll
+  try {
+    socket.on("reset_delete_member", (data) => {
+      setListeningDeleteMemberAll(true);
+    });
+  } catch (error) {}
 
-    ///listeningDeleteMemberAll
+  useEffect(() => {
     try {
-      socket.on("reset_delete_member", (data) => {
-        setListeningDeleteMemberAll(true);
-      });
+      if (listeningDeleteMemberAll) {
+        getMessage();
+        setListeningDeleteMemberAll(false);
+      }
     } catch (error) {}
-  
-    useEffect(() => {
-      try {
-        if (listeningDeleteMemberAll) {
-          getMessage();
-          setListeningDeleteMemberAll(false);
-        }
-      } catch (error) {}
-    }, [listeningDeleteMemberAll]);
-    //-------------------------------------------------------------------------------------------------------------
-
-    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningDeleteMemberAll]);
 
   //listeningTyping
   try {
     socket.on(roomId * 192.168199 + "user-typing", (accounts, data) => {
-      setDataSocket(data)
-      setAccountSocket(accounts)
+      setDataSocket(data);
+      setAccountSocket(accounts);
       setListeningTyping(true);
     });
   } catch (error) {}
@@ -111,12 +123,13 @@ export default function MessagePage(props) {
       setAccountTyping(accountSocket);
       setListeningTyping(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningTyping]);
-  //-------------------------------------------------------------------------------------------------------------
+
   //listeningStopTyping
   try {
     socket.on(roomId * 192.168199 + "stop-user-typing", (data) => {
-      setDataSocket(data)
+      setDataSocket(data);
       setListeningStopTyping(true);
     });
   } catch (error) {}
@@ -126,16 +139,8 @@ export default function MessagePage(props) {
       setUserTyping(dataSocket);
       setListeningStopTyping(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningStopTyping]);
-  //-------------------------------------------------------------------------------------------------------------
-
-  // useEffect(() => {
-  //   try {
-  //     socket.on(room + "stop-user-typing", (data) => {
-  //       setUserTyping(data);
-  //     });
-  //   } catch (error) {}
-  // });
 
   useEffect(() => {
     setUserTyping("");
@@ -157,6 +162,7 @@ export default function MessagePage(props) {
         setMessageList([...messageList, data]);
       });
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOnline]);
 
   useEffect(() => {
@@ -169,16 +175,14 @@ export default function MessagePage(props) {
 
   const getMessage = async () => {
     try {
-      // setRoom(roomId * 192.168199);
       socket.emit("join_room", roomId * 192.168199);
       const data = {
-        page: currPage,
+        page: 1,
         limit: limit,
         roomId: roomId,
       };
 
       const response = await Axios.Messages.getMessage(data);
-      // setRoom(roomId * 192.168199);
       const arr = [];
       setListContacts(group.listContacts);
 
@@ -263,9 +267,7 @@ export default function MessagePage(props) {
         console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
-    } catch (error) {
-      // toast.error("Failed to fetch message list: ", error);
-    }
+    } catch (error) {}
   };
 
   const handleClick = () => {
@@ -273,6 +275,7 @@ export default function MessagePage(props) {
     account.isActive = true;
     socket.emit("I'm typing", roomId * 192.168199, account);
   };
+
   const handleClickOut = () => {
     socket.emit("I stopped typing", roomId * 192.168199);
   };
@@ -307,20 +310,8 @@ export default function MessagePage(props) {
       roomId: roomId,
       listcontactId: listcontactId,
     };
-    const response = await Axios.Messages.createMessage(data);
-    if (response) {
-      // await getNameGroupDESC();
-    }
+    await Axios.Messages.createMessage(data);
   };
-
-  // const onScroll = () => {
-  //   if (listInnerRef.current) {
-  //     const { scrollTop } = listInnerRef.current;
-  //     if (scrollTop === 0) {
-  //       setCurrPage(currPage + 1);
-  //     }
-  //   }
-  // };
 
   return (
     <>

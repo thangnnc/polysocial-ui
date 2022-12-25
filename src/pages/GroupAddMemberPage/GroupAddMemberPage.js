@@ -1,16 +1,19 @@
 import { Box, Button, Card, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 
 export default function GroupAddMemberPage(props) {
   let socket;
+
   try {
     socket = props.socket.socket;
   } catch (error) {}
+
   const { groupId } = useParams();
+
   const [showRequestMember, setShowRequestMember] = useState([]);
 
   useEffect(() => {
@@ -35,7 +38,6 @@ export default function GroupAddMemberPage(props) {
     const response = await Axios.Groups.addMemberJoinGroup(groupId, userId);
     if (response.status === 200) {
       socket.emit("add-member");
-      // socket.emit("add-member",roomId);
       toast.success("Đã thêm thành viên thành công");
       getRequestMember(groupId);
     } else {

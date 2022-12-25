@@ -8,7 +8,6 @@ import ListGroupTeacherJoin from "./components/ListGroupTeacherJoin";
 import Axios from "./../../utils/Axios/index";
 import useLogin from "../../utils/Login/useLogin";
 import Post from "../../components/post/Post";
-// import { toast } from "react-toastify";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 72;
@@ -35,15 +34,22 @@ const BoxNav = styled("div")(({ theme }) => ({
 
 export default function GroupPage(props) {
   let socket;
+
   const { account } = useLogin();
+
   const [groups, setGroups] = useState([]);
+
   const [groupsTeacher, setGroupsTeacher] = useState([]);
+
   const [listeningCreateGroup, setListeningCreateGroup] = useState(false);
 
   const [listPostDTO, setListPost] = useState([]);
+
   const [listeningPost, setListeningPost] = useState(false);
+
   const [listeningCreateMemberGroup, setListeningCreateMemberGroup] =
     useState(false);
+
   const [listeningDeleteMemberAll, setListeningDeleteMemberAll] =
     useState(false);
 
@@ -69,7 +75,6 @@ export default function GroupPage(props) {
       }
     } catch (error) {}
   }, [listeningCreateGroup]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningDeleteMemberAll
   try {
@@ -86,7 +91,6 @@ export default function GroupPage(props) {
       }
     } catch (error) {}
   }, [listeningDeleteMemberAll]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningCreateMemberGroup
   try {
@@ -103,7 +107,6 @@ export default function GroupPage(props) {
       }
     } catch (error) {}
   }, [listeningCreateMemberGroup]);
-  //-------------------------------------------------------------------------------------------------------------
 
   const getAllData = async () => {
     const response = await Axios.Groups.getAllGroupStudent();
@@ -111,8 +114,6 @@ export default function GroupPage(props) {
     if (response) {
       setGroups(response);
       setGroupsTeacher(responseTeacher);
-      // console.log("v--",response)
-      // console.log("getAllData--",responseTeacher)
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");
@@ -134,7 +135,6 @@ export default function GroupPage(props) {
       }
     } catch (error) {}
   }, [listeningPost]);
-  //-------------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
     fetchData();

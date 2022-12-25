@@ -27,15 +27,23 @@ const scrollbar = {
 
 export default function SearchPopover(sockets) {
   let socket;
+
   try {
     socket = sockets.sockets;
   } catch (error) {}
-  const [open, setOpen] = useState(false);
-  const [isFocusPopup, setFocusPopup] = useState(false);
-  const [searchList, setSearchList] = useState([]);
-  const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
-  const [listeningRequestAcceptSuccessful, setListeningRequestAcceptsuccessful] = useState(false);
 
+  const [open, setOpen] = useState(false);
+
+  const [isFocusPopup, setFocusPopup] = useState(false);
+
+  const [searchList, setSearchList] = useState([]);
+
+  const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
+
+  const [
+    listeningRequestAcceptSuccessful,
+    setListeningRequestAcceptsuccessful,
+  ] = useState(false);
 
   useEffect(() => {
     getData();
@@ -51,21 +59,20 @@ export default function SearchPopover(sockets) {
     });
   } catch (error) {}
 
-useEffect(() => {
-  try {
-    if (listeningRequestAcceptSuccessful) {
-      getData();
-      setListeningRequestAcceptsuccessful(false);
-    }
-  } catch (error) {}
-}, [listeningRequestAcceptSuccessful]);
-//
-
+  useEffect(() => {
     try {
-      socket.on("request_accept", function () {
-        setListeningRequestAccept(true);
-      });
+      if (listeningRequestAcceptSuccessful) {
+        getData();
+        setListeningRequestAcceptsuccessful(false);
+      }
     } catch (error) {}
+  }, [listeningRequestAcceptSuccessful]);
+
+  try {
+    socket.on("request_accept", function () {
+      setListeningRequestAccept(true);
+    });
+  } catch (error) {}
 
   useEffect(() => {
     try {
@@ -75,7 +82,6 @@ useEffect(() => {
       }
     } catch (error) {}
   }, [listeningRequestAccept]);
-  //
 
   const getData = async () => {
     const response = await Axios.Friends.searchUserByKeywork("");

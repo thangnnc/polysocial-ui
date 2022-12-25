@@ -8,6 +8,7 @@ export default function ListGroupSearch(props) {
   try {
     socket = props.socket;
   } catch (error) {}
+  
   const handleJoinGroup = async (groupId) => {
     const response = await Axios.Groups.requestJoinGroup(groupId);
     if (response) {

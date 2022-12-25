@@ -39,6 +39,7 @@ export const DialogEditGroupDetail = ({
   onChange,
 }) => {
   const [memberEdit, setMemberEdit] = useState([]);
+
   const { account } = useLogin();
 
   useEffect(() => {

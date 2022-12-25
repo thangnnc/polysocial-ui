@@ -32,11 +32,13 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
+
   const { account } = useLogin();
 
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
   let navAdminConfig = [];
+
   if (account.role === "Đào tạo") {
     navAdminConfig.push(
       {
@@ -51,6 +53,7 @@ export default function Nav({ openNav, onCloseNav }) {
       }
     );
   }
+
   navAdminConfig = [
     ...navAdminConfig,
     {

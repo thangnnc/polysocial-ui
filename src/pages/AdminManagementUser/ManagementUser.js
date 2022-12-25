@@ -26,13 +26,12 @@ import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
 import BasicSpeedDial from "./components/BasicSpeedDial";
 import { DialogEditUser } from "./components/DialogEditUser";
 import Axios from "./../../utils/Axios/index";
-// import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "fullName", label: "Họ Và Tên", alignRight: false },
-  // { id: "studentCode", label: "Mã Số Sinh Viên", alignRight: false },
+  { id: "studentCode", label: "MSSV", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
   { id: "birthday", label: "Ngày Sinh", alignRight: false },
   { id: "gender", label: "Giới Tính", alignRight: false },
@@ -246,7 +245,7 @@ export default function ManagementUser() {
                           component="th"
                           scope="row"
                           padding="none"
-                          sx={{ width: "30%" }}
+                          sx={{ width: "25%" }}
                         >
                           <Stack
                             direction="row"
@@ -258,6 +257,10 @@ export default function ManagementUser() {
                               {row.fullName}
                             </Typography>
                           </Stack>
+                        </TableCell>
+
+                        <TableCell align="left" sx={{ width: "5%" }}>
+                          {row.studentCode}
                         </TableCell>
 
                         <TableCell align="left" sx={{ width: "15%" }}>

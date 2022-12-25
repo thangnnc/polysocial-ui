@@ -23,6 +23,7 @@ const styleInputFullField = {
 
 export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
   const { account } = useLogin();
+
   const [exerciseCreate, setExerciseCreate] = useState({
     groupId: groupId,
     content: "",

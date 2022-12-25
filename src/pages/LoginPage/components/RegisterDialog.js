@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -58,9 +58,12 @@ const marjorList = [
 
 export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
   const { setAccount } = useLogin();
-  const [src, setSrc] = React.useState();
-  const [userReg, setUserReg] = React.useState({});
-  const [showLoading, setShowLoading] = React.useState(false);
+
+  const [src, setSrc] = useState();
+
+  const [userReg, setUserReg] = useState({});
+
+  const [showLoading, setShowLoading] = useState(false);
 
   const handleUploadFile = (e) => {
     setUserReg((user) => ({

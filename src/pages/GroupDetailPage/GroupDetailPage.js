@@ -8,8 +8,11 @@ import Axios from "./../../utils/Axios/index";
 
 export default function GroupDetailPage(props) {
   const socket = props.socket.socket;
+
   const { groupId } = useParams();
+
   const { account } = useLogin();
+
   const [listPostDTO, setListPost] = useState([]);
 
   useEffect(() => {
@@ -24,7 +27,6 @@ export default function GroupDetailPage(props) {
     } catch (error) {}
   });
 
-  
   const fetchData = async (groupId) => {
     const response = await Axios.Posts.getAllByAllPostGroup(groupId);
     if (response) {

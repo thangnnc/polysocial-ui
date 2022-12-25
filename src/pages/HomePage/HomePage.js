@@ -7,46 +7,36 @@ import Axios from "./../../utils/Axios/index";
 
 export default function HomePage(props) {
   let socket;
+
   const { account } = useLogin();
+
   const [listPostDTO, setListPost] = useState([]);
+
   const [listeningPost, setListeningPost] = useState(false);
 
-
   try {
-    socket=props.socket.socket
-  } catch (error) {
-    
-  }
+    socket = props.socket.socket;
+  } catch (error) {}
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   try {
-  //     socket.on("Server-response-like-comment", function (listSocket) {
-  //       fetchData();
-  //     });
-  //   } catch (error) {}
-  // });
+  ///listeningPost
+  try {
+    socket.on("Server_response_like_comment", () => {
+      setListeningPost(true);
+    });
+  } catch (error) {}
 
-    ///listeningPost
+  useEffect(() => {
     try {
-      socket.on("Server_response_like_comment", () => {
-        setListeningPost(true);
-      });
+      if (listeningPost) {
+        fetchData();
+        setListeningPost(false);
+      }
     } catch (error) {}
-  
-    useEffect(() => {
-      try {
-        if (listeningPost) {
-          fetchData();
-          setListeningPost(false);
-        }
-      } catch (error) {}
-    }, [listeningPost]);
-    //-------------------------------------------------------------------------------------------------------------
-  
+  }, [listeningPost]);
 
   const fetchData = async () => {
     const response = await Axios.Posts.getAllByAllPost(0, 100);
@@ -64,7 +54,9 @@ export default function HomePage(props) {
       <Helmet>
         <title> Trang chủ | Poly Social</title>
       </Helmet>
-      {account.role !== "Sinh viên" && <UpPost onChange={handleChange} socket={socket}/>}
+      {account.role !== "Sinh viên" && (
+        <UpPost onChange={handleChange} socket={socket} />
+      )}
 
       <Post posts={listPostDTO} onChange={handleChange} socket={socket} />
     </>

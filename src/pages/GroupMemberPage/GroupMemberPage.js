@@ -9,15 +9,18 @@ import Axios from "./../../utils/Axios/index";
 
 export default function GroupMemberPage(props) {
   const { groupId } = useParams();
+
   const [members, setMember] = useState([]);
+
   const [teacher, setTeacher] = useState({});
+
   const { account } = useLogin();
+
   let socket;
+
   try {
     socket = props.socket.socket;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 
   useEffect(() => {
     getAllData(groupId);
@@ -35,11 +38,9 @@ export default function GroupMemberPage(props) {
       userId: userId,
       groupId: groupId,
     };
-    const response = await Axios.Groups.deleteStudentGroup(data);
-    // if(response.status===200){
-      socket.emit("delete_member_group",userId)
-      getAllData(groupId);
-    // }
+    await Axios.Groups.deleteStudentGroup(data);
+    socket.emit("delete_member_group", userId);
+    getAllData(groupId);
   };
 
   return (

@@ -14,31 +14,49 @@ import Axios from "./utils/Axios";
 
 function App() {
   const { account } = useLogin();
+
   const [socket, setsocket] = useState();
-  // const data1 = ;
+
   const [listResponse, setListResponse] = useState();
+
   const [count, setCount] = useState(0);
+
   const [groupList, setGroupList] = useState([]);
-  // const [listOnline, setListOnline] = useState();
+
   const [listFriends, setListFriend] = useState([]);
+
   const [notifications, setNotifications] = useState([]);
+
   const [showRequestFriend, setShowRequestFriend] = useState([]);
+
   const [listSocket, setListSocket] = useState();
+
   const [listeningConnect, setListeningConnect] = useState(false);
+
   const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
+
   const [listeningDisconnect, setListeningDisconnect] = useState(false);
+
   const [listeningAccept, setListeningAccept] = useState(false);
+
   const [listeningAllNotification, setListeningAllNotification] =
     useState(false);
+
   const [listeningOneNotification, setListeningOneNotification] =
     useState(false);
+
   const [listeningNameMessage, setListeningNameMessage] = useState(false);
+
   const [listeningCreateMemberGroup, setListeningCreateMemberGroup] =
     useState(false);
+
   const [listeningCreateGroup, setListeningCreateGroup] = useState(false);
+
   const [listeningDeleteMember, setListeningDeleteMember] = useState(false);
+
   const [listeningDeleteMemberAll, setListeningDeleteMemberAll] =
     useState(false);
+
   const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
 
   const listRoomId = [];
@@ -79,8 +97,8 @@ function App() {
         setListeningDeleteFriend(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningDeleteFriend]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningDeleteMemberAll
   try {
@@ -97,8 +115,8 @@ function App() {
         setListeningDeleteMemberAll(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningDeleteMemberAll]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningDeleteMember
   try {
@@ -116,8 +134,8 @@ function App() {
         setListeningDeleteMember(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningDeleteMember]);
-  //-------------------------------------------------------------------------------------------------------------
 
   //listeningSocket
   try {
@@ -137,8 +155,9 @@ function App() {
       getAllNotification();
       setListeningConnect(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningConnect]);
-  //-------------------------------------------------------------------------------------------------------------
+
   ///listeningCreateGroup
   try {
     socket.on("reset_create_group_successful", (data) => {
@@ -156,10 +175,9 @@ function App() {
         setListeningCreateGroup(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningCreateGroup]);
-  //-------------------------------------------------------------------------------------------------------------
 
-  //-------------------------------------------------------------------------------------------------------------
   ///listeningCreateMemberGroup
   try {
     socket.on("reset_member_group_successful", (data) => {
@@ -177,8 +195,8 @@ function App() {
         setListeningCreateMemberGroup(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningCreateMemberGroup]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningNameMessage
   try {
@@ -191,37 +209,30 @@ function App() {
   useEffect(() => {
     try {
       if (listeningNameMessage) {
-        // roomDESC(listSocket);
         fetchNameGroup(listSocket);
         getAllNotification();
         setListeningNameMessage(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningNameMessage]);
-  //-------------------------------------------------------------------------------------------------------------
 
   //listeningDisconnect
   try {
     socket.on("server_disconnect_listSocket", (data) => {
       setListeningDisconnect(true);
       setListSocket(data);
-      // setListOnline(data);
     });
   } catch (error) {}
 
   useEffect(() => {
     if (listeningDisconnect) {
-      //code==
       fetchNameGroup(listSocket);
-      // getRequestFriend();
-      // // getNameGroupDESC({ userId: 1 }, listSocket);
       getAllFriend(listSocket);
-      // getAllNotification();
-      //
       setListeningDisconnect(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningDisconnect]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningAccept
   try {
@@ -236,14 +247,13 @@ function App() {
       if (listeningAccept) {
         getAllNotification();
         getAllFriend(listSocket);
-        getRequestFriend(); //
-        // roomDESC(listSocket);
+        getRequestFriend();
         fetchNameGroup(listSocket);
         setListeningAccept(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningAccept]);
-  //-------------------------------------------------------------------------------------------------------------
 
   ///listeningRequestAccept
   try {
@@ -256,12 +266,12 @@ function App() {
     try {
       if (listeningRequestAccept) {
         getAllNotification();
-        getRequestFriend(); //
+        getRequestFriend();
         setListeningRequestAccept(false);
       }
     } catch (error) {}
   }, [listeningRequestAccept]);
-  //-------------------------------------------------------------------------------------------------------------
+
   ///listeningAllNotification
   try {
     socket.on("reset_one_account_getAllNotification", (data) => {
@@ -276,8 +286,9 @@ function App() {
         setListeningAllNotification(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningAllNotification]);
-  //-------------------------------------------------------------------------------------------------------------
+
   ///listeningOneNotification
   try {
     socket.on("reset_one_account_get_One_All_Notification", (data) => {
@@ -292,106 +303,11 @@ function App() {
       }
     } catch (error) {}
   }, [listeningOneNotification]);
-  //-------------------------------------------------------------------------------------------------------------
 
   const getRequestFriend = async () => {
     const response = await Axios.Friends.getAllRequestAddFriend();
     setShowRequestFriend(response);
   };
-
-  // const roomDESC = async (onl) => {
-  //   if (account) {
-  //     const responseDESC = await Axios.Messages.getNameGroupDESC({ userId: 1 });
-  //     const arr = [];
-  //     try {
-  //       for (let index = 0; index < responseDESC.data.length; index++) {
-  //         const listNameGr = {};
-  //         const element = responseDESC.data[index];
-  //         const names = element.name.split(",");
-  //         const n = account.fullName;
-  //         const getName = names.filter((name) => name !== n);
-
-  //         try {
-  //           const Avatar = element.avatar.split(",");
-  //           const ns = account.avatar;
-  //           const getAvatar = Avatar.filter((name) => name !== ns);
-
-  //           if (getAvatar[0] === account.avatar) {
-  //             listNameGr.avatar = element.avatar;
-  //           } else {
-  //             listNameGr.avatar = getAvatar[0];
-  //           }
-  //         } catch (error) {}
-
-  //         listNameGr.roomId = element.roomId;
-  //         listNameGr.lastMessage = element.lastMessage;
-
-  //         listNameGr.totalMember = element.totalMember;
-  //         listNameGr.status = element.status;
-  //         listNameGr.userId = element.userId;
-  //         listNameGr.contactId = element.contactId;
-
-  //         if (getName[0] === account.fullName) {
-  //           listNameGr.name = element.name;
-  //         } else {
-  //           listNameGr.name = getName[0];
-  //         }
-  //         listNameGr.listContacts = element.listContacts;
-  //         listNameGr.lastUpDateDate = element.lastUpDateDate;
-  //         listNameGr.messageRecall = element.messageRecall;
-  //         arr.push(listNameGr);
-  //       }
-  //     } catch (error) {}
-  //     var counts = 0;
-
-  //     const listContent = [];
-  //     for (let index = 0; index < arr.length; index++) {
-  //       const listContentObject = {};
-  //       const element = arr[index];
-  //       listContentObject.avatar = element.avatar;
-  //       listContentObject.lastMessage = element.lastMessage;
-  //       listContentObject.lastUpDateDate = element.lastUpDateDate;
-  //       listContentObject.listContacts = element.listContacts;
-
-  //       const mySetOnline = new Set();
-  //       for (let index = 0; index < element.listContacts.length; index++) {
-  //         const element2 = element.listContacts[index];
-  //         mySetOnline.add(element2.at(4));
-  //       }
-  //       const listOnline = [];
-  //       for (let index = 0; index < onl.length; index++) {
-  //         const element2 = onl[index];
-  //         listOnline.push(element2.email);
-  //       }
-  //       // }
-
-  //       for (let index = 0; index < listOnline.length; index++) {
-  //         mySetOnline.delete(account.email);
-  //         if (mySetOnline.has(listOnline[index])) {
-  //           listContentObject.isActive = false;
-  //           break;
-  //         } else {
-  //           listContentObject.isActive = true;
-  //         }
-  //       }
-  //       if (listOnline.length === 0) {
-  //         listContentObject.isActive = true;
-  //       }
-  //       listContentObject.name = element.name;
-  //       listContentObject.roomId = element.roomId;
-  //       listContentObject.status = element.status;
-  //       listContentObject.totalMember = element.totalMember;
-
-  //       listContent.push(listContentObject);
-  //       if (element.status === false) {
-  //         counts++;
-  //       }
-  //     }
-  //     setCount(counts);
-  //     console.log("listConetnt", listContent);
-  //     setGroupList(listContent);
-  //   }
-  // };
 
   const getRoomId = async () => {
     const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
@@ -402,101 +318,6 @@ function App() {
 
     setListResponse(response);
   };
-
-  // const getNameGroupDESC = async (data1, onl) => {
-  //   if (account) {
-  //     const arr = [];
-  //     try {
-  //       for (let index = 0; index < listResponse.data.length; index++) {
-  //         const listNameGr = {};
-  //         const element = listResponse.data[index];
-  //         const names = element.name.split(",");
-  //         const n = account.fullName;
-  //         const getName = names.filter((name) => name !== n);
-
-  //         try {
-  //           const Avatar = element.avatar.split(",");
-  //           const ns = account.avatar;
-  //           const getAvatar = Avatar.filter((name) => name !== ns);
-
-  //           if (getAvatar[0] === account.avatar) {
-  //             listNameGr.avatar = element.avatar;
-  //           } else {
-  //             listNameGr.avatar = getAvatar[0];
-  //           }
-  //         } catch (error) {}
-
-  //         listNameGr.roomId = element.roomId;
-  //         listNameGr.lastMessage = element.lastMessage;
-
-  //         listNameGr.totalMember = element.totalMember;
-  //         listNameGr.status = element.status;
-  //         listNameGr.userId = element.userId;
-  //         listNameGr.contactId = element.contactId;
-
-  //         if (getName[0] === account.fullName) {
-  //           listNameGr.name = element.name;
-  //         } else {
-  //           listNameGr.name = getName[0];
-  //         }
-  //         listNameGr.listContacts = element.listContacts;
-  //         listNameGr.lastUpDateDate = element.lastUpDateDate;
-  //         listNameGr.messageRecall = element.messageRecall;
-  //         arr.push(listNameGr);
-  //       }
-  //     } catch (error) {}
-  //     var counts = 0;
-
-  //     const listContent = [];
-  //     for (let index = 0; index < arr.length; index++) {
-  //       const listContentObject = {};
-  //       const element = arr[index];
-  //       listContentObject.avatar = element.avatar;
-  //       listContentObject.lastMessage = element.lastMessage;
-  //       listContentObject.lastUpDateDate = element.lastUpDateDate;
-  //       listContentObject.listContacts = element.listContacts;
-
-  //       const mySetOnline = new Set();
-  //       for (let index = 0; index < element.listContacts.length; index++) {
-  //         const element2 = element.listContacts[index];
-  //         mySetOnline.add(element2.at(4));
-  //       }
-  //       const listOnline = [];
-  //       for (let index = 0; index < onl.length; index++) {
-  //         const element2 = onl[index];
-  //         listOnline.push(element2.email);
-  //       }
-  //       // }
-
-  //       for (let index = 0; index < listOnline.length; index++) {
-  //         mySetOnline.delete(account.email);
-  //         if (mySetOnline.has(listOnline[index])) {
-  //           listContentObject.isActive = false;
-  //           break;
-  //         } else {
-  //           listContentObject.isActive = true;
-  //         }
-  //       }
-  //       if (listOnline.length === 0) {
-  //         listContentObject.isActive = true;
-  //       }
-  //       listContentObject.name = element.name;
-  //       listContentObject.roomId = element.roomId;
-  //       listContentObject.status = element.status;
-  //       listContentObject.totalMember = element.totalMember;
-  //       listContentObject.userId = element.userId;
-  //       listContentObject.contactId = element.contactId;
-  //       listContent.push(listContentObject);
-  //       if (element.status === false) {
-  //         counts++;
-  //       }
-  //     }
-  //     setCount(counts);
-  //     console.log("listConetnt 2", listContent);
-
-  //     setGroupList(listContent);
-  //   }
-  // };
 
   const fetchNameGroup = async (listSocket) => {
     console.log("run meeeee");
@@ -634,11 +455,6 @@ function App() {
         }
       }
       listFrindObject.contactId = contactId;
-      // console.log("elemet---> ",element2)
-      // if(element2.email!==account.email){
-      //   contactId = element2.contactId;
-      // }
-
       listFrindObject.roomId = element.roomId;
       listFrindObject.status = element.status;
       listFrindObject.userConfirmId = element.userConfirmId;
@@ -666,7 +482,6 @@ function App() {
     }
   };
 
-  //
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>

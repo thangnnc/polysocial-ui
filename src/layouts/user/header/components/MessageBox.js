@@ -6,6 +6,7 @@ import Axios from "../../../../utils/Axios";
 
 export default function MessageBox({ roomChat, listOnline,socket }) {
   const navigate = useNavigate();
+
   const {
     roomId,
     avatar,
@@ -17,6 +18,7 @@ export default function MessageBox({ roomChat, listOnline,socket }) {
     status,
     contactId,
   } = roomChat;
+  
   const pathMessage = "/message/room/";
 
   const handleOnClick = async (

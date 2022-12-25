@@ -49,12 +49,14 @@ const scrollbar = {
   },
 };
 export default function NavFriend(props) {
-  let socket = props.socket.socket.socket; 
-  // console.log("socket-->",socket)
+  let socket = props.socket.socket.socket;
 
   let listFriends = props.socket.socket.listFriends;
+
   const navigate = useNavigate();
+
   let listOnline = props.socket.socket.listOnline;
+
   const pathMessage = "/message/room/";
 
   const handleOnClick = async (
