@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Iconify from "../../../components/iconify";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
+import Axios from "../../../utils/Axios";
 
 const styleListFriends = {
   padding: "8px 12px",
@@ -48,7 +49,8 @@ const scrollbar = {
   },
 };
 export default function NavFriend(props) {
-  // let socket = props.socket.socket.socket; 
+  let socket = props.socket.socket.socket; 
+  // console.log("socket-->",socket)
 
   let listFriends = props.socket.socket.listFriends;
   const navigate = useNavigate();
@@ -61,7 +63,8 @@ export default function NavFriend(props) {
     avatar,
     name,
     isActive,
-    roomId
+    roomId,
+    contactId
   ) => {
     let group = {};
     group.listContacts = listContacts;
@@ -69,6 +72,12 @@ export default function NavFriend(props) {
     group.avatar = avatar;
     group.isActive = isActive;
     group.listOnline = listOnline;
+    const responseUpdateviewed = await Axios.Messages.updateviewedStatus({
+      contactId: contactId,
+    });
+    if (responseUpdateviewed) {
+      await socket.emit("isSeen");
+    }
     navigate(pathMessage + roomId, {
       state: {
         group: group,
@@ -127,7 +136,8 @@ export default function NavFriend(props) {
                   value.friendAvatar,
                   value.friendName,
                   value.isActive,
-                  value.roomId
+                  value.roomId,
+                  value.contactId
                 );
               }}
               key={index}

@@ -17,6 +17,7 @@ import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import useLogin from "../../../utils/Login/useLogin";
 
 const styleInputFullField = {
   width: "100%",
@@ -39,6 +40,8 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   const [groupCreate, setGroupCreate] = useState({});
   const [src, setSrc] = useState();
   const [admins, setAdmins] = useState([]);
+  const [userId, setUserId] = useState();
+
 
   const handleUploadFile = (e) => {
     setGroupCreate((group) => ({
@@ -49,6 +52,7 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   };
 
   const handleChange = (e, value) => {
+    setUserId(value.userId)
     setGroupCreate({ ...groupCreate, adminId: value.userId });
   };
 
@@ -68,7 +72,8 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
 
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
-      await socket.emit("create_group");
+      console.log("userIDdddd-d------>",userId)
+      await socket.emit("create_group",userId);
       setOpen(false);
       onChange();
     } else {
@@ -138,25 +143,6 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                   />
                 )}
               />
-              {/* <TextField
-                name="adminId"
-                label="Người tạo nhóm học tập"
-                onChange={(e) =>
-                  setGroupCreate({ ...groupCreate, adminId: e.target.value })
-                }
-                variant="standard"
-                placeholder="Nhập tên người tạo nhóm học tập"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon={"material-symbols:edit-note-sharp"} />
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="none"
-                sx={styleInputFullField}
-              /> */}
-
               <TextField
                 name="name"
                 label="Tên nhóm học tập"

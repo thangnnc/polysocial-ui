@@ -87,7 +87,7 @@ export default function Router(props) {
         },
         {
           path: "/groups/detail/members/:groupId",
-          element: <GroupMemberPage />,
+          element: <GroupMemberPage socket={props}/>,
         },
         {
           path: "/groups/detail/feedback/:groupId",

@@ -39,7 +39,7 @@ const scrollbar = {
 export default function MessagePage(props) {
   const { roomId } = useParams();
   let location = useLocation();
-  const [room, setRoom] = useState([]);
+  // const [room, setRoom] = useState([]);
   const listInnerRef = useRef();
   const [currPage, setCurrPage] = useState(1);
   // const [prevPage, setPrevPage] = useState(1);
@@ -56,9 +56,12 @@ export default function MessagePage(props) {
   const [userIdOther, setUserIdOther] = useState();
   const [isActiveOther, setIsActiveOther] = useState();
   const [emailOther, setEmailOther] = useState();
-  const [listeningConnect, setListeningConnect] = useState(false);
-  // const [listOnline, setListOnline] = useState();
-
+  const [listeningTyping, setListeningTyping] = useState(false);
+  const [listeningStopTyping, setListeningStopTyping] = useState(false);
+  const [dataSocket, setDataSocket] = useState();
+  const [accountSocket, setAccountSocket] = useState();
+  const [listeningDeleteMemberAll, setListeningDeleteMemberAll] =
+  useState(false);
 
   const messageRef = useRef(null);
   const ref = useRef(null);
@@ -72,29 +75,70 @@ export default function MessagePage(props) {
     listOnline = props.socket.listOnline;
   } catch (error) {}
 
+  // useEffect(() => {}, [location]);
+
+    ///listeningDeleteMemberAll
+    try {
+      socket.on("reset_delete_member", (data) => {
+        setListeningDeleteMemberAll(true);
+      });
+    } catch (error) {}
+  
+    useEffect(() => {
+      try {
+        if (listeningDeleteMemberAll) {
+          getMessage();
+          setListeningDeleteMemberAll(false);
+        }
+      } catch (error) {}
+    }, [listeningDeleteMemberAll]);
+    //-------------------------------------------------------------------------------------------------------------
+
+    
+
+  //listeningTyping
+  try {
+    socket.on(roomId * 192.168199 + "user-typing", (accounts, data) => {
+      setDataSocket(data)
+      setAccountSocket(accounts)
+      setListeningTyping(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    if (listeningTyping) {
+      setUserTyping(dataSocket);
+      setAccountTyping(accountSocket);
+      setListeningTyping(false);
+    }
+  }, [listeningTyping]);
+  //-------------------------------------------------------------------------------------------------------------
+  //listeningStopTyping
+  try {
+    socket.on(roomId * 192.168199 + "stop-user-typing", (data) => {
+      setDataSocket(data)
+      setListeningStopTyping(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    if (listeningStopTyping) {
+      setUserTyping(dataSocket);
+      setListeningStopTyping(false);
+    }
+  }, [listeningStopTyping]);
+  //-------------------------------------------------------------------------------------------------------------
+
   // useEffect(() => {
-  //   console.log("pug------------",props)
-
-  // }, [props.socket.listOnline!==undefined]);
-
-  // try {
-  //   socket.on("server_send_listSocket", (data) => {
-  //     setListeningConnect(true);
-  //     setListOnline(data);
-  //   });
-  // } catch (error) {}
-
-  // useEffect(() => {
-  //   if (listeningConnect) {
-  //     getMessage();
-  //   }
-  // }, [listeningConnect]);
-
-  useEffect(() => {}, [location]);
+  //   try {
+  //     socket.on(room + "stop-user-typing", (data) => {
+  //       setUserTyping(data);
+  //     });
+  //   } catch (error) {}
+  // });
 
   useEffect(() => {
     setUserTyping("");
-    setRoom(roomId);
   }, [roomId]);
 
   useEffect(() => {
@@ -114,14 +158,6 @@ export default function MessagePage(props) {
       });
     } catch (error) {}
   }, [listOnline]);
-
-  // useEffect(() => {
-  //   try {
-  //     socket.on("reset_room_message", () => {
-  //       getMessage();
-  //     });
-  //   } catch (error) {}
-  // },);
 
   useEffect(() => {
     try {
@@ -133,7 +169,7 @@ export default function MessagePage(props) {
 
   const getMessage = async () => {
     try {
-      setRoom(roomId);
+      // setRoom(roomId * 192.168199);
       socket.emit("join_room", roomId * 192.168199);
       const data = {
         page: currPage,
@@ -142,7 +178,7 @@ export default function MessagePage(props) {
       };
 
       const response = await Axios.Messages.getMessage(data);
-      setRoom(roomId);
+      // setRoom(roomId * 192.168199);
       const arr = [];
       setListContacts(group.listContacts);
 
@@ -150,19 +186,7 @@ export default function MessagePage(props) {
         const element = group.listContacts[index];
 
         if (element[4] === account.email) {
-        // console.log("elemet-> ",element[0])
-
-          // const data = {
-          //   contactId: element[0],
-          // };
           setcontactId(element[0]);
-          // const responseUpdateviewed = await Asios.Messages.updateviewedStatus(
-          //   data
-          // );
-          // if (responseUpdateviewed) {
-            // await socket.emit("isSeen");
-          // }
-          // break;
         } else {
           arr.push(element[0]);
         }
@@ -244,37 +268,20 @@ export default function MessagePage(props) {
     }
   };
 
-  useEffect(() => {
-    try {
-      socket.on(room + "user-typing", (account, data) => {
-        setUserTyping(data);
-        setAccountTyping(account);
-      });
-    } catch (error) {}
-  });
-
-  useEffect(() => {
-    try {
-      socket.on(room + "stop-user-typing", (data) => {
-        setUserTyping(data);
-      });
-    } catch (error) {}
-  });
-
   const handleClick = () => {
     ref.current.focus();
     account.isActive = true;
-    socket.emit("I'm typing", room, account);
+    socket.emit("I'm typing", roomId * 192.168199, account);
   };
   const handleClickOut = () => {
-    socket.emit("I stopped typing", room);
+    socket.emit("I stopped typing", roomId * 192.168199);
   };
 
   const sendMessage = async () => {
     try {
       await createMessage();
       let messageContent = {
-        room: room * 192.168199,
+        room: roomId * 192.168199,
         content: {
           studentCode: account.studentCode,
           content: message,
@@ -297,7 +304,7 @@ export default function MessagePage(props) {
     const data = {
       content: message,
       contactId: contactId,
-      roomId: room,
+      roomId: roomId,
       listcontactId: listcontactId,
     };
     const response = await Axios.Messages.createMessage(data);
@@ -447,7 +454,8 @@ export default function MessagePage(props) {
                 </Button>
               ),
             }}
-            ref={ref}
+            // ref={ref}
+            // value={message}
             onBlur={handleClickOut}
             onFocus={handleClick}
             onChange={(e) => {
