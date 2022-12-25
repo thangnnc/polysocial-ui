@@ -29,7 +29,12 @@ export default function CommentBox({
     <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
       <List disablePadding sx={{ p: 0 }}>
         {comments?.map((comment, index) => (
-          <CommentLine key={index} comment={comment} postId={postId} />
+          <CommentLine
+            key={index}
+            comment={comment}
+            postId={postId}
+            onChange={onChange}
+          />
         ))}
         {comments?.length === 0 && (
           <Typography

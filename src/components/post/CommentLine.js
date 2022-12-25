@@ -13,6 +13,9 @@ import { useState } from "react";
 import RepComment from "./RepComment";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Iconify from "../iconify/Iconify";
+import { toast } from "react-toastify";
+import Axios from "../../utils/Axios/index";
+import useLogin from "../../utils/Login/useLogin";
 
 const LineComment = styled(Box)(() => ({
   width: "100%",
@@ -39,12 +42,20 @@ const AvatarCmt = styled(Avatar)(() => ({
   border: "2px solid #ff7f30",
 }));
 
-export default function CommentLine({ comment }, { postId }) {
+export default function CommentLine({ comment, postId, onChange }) {
+  const { account } = useLogin();
+
   const [open, setOpen] = useState(null);
 
-  const { user, content, createdDate } = comment;
+  const { user, content, createdDate, commentReplies } = comment;
 
   const [isShow, setIsShow] = useState(false);
+
+  const dataRepCmt = {
+    postId: postId,
+    cmtId: comment.cmtId,
+    commentReplies: commentReplies,
+  };
 
   const handleCloseMenu = () => {
     setOpen(null);
@@ -52,6 +63,16 @@ export default function CommentLine({ comment }, { postId }) {
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
+  };
+
+  const deleteConment = async () => {
+    const response = await Axios.Comments.deleteComment(comment.cmtId);
+    if (response.status === 200) {
+      setOpen(false);
+      onChange();
+    } else {
+      toast.error("Xoá bình luận thất bại!");
+    }
   };
 
   return (
@@ -66,14 +87,16 @@ export default function CommentLine({ comment }, { postId }) {
             <Typography>{content}</Typography>
           </Comment>
         </LineComment>
-        <IconButton
-          aria-label="settings"
-          size="large"
-          color="inherit"
-          onClick={handleOpenMenu}
-        >
-          <MoreVertIcon />
-        </IconButton>
+        {account?.userId === user?.userId && (
+          <IconButton
+            aria-label="settings"
+            size="large"
+            color="inherit"
+            onClick={handleOpenMenu}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        )}
       </Box>
       <Button
         sx={{
@@ -115,12 +138,7 @@ export default function CommentLine({ comment }, { postId }) {
           },
         }}
       >
-        <MenuItem>
-          <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
-          Chỉnh sửa
-        </MenuItem>
-
-        <MenuItem sx={{ color: "error.main" }}>
+        <MenuItem sx={{ color: "error.main" }} onClick={deleteConment}>
           <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
           Xóa
         </MenuItem>
@@ -128,8 +146,8 @@ export default function CommentLine({ comment }, { postId }) {
       <RepComment
         open={isShow}
         setOpen={setIsShow}
-        postId={postId}
-        user={comment.user}
+        data={dataRepCmt}
+        onChange={onChange}
       />
     </Box>
   );
