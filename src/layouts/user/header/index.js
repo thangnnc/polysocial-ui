@@ -1,18 +1,18 @@
 import PropTypes from "prop-types";
 // @mui
 import { styled } from "@mui/material/styles";
-import { Box, Stack, AppBar, Toolbar, Badge, Avatar } from "@mui/material";
+import { Box, Stack, AppBar, Toolbar } from "@mui/material";
 // utils
 import { bgBlur } from "../../../utils/CssStyle/cssStyles";
 //
 import AccountPopover from "./AccountPopover";
 import NotificationPopover from "./NotificationPopover";
 import Logo from "../../../components/logo";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MessagesPopover from "./MesagePopover";
 import SearchPopover from "./SearchPopover";
 import React from "react";
 import useLogin from "../../../utils/Login/useLogin";
+import NotificationDeadlinePopover from "./NotificationDeadlinePopover";
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +40,7 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
+  console.log(props.socket.socket.notificationsDeadline);
   const { account } = useLogin();
 
   let groupList;
@@ -85,16 +86,13 @@ export default function Header(props) {
             }}
           >
             <Box sx={{ mr: 2 }}>
-              <Badge
-                badgeContent={4}
-                color="error"
-                overlap="circular"
+              <NotificationDeadlinePopover
                 sx={{ mr: 2 }}
-              >
-                <Avatar sx={{ bgcolor: "#ffa36a" }}>
-                  <MenuBookIcon />
-                </Avatar>
-              </Badge>
+                notificationsDeadline={
+                  props.socket.socket.notificationsDeadline
+                }
+                socket={props.socket.socket.socket}
+              />
 
               <MessagesPopover
                 groupList={groupList}
