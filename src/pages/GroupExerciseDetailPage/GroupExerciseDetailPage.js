@@ -84,6 +84,7 @@ export default function GroupExerciseDetailPage() {
 
   const getOneData = async (exerciseId) => {
     const response = await Axios.Exersice.getOneExercise(exerciseId);
+    console.log(response);
     if (response) {
       setExercise(response);
       // toast.success("Lấy dữ liệu thành công");
@@ -173,28 +174,34 @@ export default function GroupExerciseDetailPage() {
                   />
                 }
                 action={
-                  <Box>
-                    <TextField
-                      id="file-input"
-                      type="file"
-                      name="file"
-                      onChange={changeHandler}
-                      sx={styleInputFullField}
-                    />
-                    <label
-                      htmlFor="file-input"
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        component="span"
-                        sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
-                      >
-                        {!exercise.isSubmit ? "Chọn tệp" : "Đã nộp"}
-                      </Button>
-                    </label>
-                  </Box>
+                  <>
+                    {exercise.status ? (
+                      <Box>
+                        <TextField
+                          id="file-input"
+                          type="file"
+                          name="file"
+                          onChange={changeHandler}
+                          sx={styleInputFullField}
+                        />
+                        <label
+                          htmlFor="file-input"
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            component="span"
+                            sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
+                          >
+                            {!exercise.isSubmit ? "Chọn tệp" : "Đã nộp"}
+                          </Button>
+                        </label>
+                      </Box>
+                    ) : (
+                      ""
+                    )}
+                  </>
                 }
                 title={
                   <Typography
