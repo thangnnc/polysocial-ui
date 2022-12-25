@@ -445,8 +445,8 @@ export default function MessagePage(props) {
                 </Button>
               ),
             }}
-            // ref={ref}
-            // value={message}
+            ref={ref}
+            value={message}
             onBlur={handleClickOut}
             onFocus={handleClick}
             onChange={(e) => {
