@@ -327,7 +327,10 @@ export default function ManagementGroup(props) {
                                 <Checkbox
                                   checked={selectedGroup}
                                   onChange={(event) =>
-                                    handleClick(event, row.name)
+                                    handleClick(
+                                      event,
+                                      row.name || row.groupName
+                                    )
                                   }
                                 />
                               </TableCell>
