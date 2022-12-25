@@ -180,7 +180,7 @@ export default function GroupExercisePage() {
                         component={"p"}
                         style={{ fontSize: 25, fontWeight: 700 }}
                       >
-                        {isCount.countTaskSubmit}
+                        {isCount?.countTaskSubmit}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -195,7 +195,7 @@ export default function GroupExercisePage() {
                         component={"p"}
                         style={{ fontSize: 25, fontWeight: 700 }}
                       >
-                        {isCount.countTaskNotSubmit}
+                        {isCount?.countTaskNotSubmit}
                       </Typography>
                       <Typography
                         variant="body2"
