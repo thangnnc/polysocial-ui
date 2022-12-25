@@ -9,9 +9,9 @@ import {
   ListSubheader,
   Button,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { Box } from "@mui/system";
-import NotificationBox from "./components/NotificationBox";
+import NotificationDeadlineBox from "./components/NotificationDeadlineBox";
 
 // ----------------------------------------------------------------------
 
@@ -29,14 +29,17 @@ const scrollbar = {
   },
 };
 
-export default function NotificationPopover({ notifications, socket }) {
+export default function NotificationDeadlinePopover({
+  notificationsDeadline,
+  socket,
+}) {
   const [open, setOpen] = useState(false);
 
   let count = 0;
 
   try {
-    for (let index = 0; index < notifications.content.length; index++) {
-      const element = notifications.content[index];
+    for (let index = 0; index < notificationsDeadline.content.length; index++) {
+      const element = notificationsDeadline.content[index];
       if (element.status === false) {
         count = count + 1;
       } else {
@@ -64,9 +67,10 @@ export default function NotificationPopover({ notifications, socket }) {
         color="error"
         overlap="circular"
         onClick={handleOpen}
+        sx={{ mr: 2 }}
       >
         <Avatar sx={{ bgcolor: "#ffa36a" }}>
-          <NotificationsIcon />
+          <MenuBookIcon />
         </Avatar>
       </Badge>
 
@@ -110,7 +114,7 @@ export default function NotificationPopover({ notifications, socket }) {
               lineHeight: "40px",
             }}
           >
-            Thông báo
+            Thông báo bài tập
           </ListSubheader>
 
           <Button
@@ -131,12 +135,8 @@ export default function NotificationPopover({ notifications, socket }) {
           }}
         >
           <Divider />
-          {notifications.content?.map((notification, index) => (
-            <NotificationBox
-              key={index}
-              notification={notification}
-              socket={socket}
-            />
+          {notificationsDeadline?.map((notification, index) => (
+            <NotificationDeadlineBox key={index} notification={notification} />
           ))}
         </List>
       </Popover>

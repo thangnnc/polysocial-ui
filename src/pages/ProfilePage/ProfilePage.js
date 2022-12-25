@@ -138,6 +138,7 @@ export default function ProfilePage(props) {
     if (userId !== undefined) {
       const response = await Axios.Accounts.getOneUser(userId);
       const responseDetail = await Axios.Accounts.getOneUserDetail(userId);
+
       setUserDetails(responseDetail);
       setUser(response);
     } else {

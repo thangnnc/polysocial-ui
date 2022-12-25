@@ -27,6 +27,8 @@ function App() {
 
   const [notifications, setNotifications] = useState([]);
 
+  const [notificationsDeadline, setNotificationsDeadline] = useState([]);
+
   const [showRequestFriend, setShowRequestFriend] = useState([]);
 
   const [listSocket, setListSocket] = useState();
@@ -207,7 +209,6 @@ function App() {
   useEffect(() => {
     try {
       if (listeningCreateMemberGroup) {
-        // roomDESC(listSocket);
         fetchNameGroup(listSocket);
         getAllNotification();
         setListeningCreateMemberGroup(false);
@@ -228,7 +229,6 @@ function App() {
     try {
       if (listeningNameMessage) {
         fetchNameGroup(listSocket);
-        // getAllNotification();
         setListeningNameMessage(false);
       }
     } catch (error) {}
@@ -488,6 +488,17 @@ function App() {
     const response = await Axios.Notifications.getAllNotifications();
     setNotifications(response);
   };
+  useEffect(() => {
+    getAllNotificationDeadline(account?.userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getAllNotificationDeadline = async () => {
+    const response = await Axios.Notifications.getAllNotificationsDealine(
+      account?.userId
+    );
+    setNotificationsDeadline(response);
+  };
 
   const updateAllNotification = async () => {
     const response = await Axios.Notifications.updateAllNotifications();
@@ -510,6 +521,7 @@ function App() {
           listResponse={listResponse}
           notifications={notifications}
           showRequestFriend={showRequestFriend}
+          notificationsDeadline={notificationsDeadline}
         />
       </ThemeProvider>
       <ToastContainer />
