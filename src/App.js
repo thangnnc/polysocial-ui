@@ -70,7 +70,7 @@ function App() {
   useEffect(() => {
     try {
       if (account) {
-        const CONNECTTION_PORT = "localhost:3002";
+        const CONNECTTION_PORT = "https://polysocial-socket.up.railway.app";
         setsocket(
           io(CONNECTTION_PORT).emit("connectUser", account, listRoomId)
         );
