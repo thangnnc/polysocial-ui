@@ -263,8 +263,6 @@ export default function MessagePage(props) {
             listContent.push(listContentObject);
           } catch (error) {}
         }
-
-        console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {}

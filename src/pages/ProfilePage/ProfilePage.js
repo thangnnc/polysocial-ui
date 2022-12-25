@@ -51,7 +51,6 @@ export default function ProfilePage(props) {
 
   try {
     profilePage = location.state;
-    console.log("profile,", profilePage);
   } catch (error) {}
 
   let online;

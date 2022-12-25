@@ -84,7 +84,6 @@ export default function GroupExerciseDetailPage() {
 
   const getOneData = async (exerciseId) => {
     const response = await Axios.Exersice.getOneExercise(exerciseId);
-    console.log(response);
     if (response) {
       setExercise(response);
       // toast.success("Lấy dữ liệu thành công");

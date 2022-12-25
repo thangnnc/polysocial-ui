@@ -28,7 +28,6 @@ export default function GroupAddMemberPage(props) {
   useEffect(() => {
     try {
       socket.on("accept-member", function () {
-        console.log("runnnnnn");
         getRequestMember(groupId);
       });
     } catch (error) {}

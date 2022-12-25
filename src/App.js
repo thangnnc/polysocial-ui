@@ -320,7 +320,6 @@ function App() {
   };
 
   const fetchNameGroup = async (listSocket) => {
-    console.log("run meeeee");
     const arr = [];
     const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
     for (let index = 0; index < response.data.length; index++) {
@@ -410,8 +409,6 @@ function App() {
       }
     }
     setCount(counts);
-    console.log("listConetnt 3", listContent);
-
     setGroupList(listContent);
   };
 
