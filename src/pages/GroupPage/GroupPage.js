@@ -183,7 +183,7 @@ export default function GroupPage(props) {
                 Nhóm bạn đã tham gia
               </Typography>
               <Box sx={{ height: "570px", overflowY: "scroll" }}>
-                {groups.map((group) => (
+                {groups?.map((group) => (
                   <ListGroupJoin
                     key={group.groupId}
                     group={group}
@@ -198,7 +198,7 @@ export default function GroupPage(props) {
                 Nhóm do bạn quản lý
               </Typography>
               <Box sx={{ height: "570px", overflowY: "scroll" }}>
-                {groupsTeacher.map((groupTeacher) => (
+                {groupsTeacher?.map((groupTeacher) => (
                   <ListGroupTeacherJoin
                     key={groupTeacher.groupId}
                     group={groupTeacher}

@@ -16,6 +16,7 @@ import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import useLogin from "../../../utils/Login/useLogin";
 
 const styleInputFullField = {
   width: "100%",
@@ -39,6 +40,8 @@ const LayoutFormTwoField = ({ children }) => {
 };
 
 export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
+  const { account } = useLogin();
+
   const [contentEdit, setContentEdit] = useState({});
 
   useEffect(() => {
@@ -237,12 +240,11 @@ export const DialogEditContent = ({ open, setOpen, content, onChange }) => {
           <Button onClick={updateGroup} variant="contained" color="warning">
             Cập nhật
           </Button>
-          <Button onClick={deleteGroup} variant="contained" color="error">
-            Xóa
-          </Button>
-          <Button onClick={handleClose} variant="contained" color="success">
-            Làm mới
-          </Button>
+          {account.role === "Giảng viên" && (
+            <Button onClick={deleteGroup} variant="contained" color="error">
+              Xóa
+            </Button>
+          )}
           <Button
             onClick={handleClose}
             variant="contained"

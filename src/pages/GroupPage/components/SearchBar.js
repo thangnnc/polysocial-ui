@@ -49,7 +49,6 @@ export default function SearchBar(props) {
     const response = await Axios.Groups.findGroupByKeyWord(keyword);
     if (response) {
       setGroups(response);
-      console.log("ressss", response);
       // toast.success("Lấy dữ liệu thành công");
     } else {
       // toast.error("Lấy dữ liệu thất bại");

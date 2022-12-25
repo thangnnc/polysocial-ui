@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import Axios from "../../../utils/Axios/index";
 import useLogin from "../../../utils/Login/useLogin";
 import { toast } from "react-toastify";
+import useValidator from "../../../utils/Validator";
 
 const styleInputFullField = {
   width: "100%",
@@ -23,6 +24,50 @@ const styleInputFullField = {
 
 export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
   const { account } = useLogin();
+
+  const { validate } = useValidator();
+
+  const [errors, setErrors] = useState({
+    content: "",
+    groupId: "",
+  });
+
+  const handleOnInput = (event, error) => {
+    const { name, value } = event.target;
+    setErrors({
+      ...errors,
+      [name]: validate(error, value),
+    });
+  };
+
+  function deepObjectEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = isObject(val1) && isObject(val2);
+
+      if (
+        (areObjects && !deepObjectEqual(val1, val2)) ||
+        (!areObjects && val1 !== val2)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isObject(object) {
+    return object != null && typeof object === "object";
+  }
+
   const [itemInputPost, setItemInputPost] = useState({
     content: "",
     groupId: "",
@@ -36,15 +81,29 @@ export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
   };
 
   const handleSummit = async () => {
+    const data = {
+      content: "",
+      groupId: "",
+    };
+
     const formData = new FormData();
     formData.append("file", itemInputPost.files);
-    const responseCreate = await Axios.Contents.createPost(itemInputPost);
-    if (responseCreate) {
-      setOpen(false);
-      toast.success("Thêm bài viết thành công");
-      onChange();
+    if (!deepObjectEqual(data, errors)) {
+      const responseCreate = await Axios.Contents.createPost(itemInputPost);
+      if (responseCreate) {
+        setOpen(false);
+        toast.success("Thêm bài viết thành công");
+        onChange();
+      } else {
+        toast.success("Thêm bài viết thất bại!");
+      }
     } else {
-      toast.success("Thêm bài viết thất bại!");
+      setErrors({
+        ...errors,
+        content: "Nội dung bài viết không được để trống!",
+        groupId: "Mã nhóm học tập không được để trống!",
+      });
+      toast.error("Vui lòng điền đầy đủ thông tin!");
     }
   };
 
@@ -101,6 +160,9 @@ export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
+                error={errors.groupId ? true : false}
+                helperText={errors.groupId}
+                onInput={(e) => handleOnInput(e, "Mã nhóm học tập")}
               />
 
               <TextField
@@ -113,7 +175,7 @@ export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
                   })
                 }
                 variant="standard"
-                placeholder="Nhập tên nhóm học tập"
+                placeholder="Nhập nội dung bài viết"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -123,6 +185,9 @@ export const DialogCreateContent = ({ open, setOpen, content, onChange }) => {
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
+                error={errors.content ? true : false}
+                helperText={errors.content}
+                onInput={(e) => handleOnInput(e, "Nội dung bài viết")}
               />
 
               <TextField

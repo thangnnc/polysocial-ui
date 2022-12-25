@@ -58,6 +58,7 @@ function App() {
     useState(false);
 
   const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
+  const [listeningResetLike, setListeningResetLike] = useState(false);
 
   const listRoomId = [];
   useEffect(() => {
@@ -71,6 +72,7 @@ function App() {
     try {
       if (account) {
         const CONNECTTION_PORT = "localhost:3002";
+        // const CONNECTTION_PORT = "https://polysocial-socket.up.railway.app";
         setsocket(
           io(CONNECTTION_PORT).emit("connectUser", account, listRoomId)
         );
@@ -79,6 +81,22 @@ function App() {
     } catch (error) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  ///listeningResetLike
+  try {
+    socket.on("reset_like_notification", () => {
+      setListeningResetLike(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningResetLike) {
+        getAllNotification();
+        setListeningResetLike(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningResetLike]);
 
   ///listeningDeleteFriend
   try {
@@ -202,7 +220,7 @@ function App() {
   try {
     socket.on("recevie_message_name", (data) => {
       setListeningNameMessage(true);
-      setListSocket(data);
+      // setListSocket(data);
     });
   } catch (error) {}
 
@@ -210,7 +228,7 @@ function App() {
     try {
       if (listeningNameMessage) {
         fetchNameGroup(listSocket);
-        getAllNotification();
+        // getAllNotification();
         setListeningNameMessage(false);
       }
     } catch (error) {}
@@ -320,7 +338,6 @@ function App() {
   };
 
   const fetchNameGroup = async (listSocket) => {
-    console.log("run meeeee");
     const arr = [];
     const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
     for (let index = 0; index < response.data.length; index++) {
@@ -410,8 +427,6 @@ function App() {
       }
     }
     setCount(counts);
-    console.log("listConetnt 3", listContent);
-
     setGroupList(listContent);
   };
 

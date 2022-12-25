@@ -35,13 +35,15 @@ const scrollbar = {
 };
 
 export default function MessagePage(props) {
+  const cardContentRef = useRef(300);
+
   const { roomId } = useParams();
 
   let location = useLocation();
 
-  const listInnerRef = useRef();
+  // const listInnerRef = useRef();
 
-  const limit = 20;
+  const limit = 15;
 
   const { account } = useLogin();
 
@@ -76,7 +78,14 @@ export default function MessagePage(props) {
   const [listeningDeleteMemberAll, setListeningDeleteMemberAll] =
     useState(false);
 
-  const messageRef = useRef(null);
+  const [listeningSendMessage, setListeningSendMessage] = useState(false);
+  const [dataContent, setDataContent] = useState();
+
+  const [currPage, setCurrPage] = useState(1);
+  const [roomSocket, setRoomSocket] = useState();
+  // const [prevPage, setPrevPage] = useState(1);
+
+  // const messageRef = useRef(null);
 
   const ref = useRef(null);
 
@@ -90,6 +99,19 @@ export default function MessagePage(props) {
     group = location.state.group;
     listOnline = props.socket.listOnline;
   } catch (error) {}
+
+  try {
+    cardContentRef.current.scrollTop = 400;
+  } catch (error) {}
+  useEffect(() => {
+    const timeoutID = setTimeout(() => {
+      cardContentRef.current.scrollTop = cardContentRef.current.clientHeight;
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutID);
+    };
+  }, [roomId]);
 
   ///listeningDeleteMemberAll
   try {
@@ -110,7 +132,7 @@ export default function MessagePage(props) {
 
   //listeningTyping
   try {
-    socket.on(roomId * 192.168199 + "user-typing", (accounts, data) => {
+    socket.on("user-typing", (accounts, data) => {
       setDataSocket(data);
       setAccountSocket(accounts);
       setListeningTyping(true);
@@ -128,7 +150,7 @@ export default function MessagePage(props) {
 
   //listeningStopTyping
   try {
-    socket.on(roomId * 192.168199 + "stop-user-typing", (data) => {
+    socket.on("stop-user-typing", (data) => {
       setDataSocket(data);
       setListeningStopTyping(true);
     });
@@ -139,43 +161,45 @@ export default function MessagePage(props) {
       setUserTyping(dataSocket);
       setListeningStopTyping(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningStopTyping]);
 
   useEffect(() => {
     setUserTyping("");
+    try {
+    socket.emit("leave_room", roomSocket);
+    } catch (error) {
+      
+    }
+    getMessage();
   }, [roomId]);
 
   useEffect(() => {
+    setUserTyping("");
     getMessage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId]);
 
-  useEffect(() => {
-    getMessage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOnline]);
+
+  ///listeningNameMessage
+  try {
+    socket.on("recevie_message", (data) => {
+      setDataContent(data);
+      setListeningSendMessage(true);
+    });
+  } catch (error) {}
 
   useEffect(() => {
     try {
-      socket.on("recevie_message", (data) => {
-        setMessageList([...messageList, data]);
-      });
+      if (listeningSendMessage) {
+        setMessageList([...messageList, dataContent]);
+        setListeningSendMessage(false);
+      }
     } catch (error) {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listOnline]);
-
-  useEffect(() => {
-    try {
-      socket.on("recevie_message", (data) => {
-        setMessageList([...messageList, data]);
-      });
-    } catch (error) {}
-  }, [messageList, socket]);
+  }, [listeningSendMessage]);
 
   const getMessage = async () => {
     try {
-      socket.emit("join_room", roomId * 192.168199);
+      setRoomSocket(roomId * 1921681.99999);
+      socket.emit("join_room", roomId * 1921681.99999);
       const data = {
         page: 1,
         limit: limit,
@@ -263,8 +287,6 @@ export default function MessagePage(props) {
             listContent.push(listContentObject);
           } catch (error) {}
         }
-
-        console.log("messs---", listContent);
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {}
@@ -273,18 +295,18 @@ export default function MessagePage(props) {
   const handleClick = () => {
     ref.current.focus();
     account.isActive = true;
-    socket.emit("I'm typing", roomId * 192.168199, account);
+    socket.emit("I'm typing", roomId * 1921681.99999, account);
   };
 
   const handleClickOut = () => {
-    socket.emit("I stopped typing", roomId * 192.168199);
+    socket.emit("I stopped typing", roomId * 1921681.99999);
   };
 
   const sendMessage = async () => {
     try {
       await createMessage();
       let messageContent = {
-        room: roomId * 192.168199,
+        room: roomId * 1921681.99999,
         content: {
           studentCode: account.studentCode,
           content: message,
@@ -313,6 +335,127 @@ export default function MessagePage(props) {
     await Axios.Messages.createMessage(data);
   };
 
+  // const handleClickRef = async () => {
+  // Nếu ref không null, ta sẽ set scrollTop của nó bằng clientHeight của nó
+  //   console.log("cardContentRef.current", cardContentRef.current.clientHeight);
+  //   if (cardContentRef.current) {
+  //     // cardContentRef.current.scrollTop = cardContentRef.current.scrollHeight;
+  //   }
+  // };
+
+  useEffect(() => {
+    const getMessagePaging = async () => {
+      try {
+        // socket.emit("join_room", roomId * 192.168199);
+        const data = {
+          page: currPage,
+          limit: limit,
+          roomId: roomId,
+        };
+
+        const response = await Axios.Messages.getMessage(data);
+        const arr = [];
+        setListContacts(group.listContacts);
+
+        for (let index = 0; index < group.listContacts.length; index++) {
+          const element = group.listContacts[index];
+
+          if (element[4] === account.email) {
+            setcontactId(element[0]);
+          } else {
+            arr.push(element[0]);
+          }
+        }
+        setListcontactId(arr);
+        let listOnlines = [];
+        let listOnls = [];
+        try {
+          const listContent = [];
+
+          for (let index = 0; index < listOnline.length; index++) {
+            const element2 = listOnline[index];
+            listOnlines.push(element2.email);
+            listOnls.push(element2.email);
+          }
+
+          listOnlines.splice(listOnlines.indexOf(account.email), 1);
+
+          for (let index = 0; index < response.data.length; index++) {
+            const listContentObject = {};
+            const element = response.data[index];
+            listContentObject.isAdmin = element.isAdmin;
+            listContentObject.avatar = element.avatar;
+            listContentObject.createdDate = element.createdDate;
+            listContentObject.fullName = element.fullName;
+            listContentObject.statusCreated = element.statusCreated;
+            listContentObject.studentCode = element.studentCode;
+            listContentObject.email = element.email;
+            listContentObject.messageRecall = element.messageRecall;
+            listContentObject.userId = element.userId;
+
+            if (element.statusCreated === false) {
+              if (element.studentCode === account.studentCode) {
+                listContentObject.content = "";
+              } else {
+                listContentObject.content = element.content;
+                setUserIdOther(element.userId);
+
+                setEmailOther(element.email);
+              }
+            } else {
+              listContentObject.content = element.content;
+            }
+            try {
+              for (let i = 0; i < 1; i++) {
+                var isActive;
+                if (listOnlines.includes(element.email) === true) {
+                  isActive = true;
+                  for (let index = 0; index < listOnlines.length; index++) {
+                    const element1 = listOnlines[index];
+                    if (element1 === account.email) {
+                      setIsActiveOther(false);
+                    } else {
+                      setIsActiveOther(true);
+                      break;
+                    }
+                  }
+                } else {
+                  isActive = false;
+                }
+                listContentObject.isActive = isActive;
+              }
+
+              listOnlines = [];
+              for (let j = 0; j < listOnls.length; j++) {
+                const el = listOnls[j];
+                listOnlines.push(el);
+              }
+
+              listContent.push(listContentObject);
+            } catch (error) {}
+          }
+
+          setMessageList([...listContent.reverse(), ...messageList]);
+
+          // console.log("messageList",messageList.length)
+        } catch (error) {}
+      } catch (error) {}
+    };
+    getMessagePaging();
+  }, [currPage]);
+
+  const onScroll = () => {
+    // console.log("----",cardContentRef.current.clientHeight )
+    // const { scrollTop, scrollHeight, clientHeight } = cardContentRef.current;
+    // console.log("-scrollTop---",cardContentRef.current.scrollTop )
+    // console.log("-scrollHeight---",cardContentRef.current.scrollHeight )
+    // console.log("-clientHeight---",cardContentRef.current.clientHeight )
+    if (cardContentRef.current.scrollTop < 1) {
+      setCurrPage(currPage + 1);
+      // }
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -337,11 +480,6 @@ export default function MessagePage(props) {
                 sx={{ width: "46px", height: "46px" }}
               />
             }
-            // action={
-            //   <IconButton nButton aria-label="settings">
-            //     <MoreVertIcon />
-            //   </IconButton>
-            // }
             title={<Typography fontWeight={700}>{group.name}</Typography>}
             subheader={isActiveOther ? "Đang hoạt động" : "Không hoạt động"}
           />
@@ -358,12 +496,13 @@ export default function MessagePage(props) {
             overflowX: "hidden",
             ...scrollbar,
           }}
-          // onScroll={onScroll}
-          ref={listInnerRef}
+          onScroll={onScroll}
+          ref={cardContentRef}
+          // ref={listInnerRef}
         >
-          {messageList.map((value, key) => {
+          {messageList?.map((value, key) => {
             return (
-              <div ref={messageRef}>
+              <div>
                 <AlertMessage
                   message={value.statusCreated ? "" : value.content}
                 />

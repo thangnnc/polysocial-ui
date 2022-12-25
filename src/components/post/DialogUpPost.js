@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Axios from "./../../utils/Axios/index";
 
-export default function DialogUpPost({ open, handleClose, onChange,socket }) {
+export default function DialogUpPost({ open, handleClose, onChange, socket }) {
   const { groupId } = useParams();
 
   const [itemInputPost, setItemInputPost] = useState({
