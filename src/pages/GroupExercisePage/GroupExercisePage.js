@@ -111,7 +111,8 @@ export default function GroupExercisePage() {
                   aria-expanded={expanded ? exercise.exId : undefined}
                   aria-label="show"
                 >
-                  {account.fullName} đã tạo mới một bài tập: {exercise?.content}
+                  {account.fullName} đã tạo mới một bài tập: {exercise?.content}{" "}
+                  {!exercise?.status ? "- Đã hết hạn" : ""}
                 </Typography>
               }
               subheader={
@@ -130,51 +131,61 @@ export default function GroupExercisePage() {
               timeout="auto"
               unmountOnExit
             >
-              <CardContent
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography
-                  paragraph
-                  sx={{ fontSize: 20, fontWeight: "bold", width: "50%" }}
-                >
-                  Số bài đã nộp
-                </Typography>
-                <Box
+              {account.role !== "Sinh viên" && (
+                <CardContent
                   sx={{
                     display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    justifyContent: "space-around",
-                    width: "50%",
                   }}
                 >
-                  <Box sx={{ textAlign: "center" }}>
-                    <Typography
-                      component={"p"}
-                      style={{ fontSize: 25, fontWeight: 700 }}
-                    >
-                      0
-                    </Typography>
-                    <Typography variant="body2" paragraph sx={{ fontSize: 18 }}>
-                      Đã nộp
-                    </Typography>
+                  <Typography
+                    paragraph
+                    sx={{ fontSize: 20, fontWeight: "bold", width: "50%" }}
+                  >
+                    Số bài đã nộp
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      width: "50%",
+                    }}
+                  >
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography
+                        component={"p"}
+                        style={{ fontSize: 25, fontWeight: 700 }}
+                      >
+                        0
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        paragraph
+                        sx={{ fontSize: 18 }}
+                      >
+                        Đã nộp
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography
+                        component={"p"}
+                        style={{ fontSize: 25, fontWeight: 700 }}
+                      >
+                        0
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        paragraph
+                        sx={{ fontSize: 18 }}
+                      >
+                        Chưa nộp
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Box sx={{ textAlign: "center" }}>
-                    <Typography
-                      component={"p"}
-                      style={{ fontSize: 25, fontWeight: 700 }}
-                    >
-                      0
-                    </Typography>
-                    <Typography variant="body2" paragraph sx={{ fontSize: 18 }}>
-                      Chưa nộp
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
+                </CardContent>
+              )}
               <CardActions
                 disableSpacing
                 sx={{

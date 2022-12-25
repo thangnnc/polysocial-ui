@@ -42,7 +42,6 @@ export default function ChangePassword(props) {
       toast.error("Mật khẩu mới không được trùng với mật khẩu cũ!");
       return;
     } else {
-      console.log(user);
       const response = await Axios.Accounts.updatePassword(user);
       if (response === "Update password success") {
         toast.success("Cập nhật mật khẩu thành công");

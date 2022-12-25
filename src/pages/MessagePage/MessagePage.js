@@ -287,7 +287,6 @@ export default function MessagePage(props) {
             listContent.push(listContentObject);
           } catch (error) {}
         }
-
         setMessageList(listContent.reverse());
       } catch (error) {}
     } catch (error) {}
