@@ -44,7 +44,13 @@ export default function GroupExerciseDetailPage() {
     groupId: groupId,
     userId: "2",
   });
-  const [createMark, setCreateMark] = useState(0);
+  const [createMark, setCreateMark] = useState({
+    userId: "",
+    exId: exerciseId,
+    groupId: groupId,
+    mark: 0,
+    taskId: "",
+  });
 
   useEffect(() => {
     getAllData(exerciseId, groupId);
@@ -91,6 +97,7 @@ export default function GroupExerciseDetailPage() {
     if (response) {
       toast.success("Nộp bài tập thành công");
       getAllData(exerciseId, groupId);
+      getOneData(exerciseId);
     } else {
       toast.error("Nộp bài tập thất bại");
     }
@@ -103,6 +110,7 @@ export default function GroupExerciseDetailPage() {
     if (response) {
       toast.success("Cập nhật nộp bài tập thành công");
       getAllData(exerciseId, groupId);
+      getOneData(exerciseId);
     } else {
       toast.error("Cập nhật nộp bài tập thất bại");
     }
@@ -113,6 +121,7 @@ export default function GroupExerciseDetailPage() {
     if (response.status === 200) {
       toast.success("Xoá bài tập đã nộp thành công");
       getAllData(exerciseId, groupId);
+      getOneData(exerciseId);
     } else {
       toast.error("Xoá bài tập đã nộp thất bại");
     }
@@ -123,13 +132,14 @@ export default function GroupExerciseDetailPage() {
       userId: uId,
       exId: exerciseId,
       groupId: groupId,
-      mark: createMark,
+      mark: createMark.mark,
       taskId: tkId,
     };
     const response = await Axios.Exersice.createMarks(data);
     if (response.status === 200) {
       toast.success("Chấm điểm bài tập thành công");
       getAllData(exerciseId, groupId);
+      getOneData(exerciseId);
     } else {
       toast.error("Chấm điểm bài tập thất bại");
     }
@@ -365,8 +375,10 @@ export default function GroupExerciseDetailPage() {
                       name="mark"
                       label="Điểm bài tập"
                       placeholder="Nhập điểm bài tập"
-                      value={item.mark}
-                      onChange={(e) => setCreateMark(e.target.value)}
+                      value={item.mark === 0 ? createMark.mark : item.mark}
+                      onChange={(e) =>
+                        setCreateMark({ ...createMark, mark: e.target.value })
+                      }
                       variant="standard"
                       InputProps={{
                         inputProps: {

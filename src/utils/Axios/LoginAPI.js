@@ -10,9 +10,10 @@ class Login {
     Axios.post("/api/login-email", {
       email,
     });
-    
-  static registerAPI = (data) =>
-  Axios.postFile("/api/register", data);
+
+  static registerAPI = (data) => Axios.postFile("/api/register", data);
+
+  static forgotPassword = (data) => Axios.post("/user/reset-password", data);
 }
 
 export default Login;

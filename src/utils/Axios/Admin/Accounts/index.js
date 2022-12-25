@@ -12,6 +12,15 @@ class Accounts {
   //API get one user detail
   static getOneUserDetail = async (userId) =>
     Axios.get(`/user/get-one-user-details?userId=${userId}`);
+  // API update password
+  static updatePassword = async (user) =>
+    Axios.put("/user/update-password", user);
+  // API get all user details
+  static getAllUserDetails = async () =>
+    Axios.get("/user/get-all-user-userdetail");
+  // API update user details
+  static updateUserDetails = async (user) =>
+    Axios.put("/user/update-account", user);
 }
 
 export default Accounts;
