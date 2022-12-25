@@ -5,11 +5,12 @@ import Axios from "./../../utils/Axios/index";
 import { useState } from "react";
 
 export default function CommentBox({
-  show,
+  open,
   comments,
   postId,
   onChange,
   socket,
+  checkPostId,
 }) {
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
@@ -26,7 +27,12 @@ export default function CommentBox({
   };
 
   return (
-    <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
+    <Box
+      key={postId}
+      sx={{ pt: 2 }}
+      style={{ display: postId === checkPostId ? "block" : "none" }}
+      open={open}
+    >
       <List disablePadding sx={{ p: 0 }}>
         {comments?.map((comment, index) => (
           <CommentLine

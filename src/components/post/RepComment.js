@@ -85,10 +85,14 @@ export default function RepComment({ data, open, onChange }) {
   };
 
   return (
-    <Box open={open} style={{ display: open ? "block" : "none" }}>
+    <Box
+      key={data.cmtId}
+      open={open}
+      style={{ display: open ? "block" : "none" }}
+    >
       {data?.commentReplies?.map((item, index) => {
         return (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
             <LineComment key={index}>
               <AvatarCmt src={item?.user.avatar} />
               <Comment>

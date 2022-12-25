@@ -40,9 +40,12 @@ export default function Post({ posts, onChange, socket }) {
 
   const { account } = useLogin();
 
+  const [checkPostId, setCheckPostId] = useState("");
+
   const isLike = [];
 
-  const handleShowCmt = () => {
+  const handleShowCmt = (e, postId) => {
+    setCheckPostId(postId);
     setShowCmt(true);
   };
 
@@ -63,21 +66,18 @@ export default function Post({ posts, onChange, socket }) {
       sx={{ width: "100%", p: 0, display: "block", mb: 4, mx: "auto" }}
     >
       {posts?.map(
-        (
-          {
-            user,
-            postId,
-            content,
-            createdDate,
-            countLike,
-            countComment,
-            listUrl,
-            listComment,
-            listLike,
-          },
-          index
-        ) => (
-          <Card key={index} sx={{ width: "80%", my: 3, mx: "auto" }}>
+        ({
+          user,
+          postId,
+          content,
+          createdDate,
+          countLike,
+          countComment,
+          listUrl,
+          listComment,
+          listLike,
+        }) => (
+          <Card key={postId} sx={{ width: "80%", my: 3, mx: "auto" }}>
             <CardHeader
               avatar={
                 <AvatarCmt
@@ -179,19 +179,23 @@ export default function Post({ posts, onChange, socket }) {
                     Thích
                   </ButtonNormal>
                 )}
-                <ButtonNormal size="large" onClick={handleShowCmt}>
+                <ButtonNormal
+                  size="large"
+                  onClick={(e) => handleShowCmt(e, postId)}
+                >
                   <TextsmsIcon sx={{ mr: 1 }} />
                   Bình Luận
                 </ButtonNormal>
               </Box>
-
               <CommentBox
-                key={index}
-                show={isShowCmt}
+                key={postId}
+                open={isShowCmt}
+                setOpen={setShowCmt}
                 comments={listComment}
                 postId={postId}
                 onChange={onChange}
                 socket={socket}
+                checkPostId={checkPostId}
               />
             </CardActions>
           </Card>

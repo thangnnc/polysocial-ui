@@ -144,6 +144,7 @@ export default function CommentLine({ comment, postId, onChange }) {
         </MenuItem>
       </Popover>
       <RepComment
+        key={postId}
         open={isShow}
         setOpen={setIsShow}
         data={dataRepCmt}
