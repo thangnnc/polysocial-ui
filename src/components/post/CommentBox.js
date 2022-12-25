@@ -6,13 +6,22 @@ import { useEffect, useRef, useState } from "react";
 import EnteringMessagePost from "./EnteringMessagePost";
 
 export default function CommentBox({
-  show,
+  open,
   comments,
   postId,
   userId,
   onChange,
   socket,
+  checkPostId,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (postId === checkPostId) {
+      setIsOpen(true);
+    }
+  }, [checkPostId, postId]);
+
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
     content: "",
@@ -81,7 +90,12 @@ export default function CommentBox({
   };
 
   return (
-    <Box key={postId} sx={{ pt: 2 }} hidden={!show}>
+    <Box
+      key={postId}
+      sx={{ pt: 2 }}
+      style={{ display: isOpen ? "block" : "none" }}
+      open={open}
+    >
       <List disablePadding sx={{ p: 0 }}>
         {comments?.map((comment, index) => (
           <CommentLine
