@@ -34,6 +34,9 @@ class Exercise {
   // API get adll task exercise
   static getAllTaskExercise = async (exId) =>
     Axios.get(`/task/get-task-by-ex?exId=${exId}`);
+  // API get count exercise
+  static getCountExercise = async (exId) =>
+    Axios.get(`/task/get-task-by-exId?exId=${exId}`);
 }
 
 export default Exercise;
