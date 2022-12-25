@@ -70,7 +70,7 @@ function App() {
   useEffect(() => {
     try {
       if (account) {
-        const CONNECTTION_PORT = "https://localhost:10000";
+        const CONNECTTION_PORT = "polysocial-socket.up.railway.app";
         setsocket(
           io(CONNECTTION_PORT, {
             secure: true // for SSL
