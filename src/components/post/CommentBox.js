@@ -2,7 +2,7 @@ import { Box, Button, List, TextField, Typography } from "@mui/material";
 // import CommentLoading from "./CommentLoading";
 import CommentLine from "./CommentLine";
 import Axios from "./../../utils/Axios/index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CommentBox({
   open,
@@ -12,6 +12,14 @@ export default function CommentBox({
   socket,
   checkPostId,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (postId === checkPostId) {
+      setIsOpen(true);
+    }
+  }, [checkPostId, postId]);
+
   const [itemInputComment, setItemInputComment] = useState({
     postId: postId,
     content: "",
@@ -30,7 +38,7 @@ export default function CommentBox({
     <Box
       key={postId}
       sx={{ pt: 2 }}
-      style={{ display: postId === checkPostId ? "block" : "none" }}
+      style={{ display: isOpen ? "block" : "none" }}
       open={open}
     >
       <List disablePadding sx={{ p: 0 }}>
