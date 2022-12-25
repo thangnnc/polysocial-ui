@@ -47,12 +47,12 @@ class Groups {
 
   //API delete student in group
   static deleteStudentGroup = async (data) =>
-    Axios.put(
-      `/group/leave-group`,data
-    );
-  // static deleteStudentGroup = async (userId, groupId) =>
+    Axios.put(`/group/leave-group`, data);
+
+  //API delete student in group admin
+  // static deleteStudentGroupAdmin = async (userId, groupId) =>
   //   Axios.delete(
-      // `/group/api/remove-student?userId=${userId}&groupId=${groupId}`
+  //     `/group/api/remove-student?userId=${userId}&groupId=${groupId}`
   //   );
 
   //API get all group by student
