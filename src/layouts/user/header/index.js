@@ -11,9 +11,8 @@ import Logo from "../../../components/logo";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MessagesPopover from "./MesagePopover";
 import SearchPopover from "./SearchPopover";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import useLogin from "../../../utils/Login/useLogin";
-import Asios from "../../../utils/Axios";
 
 // ----------------------------------------------------------------------
 
@@ -41,13 +40,16 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
-  // console.log("groupList",props.socket.socket)
   const { account } = useLogin();
 
   let groupList;
+
   let count;
+
   let listOnline;
+
   let socket;
+
   if (account) {
     try {
       count = props.socket.socket.count;
@@ -56,43 +58,6 @@ export default function Header(props) {
       socket = props.socket.socket.socket;
     } catch (error) {}
   }
-
-  // const [groupList, setGroupList] = useState([]);
-  // const [count, setCount] = useState(0);
-  // const [online, setOnline] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-
-  // useEffect(() => {
-  //   getAllNotification();
-  // }, []);
-
-  const getAllNotification = async () => {
-    const response = await Asios.Notifications.getAllNotifications();
-    // console.log("runnn");
-    setNotifications(response);
-  };
-
-  // useEffect(()=>{
-  //   try {
-  //    socket.on("reset_ProfilePage_delete", function () {
-  //     getAllNotification();
-  //    })
-  //   } catch (error) {
-     
-  //   }
-  //  })
-
-  // useEffect(() => {
-  //   try {
-  //     socket.on("reset_getAllNotification", function () {
-  //       getAllNotification();
-  //     });
-  //   } catch (error) {}
-  // });
-
-  // const handleChange = () => {
-  //   getAllNotification();
-  // };
 
   return (
     <StyledRoot>
@@ -140,7 +105,7 @@ export default function Header(props) {
 
               <NotificationPopover
                 notifications={props.socket.socket.notifications}
-                socket = {props.socket.socket.socket}
+                socket={props.socket.socket.socket}
               />
             </Box>
 

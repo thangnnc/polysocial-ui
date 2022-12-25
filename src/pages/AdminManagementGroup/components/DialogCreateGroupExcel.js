@@ -31,8 +31,11 @@ export const DialogCreateGroupExcel = ({
   propsSocket,
 }) => {
   const socket = propsSocket.socket.socket;
+
   const [selectedFile, setSelectedFile] = useState();
+
   const [isSelected, setIsSelected] = useState(false);
+
   const [groupId, setGroupId] = useState("");
 
   const changeHandler = (event) => {
@@ -47,7 +50,6 @@ export const DialogCreateGroupExcel = ({
     const response = await Axios.Groups.createGroupExcel(formData, groupId);
     if (response) {
       toast.success("Thêm thành viên thành công");
-      // console.log("responseeeeeee",response)
       await socket.emit("add_member_group");
       setOpen(false);
       onChange();

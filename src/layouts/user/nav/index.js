@@ -4,46 +4,9 @@ import Iconify from "../../../components/iconify/Iconify";
 import NavUserSection from "../../../components/nav-user-section/NavUserSection";
 import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 import useLogin from "../../../utils/Login/useLogin";
-import Axios from "../../../utils/Axios";
-import { useEffect, useState } from "react";
 
 export default function NavUser(props) {
-  // console.log("proppss",props.socket.socket.showRequestFriend.length);
-  let counts= props.socket.socket.showRequestFriend.length;
   const { account } = useLogin();
-  // const [count, setCount] = useState(counts);
-  // props.socket.showRequestFriend.length
-  let socket;
-  try {
-    socket = props.socket.socket.socket;
-  } catch (error) {}
-
-  // const getRequestFriend = async () => {
-  //   const response = await Axios.Friends.getAllRequestAddFriend();
-  //   setCount(response.length);
-  // };
-
-  // useEffect(() => {
-  //   getRequestFriend();
-  // }, []);
-
-  
-  // useEffect(() => {
-  //   try {
-  //     socket.on("request-accept", function () {
-  //       getRequestFriend();
-  //     });
-  //   } catch (error) {}
-  // });
-
-  // useEffect(() => {
-  //   try {
-  //     socket.on("request-delete", function () {
-  //       console.log("reset_delete")
-  //       getRequestFriend();
-  //     });
-  //   } catch (error) {}
-  // });
 
   const icon = (name) => <Iconify icon={name} sx={{ width: 1, height: 1 }} />;
 
@@ -62,7 +25,10 @@ export default function NavUser(props) {
       title: "Lời Mời Kết Bạn",
       path: "/friends-requests",
       icon: icon("fluent-mdl2:add-friend"),
-      notiCount: props.socket.socket.showRequestFriend.length === 0 ? null : props.socket.socket.showRequestFriend.length,
+      notiCount:
+        props.socket.socket.showRequestFriend.length === 0
+          ? null
+          : props.socket.socket.showRequestFriend.length,
     },
     {
       title: "Nhóm Của Tôi",

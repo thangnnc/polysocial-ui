@@ -17,7 +17,6 @@ import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useLogin from "../../../utils/Login/useLogin";
 
 const styleInputFullField = {
   width: "100%",
@@ -34,14 +33,18 @@ const styleAvatar = {
 
 export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   let socket;
+
   try {
     socket = propsSocket.socket.socket;
   } catch (error) {}
-  const [groupCreate, setGroupCreate] = useState({});
-  const [src, setSrc] = useState();
-  const [admins, setAdmins] = useState([]);
-  const [userId, setUserId] = useState();
 
+  const [groupCreate, setGroupCreate] = useState({});
+
+  const [src, setSrc] = useState();
+
+  const [admins, setAdmins] = useState([]);
+
+  const [userId, setUserId] = useState();
 
   const handleUploadFile = (e) => {
     setGroupCreate((group) => ({
@@ -52,7 +55,7 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   };
 
   const handleChange = (e, value) => {
-    setUserId(value.userId)
+    setUserId(value.userId);
     setGroupCreate({ ...groupCreate, adminId: value.userId });
   };
 
@@ -72,8 +75,7 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
 
     if (response) {
       toast.success("Tạo nhóm học tập thành công");
-      console.log("userIDdddd-d------>",userId)
-      await socket.emit("create_group",userId);
+      await socket.emit("create_group", userId);
       setOpen(false);
       onChange();
     } else {

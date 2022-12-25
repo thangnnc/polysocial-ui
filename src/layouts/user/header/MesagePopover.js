@@ -33,7 +33,9 @@ const scrollbar = {
 
 export default function MessagesPopover({groupList,count,listOnline,socket }) {
   const { account } = useLogin();
+
   const [open, setOpen] = useState(false);
+  
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };

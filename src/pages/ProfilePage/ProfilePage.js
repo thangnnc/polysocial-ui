@@ -12,7 +12,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Iconify from "../../components/iconify/Iconify";
-// import AvatarStatus from "../../utils/AvatarStatus/AvatarStatus";
 import Axios from "./../../utils/Axios/index";
 import Infomation from "./components/Infomation";
 import ListFriend from "./components/ListFriend";
@@ -25,38 +24,47 @@ export default function ProfilePage(props) {
   const socket = props.socket.socket;
 
   const location = useLocation();
-  let profilePage;
-  try {
-    profilePage = location.state;
-    console.log("profile,",profilePage)
-  } catch (error) {}
-  // let isActive;
-  let online;
-  let roomId;
-  let listContacts;
-  try {
-    // isActive = profilePage.isActive;
-    // email = profilePage.email;
-    roomId = profilePage.roomId;
-    listContacts = profilePage.listContacts;
-    online=props.socket.listOnline
-  } catch (error) {}
-  const { account } = useLogin();
-  const { userId } = useParams();
-  const [user, setUser] = useState({});
-  const [userDetails, setUserDetails] = useState({});
-  const [value, setValue] = useState("1");
-  const [isEdit, setIsEdit] = useState(false);
-  // const [isActiveOther, setIsActiveOther] = useState(isActive);
-  const [listeningAccept, setListeningAccept] = useState(false);
-  // const [listSocket, setListSocket] = useState();
-  const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
-  const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
 
+  const { account } = useLogin();
+
+  const { userId } = useParams();
+
+  const [user, setUser] = useState({});
+
+  const [userDetails, setUserDetails] = useState({});
+
+  const [value, setValue] = useState("1");
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  const [listeningAccept, setListeningAccept] = useState(false);
+
+  const [listeningRequestAccept, setListeningRequestAccept] = useState(false);
+
+  const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
 
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
+
+  let profilePage;
+
+  try {
+    profilePage = location.state;
+    console.log("profile,", profilePage);
+  } catch (error) {}
+
+  let online;
+
+  let roomId;
+
+  let listContacts;
+
+  try {
+    roomId = profilePage.roomId;
+    listContacts = profilePage.listContacts;
+    online = props.socket.listOnline;
+  } catch (error) {}
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -73,24 +81,23 @@ export default function ProfilePage(props) {
     setValue(newValue);
   };
 
-      ///listeningDeleteFriend
-      try {
-        socket.on("request_delete_friend_profile", (data) => {
-          setListeningDeleteFriend(true);
-        });
-      } catch (error) {}
-    
-      useEffect(() => {
-        try {
-          if (listeningDeleteFriend) {
-            getOneUser(userId);
-            setListeningDeleteFriend(false);
-          }
-        } catch (error) {}
-      }, [listeningDeleteFriend]);
-      //-------------------------------------------------------------------------------------------------------------
-    
-  //
+  ///listeningDeleteFriend
+  try {
+    socket.on("request_delete_friend_profile", (data) => {
+      setListeningDeleteFriend(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningDeleteFriend) {
+        getOneUser(userId);
+        setListeningDeleteFriend(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningDeleteFriend]);
+
   try {
     socket.on("request_accept", function () {
       setListeningRequestAccept(true);
@@ -104,8 +111,9 @@ export default function ProfilePage(props) {
         setListeningRequestAccept(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningRequestAccept]);
-  //
+
   ///listeningAccept
   try {
     socket.on("successful_accept", (data) => {
@@ -120,6 +128,7 @@ export default function ProfilePage(props) {
         setListeningAccept(false);
       }
     } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listeningAccept]);
 
   useEffect(() => {
@@ -149,16 +158,12 @@ export default function ProfilePage(props) {
   };
 
   const handleDeleteFriend = async () => {
-    const response = await Axios.Friends.deleteOneAllRequestAddFriend({
+    await Axios.Friends.deleteOneAllRequestAddFriend({
       userId: userId,
     });
-    // if (response.status === 200) {
     await socket.emit("delete_friend", user.userId);
     getOneUser(userId);
     toast.success("Huỷ kết bạn thành công");
-    // }else{
-    // toast.success("Huỷ lời mời kết bạn thất bại");
-    // }
   };
 
   const handleOneDeleteFriend = async () => {
@@ -187,8 +192,6 @@ export default function ProfilePage(props) {
     group.listOnline = online;
     navigate(pathMessage + roomId, {
       state: {
-        // listContacts: listContacts,
-        // avatar: avatar,
         group: group,
       },
     });
@@ -376,12 +379,7 @@ export default function ProfilePage(props) {
                           borderRadius: 2,
                         }}
                         onClick={(e) => {
-                          handleOnClick(
-                            e,
-                            user?.avatar,
-                            user?.fullName,
-                            true
-                          );
+                          handleOnClick(e, user?.avatar, user?.fullName, true);
                         }}
                       >
                         <Iconify icon={"mdi:facebook-messenger"} />

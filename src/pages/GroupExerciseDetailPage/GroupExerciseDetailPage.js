@@ -27,23 +27,32 @@ const styleInputField = {
 
 export default function GroupExerciseDetailPage() {
   const { account } = useLogin();
+
   const { exerciseId } = useParams();
+
   const { groupId } = useParams();
+
   const [selectedFile, setSelectedFile] = useState();
+
   const [isSelected, setIsSelected] = useState(false);
+
   const [data, setData] = useState([]);
+
   const [upload, setUpload] = useState({
     file: "",
     exId: exerciseId,
     groupId: groupId,
   });
+
   const [exercise, setExercise] = useState({});
+
   const [updateExercise, setUpdateExercise] = useState({
     file: "",
     exId: exerciseId,
     groupId: groupId,
     userId: "2",
   });
+
   const [createMark, setCreateMark] = useState({
     userId: "",
     exId: exerciseId,

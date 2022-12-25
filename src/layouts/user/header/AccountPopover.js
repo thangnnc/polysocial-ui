@@ -17,7 +17,9 @@ import AvatarStatus from "../../../utils/AvatarStatus/AvatarStatus";
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+
   const { account, logout } = useLogin();
+  
   const navigate = useNavigate();
 
   let MENU_OPTIONS = [

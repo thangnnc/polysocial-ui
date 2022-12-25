@@ -39,6 +39,7 @@ export const DialogEditGroupDetail = ({
   onChange,
 }) => {
   const [memberEdit, setMemberEdit] = useState([]);
+
   const { account } = useLogin();
 
   useEffect(() => {
@@ -46,11 +47,12 @@ export const DialogEditGroupDetail = ({
   }, [member]);
 
   const deleteMember = async () => {
-    const response = await Axios.Groups.deleteStudentGroup(
-      memberEdit.userId,
-      groupId
-    );
-    if (response.status === 200) {
+    const data = {
+      userId: memberEdit.userId,
+      groupId: groupId,
+    };
+    const response = await Axios.Groups.deleteStudentGroup(data);
+    if (response === "Leave group success") {
       toast.success("Xoá sinh viên thành công");
       setOpen(false);
       onChange();

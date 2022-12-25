@@ -23,6 +23,7 @@ const styleInputFullField = {
 
 export const DialogCreateMember = ({ open, setOpen, groupId, onChange }) => {
   const [user, setUser] = useState({});
+
   const [idUser, setIdUser] = useState("");
 
   useEffect(() => {

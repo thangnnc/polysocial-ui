@@ -33,11 +33,17 @@ const clientId =
 
 export const LoginForm = (props) => {
   const { setAccount } = useLogin();
+
   const { validate } = useValidator();
+
   const [showPassword, setShowPassword] = useState(false);
+
   const [showAlert, setShowAlert] = useState(false);
+
   const [showLoading, setShowLoading] = useState(false);
+
   const [isShowRegister, setShowRegister] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     email: undefined,
     fullName: undefined,
@@ -48,6 +54,7 @@ export const LoginForm = (props) => {
     birthday: undefined,
     gender: undefined,
   });
+
   const [inputValues, setInputValues] = useState({
     email: "",
     password: "",
@@ -57,6 +64,7 @@ export const LoginForm = (props) => {
     email: "",
     password: "",
   });
+
   const [form, setForm] = useState({
     status: "success",
     message: "",

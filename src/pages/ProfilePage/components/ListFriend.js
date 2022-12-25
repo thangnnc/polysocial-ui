@@ -6,6 +6,7 @@ import Axios from "./../../../utils/Axios/index";
 
 export default function ListFriend(props) {
   const { userId } = props;
+
   const [listFriends, setListFriend] = useState([]);
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export default function ListFriend(props) {
     const response = await Axios.Friends.getAllFriend(userId);
     setListFriend(response);
   };
+
   return (
     <Box>
       <Typography sx={{ fontWeight: "bold", fontSize: "20" }}>

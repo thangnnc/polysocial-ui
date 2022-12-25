@@ -24,12 +24,19 @@ import { DialogEditExercise } from "./components/DialogEditExercise";
 
 export default function GroupExercisePage() {
   const [open, setOpen] = useState(null);
+
   const { account } = useLogin();
+
   const { groupId } = useParams();
+
   const [expanded, setExpanded] = useState(false);
+
   const [isCreateExercise, setIsCreateExercise] = useState(false);
+
   const [exercises, setExercises] = useState([]);
+
   const [exercise, setExercise] = useState({});
+
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {

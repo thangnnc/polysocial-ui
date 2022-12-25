@@ -55,6 +55,7 @@ export const DialogEditAccount = ({
   onchange,
 }) => {
   const [userEdit, setUserEdit] = useState(userDetails);
+
   const updateUser = async () => {
     const response = await Axios.Accounts.updateUser(userEdit);
     if (response) {

@@ -5,13 +5,24 @@ import { toast } from "react-toastify";
 import useLogin from "../../../../utils/Login/useLogin";
 import Axios from "./../../../../utils/Axios/index";
 
-export default function FriendSearchBox({ searchData, sockets,onchange }) {
+export default function FriendSearchBox({ searchData, sockets, onchange }) {
   const socket = sockets.sockets;
   const { account } = useLogin();
 
-  const { avatar, fullName, email, status, userId, roomId, listContact,userInviteId,userConfirmId } =
-    searchData;
+  const {
+    avatar,
+    fullName,
+    email,
+    status,
+    userId,
+    roomId,
+    listContact,
+    userInviteId,
+    userConfirmId,
+  } = searchData;
+
   var listArr = [];
+
   try {
     for (let i = 0; i < listContact.length; i++) {
       var arr = [];
@@ -27,8 +38,8 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
   const handleAddFriend = async () => {
     const response = await Axios.Friends.addFriend(searchData);
     if (response.status === 200) {
-      await socket.emit("add_friend",userId);
-      onchange(); 
+      await socket.emit("add_friend", userId);
+      onchange();
       toast.success("Gửi lời mời kết bạn thành công");
     } else {
       toast.error("Gửi lời mời kết bạn thất bại");
@@ -37,15 +48,15 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
 
   const handleDeleteFriend = async () => {
     const data = {
-      userInviteId:searchData.userInviteId,
-      userConfirmId:searchData.userConfirmId
-    }
+      userInviteId: searchData.userInviteId,
+      userConfirmId: searchData.userConfirmId,
+    };
     const response = await Axios.Friends.deleteAllRequestAddFriend(data);
     if (response.status === 200) {
-      onchange(); 
-      await socket.emit("add_friend",userId);
+      onchange();
+      await socket.emit("add_friend", userId);
       toast.success("Huỷ lời mời kết bạn thành công");
-    }else{
+    } else {
       toast.success("Huỷ lời mời kết bạn thất bại");
     }
   };
@@ -53,8 +64,8 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
   const handleConfirmFriend = async () => {
     const response = await Axios.Friends.acceptFriend(searchData);
     if (response.status === 200) {
-      onchange(); 
-      await socket.emit("accept_friend",userId);
+      onchange();
+      await socket.emit("accept_friend", userId);
       toast.success("Đã thêm bạn thành công");
     } else {
       toast.error("Đã thêm bạn thất bại");
@@ -97,17 +108,19 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
             </Typography>
           </Box>
         </Box>
-        {status === 2 && userInviteId===undefined && userConfirmId === undefined &&(
-          <Button
-            className="btn-orange"
-            variant="contained"
-            sx={{ borderRadius: 50 }}
-            onClick={handleAddFriend}
-          >
-            Kết Bạn
-          </Button>
-        )}
-        {status === 1 &&(
+        {status === 2 &&
+          userInviteId === undefined &&
+          userConfirmId === undefined && (
+            <Button
+              className="btn-orange"
+              variant="contained"
+              sx={{ borderRadius: 50 }}
+              onClick={handleAddFriend}
+            >
+              Kết Bạn
+            </Button>
+          )}
+        {status === 1 && (
           <Button
             className="btn-orange"
             variant="contained"
@@ -116,7 +129,7 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
             Bạn bè
           </Button>
         )}
-        {status === 0 && userInviteId===account.userId && (
+        {status === 0 && userInviteId === account.userId && (
           <Button
             className="btn-orange"
             variant="contained"
@@ -126,7 +139,7 @@ export default function FriendSearchBox({ searchData, sockets,onchange }) {
             Huỷ
           </Button>
         )}
-        {status === 0 && userConfirmId===account.userId && (
+        {status === 0 && userConfirmId === account.userId && (
           <Button
             className="btn-orange"
             variant="contained"

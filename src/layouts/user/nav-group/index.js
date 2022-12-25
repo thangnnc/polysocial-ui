@@ -8,8 +8,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-// import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 import Iconify from "../../../components/iconify";
 import NavGroupSection from "../../../components/nav-group-section/NavGroupSection";
 import useLogin from "../../../utils/Login/useLogin";
@@ -27,8 +26,6 @@ const BoxNav = styled("div")(({ theme }) => ({
   position: "fixed",
   [theme.breakpoints.up("lg")]: {
     paddingTop: APP_BAR_DESKTOP + 9,
-    // paddingLeft: theme.spacing(3),
-    // paddingRight: theme.spacing(2),
   },
 }));
 
@@ -37,8 +34,6 @@ export default function NavGroup(props) {
   const { account } = useLogin();
   const [groups, setGroups] = useState([]);
   const [group, setGroup] = useState();
-  // const location = useLocation();
-  // const [showRequestMember, setShowRequestMember] = useState([]);
   const [count, setCount] = useState(0);
   const [roomId, setRoomId] = useState();
   let socket;
@@ -105,11 +100,6 @@ export default function NavGroup(props) {
       path: `/groups/detail/exercise/${groupId}`,
       icon: icon("material-symbols:nest-clock-farsight-analog-outline"),
     },
-    // {
-    //   title: "Rời nhóm",
-    //   path: `/groups/detail/leave/${groupId}`,
-    //   icon: icon("ic:round-log-out"),
-    // },
   ];
 
   useEffect(() => {
@@ -138,7 +128,6 @@ export default function NavGroup(props) {
       listNameGr.listOnline = listOnline;
       listNameGr.name = response.name;
       listNameGr.roomId = response.roomId;
-      
       setGroup(listNameGr);
       setRoomId(response.roomId);
       // toast.success("Lấy dữ liệu thành công");
@@ -257,7 +246,7 @@ export default function NavGroup(props) {
         </Button>
       </Stack>
       <Box sx={{ paddingTop: 3 }}>
-        <NavGroupSection data={navGroupConfig} state={group}/>
+        <NavGroupSection data={navGroupConfig} state={group} />
       </Box>
     </BoxNav>
   );

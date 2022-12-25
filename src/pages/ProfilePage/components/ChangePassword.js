@@ -20,8 +20,11 @@ const styleInputFullField = {
 
 export default function ChangePassword(props) {
   const { logout } = useLogin();
+
   const [showPassword, setShowPassword] = useState(false);
+
   const [showNewPassword, setNewShowPassword] = useState(false);
+
   const [showConfirmPassword, setConfirmShowPassword] = useState(false);
 
   const [user, setUser] = useState({
@@ -74,25 +77,6 @@ export default function ChangePassword(props) {
           autoComplete="none"
           sx={styleInputFullField}
         />
-
-        {/* <TextField
-          name="password"
-          label="Mật khẩu"
-          placeholder="Nhập mật khẩu"
-          onChange={(e) => {
-            setUser({ ...user, oldPassword: e.target.value });
-          }}
-          variant="standard"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon={"carbon:password"} />
-              </InputAdornment>
-            ),
-          }}
-          autoComplete="none"
-          sx={styleInputFullField}
-        /> */}
 
         <TextField
           name="password"

@@ -12,7 +12,6 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Box } from "@mui/system";
 import NotificationBox from "./components/NotificationBox";
-import Asios from "../../../utils/Axios";
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +31,9 @@ const scrollbar = {
 
 export default function NotificationPopover({ notifications, socket }) {
   const [open, setOpen] = useState(false);
+
   let count = 0;
+
   try {
     for (let index = 0; index < notifications.content.length; index++) {
       const element = notifications.content[index];
@@ -43,6 +44,7 @@ export default function NotificationPopover({ notifications, socket }) {
       }
     }
   } catch (error) {}
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
