@@ -202,7 +202,7 @@ function App() {
   try {
     socket.on("recevie_message_name", (data) => {
       setListeningNameMessage(true);
-      setListSocket(data);
+      // setListSocket(data);
     });
   } catch (error) {}
 
@@ -210,7 +210,7 @@ function App() {
     try {
       if (listeningNameMessage) {
         fetchNameGroup(listSocket);
-        getAllNotification();
+        // getAllNotification();
         setListeningNameMessage(false);
       }
     } catch (error) {}
