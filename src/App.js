@@ -70,7 +70,7 @@ function App() {
   useEffect(() => {
     try {
       if (account) {
-        const CONNECTTION_PORT = "http://localhost:3002";
+        const CONNECTTION_PORT = "https://polysocial-socket.vercel.app";
         setsocket(
           io(CONNECTTION_PORT, {
             secure: true // for SSL
