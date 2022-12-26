@@ -21,8 +21,9 @@ const styleInputFullField = {
   mb: 3,
 };
 
-export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
+export const DialogCreateExercise = ({ open, setOpen, onChange, groupId,socket }) => {
   const { account } = useLogin();
+  // console.log("sockett",socket.socket.socket)
 
   const [exerciseCreate, setExerciseCreate] = useState({
     groupId: groupId,
@@ -33,6 +34,7 @@ export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
   const createExercise = async () => {
     const response = await Axios.Exersice.createExercise(exerciseCreate);
     if (response) {
+      socket.socket.socket.emit("create_successful_exercises");
       toast.success("Tạo bài tập thành công");
       setOpen(false);
       onChange();
