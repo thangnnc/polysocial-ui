@@ -1,9 +1,11 @@
 import {
+  Backdrop,
   Box,
   Button,
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   InputAdornment,
   TextField,
   Typography,
@@ -37,6 +39,8 @@ export default function GroupExerciseDetailPage() {
   const [isSelected, setIsSelected] = useState(false);
 
   const [data, setData] = useState([]);
+
+  const [showLoading, setShowLoading] = useState(false);
 
   const [upload, setUpload] = useState({
     file: "",
@@ -100,6 +104,7 @@ export default function GroupExerciseDetailPage() {
   };
 
   const submitHandler = async () => {
+    setShowLoading(!showLoading);
     const formData = new FormData();
     formData.append("file", selectedFile);
     const response = await Axios.Exersice.uploadFileExercise(upload);
@@ -107,6 +112,7 @@ export default function GroupExerciseDetailPage() {
       toast.success("Nộp bài tập thành công");
       getAllData(exerciseId, groupId);
       getOneData(exerciseId);
+      setShowLoading(false);
     } else {
       toast.error("Nộp bài tập thất bại");
     }
@@ -173,28 +179,34 @@ export default function GroupExerciseDetailPage() {
                   />
                 }
                 action={
-                  <Box>
-                    <TextField
-                      id="file-input"
-                      type="file"
-                      name="file"
-                      onChange={changeHandler}
-                      sx={styleInputFullField}
-                    />
-                    <label
-                      htmlFor="file-input"
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        component="span"
-                        sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
-                      >
-                        {!exercise.isSubmit ? "Chọn tệp" : "Đã nộp"}
-                      </Button>
-                    </label>
-                  </Box>
+                  <>
+                    {exercise.status ? (
+                      <Box>
+                        <TextField
+                          id="file-input"
+                          type="file"
+                          name="file"
+                          onChange={changeHandler}
+                          sx={styleInputFullField}
+                        />
+                        <label
+                          htmlFor="file-input"
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            component="span"
+                            sx={{ mt: 2, mr: 5, background: "#ff7b29" }}
+                          >
+                            {!exercise.isSubmit ? "Chọn tệp" : "Đã nộp"}
+                          </Button>
+                        </label>
+                      </Box>
+                    ) : (
+                      ""
+                    )}
+                  </>
                 }
                 title={
                   <Typography
@@ -503,6 +515,12 @@ export default function GroupExerciseDetailPage() {
           </Button>
         </Card>
       </Box>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={showLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 }

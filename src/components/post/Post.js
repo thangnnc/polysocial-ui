@@ -38,19 +38,23 @@ const ButtonNormal = styled(Button)(() => ({
 export default function Post({ posts, onChange, socket }) {
   const [isShowCmt, setShowCmt] = useState(false);
   const { account } = useLogin();
+
+  const [checkPostId, setCheckPostId] = useState("");
+
   const isLike = [];
 
-  const handleShowCmt = () => {
+  const handleShowCmt = (e, postId) => {
+    setCheckPostId(postId);
     setShowCmt(true);
   };
 
-  const likeUnLike = async (postId) => {
+  const likeUnLike = async (postId,userId) => {
     const data = {
       postId: postId,
     };
     const response = await Axios.Likes.likeUnLike(data);
     if (response.status === 200) {
-      socket.emit("Client_request_create_like_comment");
+      socket.emit("Client_request_create_like_comment",userId);
       onChange();
     }
   };
@@ -61,21 +65,18 @@ export default function Post({ posts, onChange, socket }) {
       sx={{ width: "100%", p: 0, display: "block", mb: 4, mx: "auto" }}
     >
       {posts?.map(
-        (
-          {
-            user,
-            postId,
-            content,
-            createdDate,
-            countLike,
-            countComment,
-            listUrl,
-            listComment,
-            listLike,
-          },
-          index
-        ) => (
-          <Card key={index} sx={{ width: "80%", my: 3, mx: "auto" }}>
+        ({
+          user,
+          postId,
+          content,
+          createdDate,
+          countLike,
+          countComment,
+          listUrl,
+          listComment,
+          listLike,
+        }) => (
+          <Card key={postId} sx={{ width: "80%", my: 3, mx: "auto" }}>
             <CardHeader
               avatar={
                 <AvatarCmt
@@ -167,29 +168,34 @@ export default function Post({ posts, onChange, socket }) {
                 })}
 
                 {isLike?.includes(account.studentCode && postId) ? (
-                  <ButtonLiked size="large" onClick={() => likeUnLike(postId)}>
+                  <ButtonLiked size="large" onClick={() => likeUnLike(postId,user.userId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Đã Thích
                   </ButtonLiked>
                 ) : (
-                  <ButtonNormal size="large" onClick={() => likeUnLike(postId)}>
+                  <ButtonNormal size="large" onClick={() => likeUnLike(postId,user.userId)}>
                     <FavoriteIcon sx={{ mr: 1 }} />
                     Thích
                   </ButtonNormal>
                 )}
-                <ButtonNormal size="large" onClick={handleShowCmt}>
+                <ButtonNormal
+                  size="large"
+                  onClick={(e) => handleShowCmt(e, postId)}
+                >
                   <TextsmsIcon sx={{ mr: 1 }} />
                   Bình Luận
                 </ButtonNormal>
               </Box>
-
               <CommentBox
-                key={index}
-                show={isShowCmt}
+                key={postId}
+                open={isShowCmt}
+                setOpen={setShowCmt}
                 comments={listComment}
                 postId={postId}
+                userId={user.userId}
                 onChange={onChange}
                 socket={socket}
+                checkPostIds={checkPostId}
               />
             </CardActions>
           </Card>

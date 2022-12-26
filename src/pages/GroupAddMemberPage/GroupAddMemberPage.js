@@ -7,6 +7,7 @@ import Axios from "./../../utils/Axios/index";
 
 export default function GroupAddMemberPage(props) {
   let socket;
+  const [listeningResquestMember, setListeningRequestMember] = useState(false);
 
   try {
     socket = props.socket.socket;
@@ -25,19 +26,27 @@ export default function GroupAddMemberPage(props) {
     setShowRequestMember(response);
   };
 
+  ///listeningResquestMember
+  try {
+    socket.on("reset_request_group", () => {
+      setListeningRequestMember(true);
+    });
+  } catch (error) {}
+
   useEffect(() => {
     try {
-      socket.on("accept-member", function () {
-        console.log("runnnnnn");
+      if (listeningResquestMember) {
         getRequestMember(groupId);
-      });
+        setListeningRequestMember(false);
+      }
     } catch (error) {}
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningResquestMember]);
 
   const addFriendHandle = async (userId) => {
     const response = await Axios.Groups.addMemberJoinGroup(groupId, userId);
     if (response.status === 200) {
-      socket.emit("add-member");
+      await socket.emit("add_member_group_one");
       toast.success("Đã thêm thành viên thành công");
       getRequestMember(groupId);
     } else {

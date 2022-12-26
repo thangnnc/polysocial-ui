@@ -27,6 +27,8 @@ function App() {
 
   const [notifications, setNotifications] = useState([]);
 
+  const [notificationsDeadline, setNotificationsDeadline] = useState([]);
+
   const [showRequestFriend, setShowRequestFriend] = useState([]);
 
   const [listSocket, setListSocket] = useState();
@@ -58,6 +60,8 @@ function App() {
     useState(false);
 
   const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
+  const [listeningResetLike, setListeningResetLike] = useState(false);
+  const [listeningExercise, setListeningExercises] = useState(false);
 
   const listRoomId = [];
   useEffect(() => {
@@ -81,6 +85,40 @@ function App() {
     } catch (error) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  ///listeningDeleteFriend
+  try {
+    socket.on("successful_exercises", () => {
+      setListeningExercises(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningExercise) {
+        getAllNotificationDeadline(account?.userId);
+        setListeningExercises(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningExercise]);
+
+  ///listeningResetLike
+  try {
+    socket.on("reset_like_notification", () => {
+      setListeningResetLike(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningResetLike) {
+        getAllNotification();
+        setListeningResetLike(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningResetLike]);
 
   ///listeningDeleteFriend
   try {
@@ -191,7 +229,6 @@ function App() {
   useEffect(() => {
     try {
       if (listeningCreateMemberGroup) {
-        // roomDESC(listSocket);
         fetchNameGroup(listSocket);
         getAllNotification();
         setListeningCreateMemberGroup(false);
@@ -204,7 +241,7 @@ function App() {
   try {
     socket.on("recevie_message_name", (data) => {
       setListeningNameMessage(true);
-      setListSocket(data);
+      // setListSocket(data);
     });
   } catch (error) {}
 
@@ -212,7 +249,6 @@ function App() {
     try {
       if (listeningNameMessage) {
         fetchNameGroup(listSocket);
-        getAllNotification();
         setListeningNameMessage(false);
       }
     } catch (error) {}
@@ -322,7 +358,6 @@ function App() {
   };
 
   const fetchNameGroup = async (listSocket) => {
-    console.log("run meeeee");
     const arr = [];
     const response = await Axios.Messages.getNameGroupDESC({ userId: 1 });
     for (let index = 0; index < response.data.length; index++) {
@@ -412,8 +447,6 @@ function App() {
       }
     }
     setCount(counts);
-    console.log("listConetnt 3", listContent);
-
     setGroupList(listContent);
   };
 
@@ -475,6 +508,18 @@ function App() {
     const response = await Axios.Notifications.getAllNotifications();
     setNotifications(response);
   };
+  useEffect(() => {
+    getAllNotificationDeadline(account?.userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getAllNotificationDeadline = async () => {
+    const response = await Axios.Notifications.getAllNotificationsDealine(
+      account?.userId
+    );
+    console.log("rep",response)
+    setNotificationsDeadline(response);
+  };
 
   const updateAllNotification = async () => {
     const response = await Axios.Notifications.updateAllNotifications();
@@ -497,6 +542,7 @@ function App() {
           listResponse={listResponse}
           notifications={notifications}
           showRequestFriend={showRequestFriend}
+          notificationsDeadline={notificationsDeadline}
         />
       </ThemeProvider>
       <ToastContainer />

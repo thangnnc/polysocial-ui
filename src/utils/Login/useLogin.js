@@ -1,8 +1,4 @@
 import { useState } from "react";
-// import { io } from "socket.io-client";
-
-// const CONNECTTION_PORT = "localhost:3002";
-// let socket = io(CONNECTTION_PORT);
 
 export default function useLogin() {
   const getAccount = () => {
@@ -23,7 +19,6 @@ export default function useLogin() {
   };
 
   const logout = () => {
-    // socket.emit("logout", account);
     sessionStorage.removeItem("account");
     window.location = "/login";
   };
@@ -32,6 +27,5 @@ export default function useLogin() {
     account,
     setAccount: saveAccount,
     logout,
-    // socket,
   };
 }

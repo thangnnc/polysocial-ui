@@ -36,6 +36,9 @@ export default function NavGroup(props) {
   const [group, setGroup] = useState();
   const [count, setCount] = useState(0);
   const [roomId, setRoomId] = useState();
+  const [listeningResquestMember, setListeningRequestMember] = useState(false);
+  const [listeningResquestMemberOne, setListeningRequestMemberOne] = useState(false);
+
   let socket;
   let listOnline;
   try {
@@ -43,13 +46,45 @@ export default function NavGroup(props) {
     socket = props.socket.socket.socket;
   } catch (error) {}
 
+  // useEffect(() => {
+  //   try {
+  //     socket.on("accept-member", function () {
+  //       getRequestMember(groupId);
+  //     });
+  //   } catch (error) {}
+  // });
+  try {
+    socket.on("reset_request_group_one", () => {
+      setListeningRequestMemberOne(true);
+    });
+  } catch (error) {}
+
   useEffect(() => {
     try {
-      socket.on("accept-member", function () {
+      if (listeningResquestMemberOne) {
         getRequestMember(groupId);
-      });
+        setListeningRequestMemberOne(false);
+      }
     } catch (error) {}
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningResquestMemberOne]);
+  
+  ///listeningResquestMember
+  try {
+    socket.on("reset_request_group", () => {
+      setListeningRequestMember(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningResquestMember) {
+        getRequestMember(groupId);
+        setListeningRequestMember(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningResquestMember]);
 
   useEffect(() => {
     getRequestMember(groupId);

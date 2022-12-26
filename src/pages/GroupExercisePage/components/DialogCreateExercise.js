@@ -5,6 +5,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import {
+  Backdrop,
+  CircularProgress,
   DialogContentText,
   Divider,
   Grid,
@@ -21,8 +23,11 @@ const styleInputFullField = {
   mb: 3,
 };
 
-export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
+export const DialogCreateExercise = ({ open, setOpen, onChange, groupId,socket }) => {
   const { account } = useLogin();
+  // console.log("sockett",socket.socket.socket)
+
+  const [showLoading, setShowLoading] = useState(false);
 
   const [exerciseCreate, setExerciseCreate] = useState({
     groupId: groupId,
@@ -31,11 +36,15 @@ export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
   });
 
   const createExercise = async () => {
+    setShowLoading(!showLoading);
+    handleClose();
     const response = await Axios.Exersice.createExercise(exerciseCreate);
     if (response) {
+      socket.socket.socket.emit("create_successful_exercises");
       toast.success("Tạo bài tập thành công");
       setOpen(false);
       onChange();
+      setShowLoading(false);
     } else {
       toast.error("Tạo bài tập thất bại!");
     }
@@ -130,6 +139,12 @@ export const DialogCreateExercise = ({ open, setOpen, onChange, groupId }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={showLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };

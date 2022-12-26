@@ -20,6 +20,7 @@ import Iconify from "../../../components/iconify";
 import Axios from "../../../utils/Axios";
 import { toast } from "react-toastify";
 import useLogin from "../../../utils/Login/useLogin";
+import useValidator from "../../../utils/Validator";
 
 const styleInputFullField = {
   width: "100%",
@@ -57,6 +58,8 @@ const marjorList = [
 ];
 
 export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
+  const { validate } = useValidator();
+
   const { setAccount } = useLogin();
 
   const [src, setSrc] = useState();
@@ -64,6 +67,50 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
   const [userReg, setUserReg] = useState({});
 
   const [showLoading, setShowLoading] = useState(false);
+
+  const [errors, setErrors] = useState({
+    password: "",
+    birthday: "",
+    major: undefined,
+    course: "",
+    gender: undefined,
+  });
+
+  const handleOnInput = (event, error) => {
+    const { name, value } = event.target;
+    setErrors({
+      ...errors,
+      [name]: validate(error, value),
+    });
+  };
+
+  function deepObjectEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = isObject(val1) && isObject(val2);
+
+      if (
+        (areObjects && !deepObjectEqual(val1, val2)) ||
+        (!areObjects && val1 !== val2)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isObject(object) {
+    return object != null && typeof object === "object";
+  }
 
   const handleUploadFile = (e) => {
     setUserReg((user) => ({
@@ -118,14 +165,41 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
   };
 
   const handleRegister = async (formData) => {
-    const response = await Axios.LoginAPI.registerAPI(formData);
-    if (response) {
-      setAccount(response);
-      toast.success("Đăng ký thành công! Vui lòng đăng nhập!");
-      window.location = "/home";
+    const data = {
+      password: "",
+      birthday: "",
+      major: undefined,
+      course: "",
+      gender: undefined,
+    };
+
+    if (!deepObjectEqual(data, errors)) {
+      setErrors({
+        password: "",
+        birthday: "",
+        major: undefined,
+        course: "",
+        gender: undefined,
+      });
+      const response = await Axios.LoginAPI.registerAPI(formData);
+      if (response) {
+        setAccount(response);
+        toast.success("Đăng ký thành công! Vui lòng đăng nhập!");
+        window.location = "/home";
+      } else {
+        toast.error("Đăng ký thất bại. Vui lòng thử lại!");
+        setOpen(() => false);
+      }
     } else {
-      toast.error("Đăng ký thất bại. Vui lòng thử lại!");
-      setOpen(() => false);
+      setErrors({
+        ...errors,
+        password: "Mật khẩu không được để trống!",
+        birthday: "Ngày sinh không được để trống!",
+        major: "Ngành học không được để trống!",
+        course: "Khoá học không được để trống!",
+        gender: "Giới tính không được để trống!",
+      });
+      toast.error("Vui lòng điền đầy đủ thông tin!");
     }
   };
 
@@ -196,6 +270,9 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
                 }
                 autoComplete="none"
                 sx={styleInputFullField}
+                error={errors.password ? true : false}
+                helperText={errors.password}
+                onInput={(e) => handleOnInput(e, "Mật khẩu")}
               />
               <TextField
                 name="fullName"
@@ -259,6 +336,9 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
                       }))
                     }
                     sx={styleInputFullField}
+                    error={errors.course ? true : false}
+                    helperText={errors.course}
+                    onInput={(e) => handleOnInput(e, "Khoá học")}
                   />
                 </Grid>
               </LayoutFormTwoField>
@@ -292,6 +372,9 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
                       }))
                     }
                     sx={styleInputFullField}
+                    error={errors.major ? true : false}
+                    helperText={errors.major}
+                    onInput={(e) => handleOnInput(e, "Ngành học")}
                   />
                 )}
               />
@@ -318,6 +401,9 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
                       }))
                     }
                     sx={styleInputFullField}
+                    error={errors.birthday ? true : false}
+                    helperText={errors.birthday}
+                    onInput={(e) => handleOnInput(e, "Ngày sinh")}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -351,6 +437,9 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
                           }))
                         }
                         sx={styleInputFullField}
+                        error={errors.gender ? true : false}
+                        helperText={errors.gender}
+                        onInput={(e) => handleOnInput(e, "Giới tính")}
                       />
                     )}
                   />
@@ -382,7 +471,6 @@ export const RegisterDialog = ({ open = false, setOpen, newUser }) => {
       >
         <CircularProgress color="inherit" sx={{ zIndex: 999999 }} />
       </Backdrop>
-      s
     </div>
   );
 };

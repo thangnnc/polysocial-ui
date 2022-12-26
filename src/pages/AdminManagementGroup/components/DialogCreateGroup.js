@@ -17,6 +17,7 @@ import Iconify from "../../../components/iconify";
 import Axios from "./../../../utils/Axios/index";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import useValidator from "../../../utils/Validator";
 
 const styleInputFullField = {
   width: "100%",
@@ -32,6 +33,8 @@ const styleAvatar = {
 };
 
 export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
+  const { validate } = useValidator();
+
   let socket;
 
   try {
@@ -45,6 +48,49 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   const [admins, setAdmins] = useState([]);
 
   const [userId, setUserId] = useState();
+
+  const [errors, setErrors] = useState({
+    name: "",
+    className: "",
+    description: "",
+    adminId: undefined,
+  });
+
+  const handleOnInput = (event, error) => {
+    const { name, value } = event.target;
+    setErrors({
+      ...errors,
+      [name]: validate(error, value),
+    });
+  };
+
+  function deepObjectEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = isObject(val1) && isObject(val2);
+
+      if (
+        (areObjects && !deepObjectEqual(val1, val2)) ||
+        (!areObjects && val1 !== val2)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isObject(object) {
+    return object != null && typeof object === "object";
+  }
 
   const handleUploadFile = (e) => {
     setGroupCreate((group) => ({
@@ -69,17 +115,35 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
   };
 
   const createGroup = async () => {
+    const data = {
+      name: "",
+      className: "",
+      description: "",
+      adminId: undefined,
+    };
+
     let formData = new FormData();
     formData.append("avatarFile", groupCreate.avatarFile);
-    const response = await Axios.Groups.createGroup(groupCreate);
 
-    if (response) {
-      toast.success("Tạo nhóm học tập thành công");
-      await socket.emit("create_group", userId);
-      setOpen(false);
-      onChange();
+    if (!deepObjectEqual(data, errors)) {
+      const response = await Axios.Groups.createGroup(groupCreate);
+      if (response) {
+        toast.success("Tạo nhóm học tập thành công");
+        await socket.emit("create_group", userId);
+        setOpen(false);
+        onChange();
+      } else {
+        toast.error("Tạo nhóm học tập thất bại!");
+      }
     } else {
-      toast.error("Tạo nhóm học tập thất bại!");
+      setErrors({
+        ...errors,
+        name: "Tên nhóm học tập không được để trống!",
+        className: "Tên lớp không được để trống!",
+        description: "Mô tả không được để trống!",
+        adminId: "Chọn người tạo nhóm học tập",
+      });
+      toast.error("Vui lòng điền đầy đủ thông tin!");
     }
   };
 
@@ -142,9 +206,15 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                     label="Người tạo nhóm học tập"
                     placeholder="Chọn người tạo nhóm học tập"
                     sx={styleInputFullField}
+                    error={errors.adminId ? true : false}
+                    helperText={errors.adminId}
+                    onInput={(e) =>
+                      handleOnInput(e, "Chọn người tạo nhóm học tập")
+                    }
                   />
                 )}
               />
+
               <TextField
                 name="name"
                 label="Tên nhóm học tập"
@@ -162,16 +232,19 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
+                error={errors.name ? true : false}
+                helperText={errors.name}
+                onInput={(e) => handleOnInput(e, "Tên nhóm học tập")}
               />
 
               <TextField
                 name="className"
-                label="Mã lớp học tập"
+                label="Tên lớp học tập"
                 onChange={(e) =>
                   setGroupCreate({ ...groupCreate, className: e.target.value })
                 }
                 variant="standard"
-                placeholder="Nhập mã lớp học tập"
+                placeholder="Nhập lớp học tập"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -181,6 +254,9 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
+                error={errors.className ? true : false}
+                helperText={errors.className}
+                onInput={(e) => handleOnInput(e, "Tên lớp học tập")}
               />
 
               <TextField
@@ -203,6 +279,9 @@ export const DialogCreateGroup = ({ open, setOpen, onChange, propsSocket }) => {
                 }}
                 autoComplete="none"
                 sx={styleInputFullField}
+                error={errors.description ? true : false}
+                helperText={errors.description}
+                onInput={(e) => handleOnInput(e, "Mô tả nhóm học tập")}
               />
             </Grid>
           </Grid>

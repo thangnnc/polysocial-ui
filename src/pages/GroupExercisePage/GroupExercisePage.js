@@ -22,9 +22,8 @@ import Axios from "./../../utils/Axios/index";
 import Iconify from "../../components/iconify/Iconify";
 import { DialogEditExercise } from "./components/DialogEditExercise";
 
-export default function GroupExercisePage() {
+export default function GroupExercisePage(props) {
   const [open, setOpen] = useState(null);
-
   const { account } = useLogin();
 
   const { groupId } = useParams();
@@ -39,12 +38,33 @@ export default function GroupExercisePage() {
 
   const [isEdit, setIsEdit] = useState(false);
 
+  const [isCount, setCount] = useState({});
+
+  const [checkExId, setCheckExId] = useState(0);
+
   useEffect(() => {
     getAllData(groupId);
   }, [groupId]);
 
-  const handleExpandClick = () => {
+  useEffect(() => {
+    getCountData(checkExId);
+  }, [checkExId]);
+
+  const handleExpandClick = (exId) => {
+    getCountData(exId);
     setExpanded(!expanded);
+    setCheckExId(exId);
+  };
+
+  const getCountData = async (exId) => {
+    const response = await Axios.Exersice.getCountExercise(exId);
+    console.log(response);
+    if (response) {
+      setCount(response);
+      // toast.success("Lấy dữ liệu bài tập thành công");
+    } else {
+      // toast.error("Lấy dữ liệu bài tập thất bại!");
+    }
   };
 
   const getAllData = async (groupId) => {
@@ -107,11 +127,13 @@ export default function GroupExercisePage() {
                   noWrap
                   fontSize={16}
                   expand={expanded ? exercise.exId : undefined}
-                  onClick={handleExpandClick}
+                  onClick={() => handleExpandClick(exercise.exId)}
+                  // onClick={handleExpandClick}
                   aria-expanded={expanded ? exercise.exId : undefined}
                   aria-label="show"
                 >
-                  {account.fullName} đã tạo mới một bài tập: {exercise?.content}
+                  {account.fullName} đã tạo mới một bài tập: {exercise?.content}{" "}
+                  {!exercise?.status ? "- Đã hết hạn" : ""}
                 </Typography>
               }
               subheader={
@@ -126,55 +148,65 @@ export default function GroupExercisePage() {
             />
             <Collapse
               key={exercise.exId}
-              in={expanded}
+              in={exercise.exId === checkExId ? expanded : false}
               timeout="auto"
               unmountOnExit
             >
-              <CardContent
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography
-                  paragraph
-                  sx={{ fontSize: 20, fontWeight: "bold", width: "50%" }}
-                >
-                  Số bài đã nộp
-                </Typography>
-                <Box
+              {account.role !== "Sinh viên" && (
+                <CardContent
                   sx={{
                     display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    justifyContent: "space-around",
-                    width: "50%",
                   }}
                 >
-                  <Box sx={{ textAlign: "center" }}>
-                    <Typography
-                      component={"p"}
-                      style={{ fontSize: 25, fontWeight: 700 }}
-                    >
-                      0
-                    </Typography>
-                    <Typography variant="body2" paragraph sx={{ fontSize: 18 }}>
-                      Đã nộp
-                    </Typography>
+                  <Typography
+                    paragraph
+                    sx={{ fontSize: 20, fontWeight: "bold", width: "50%" }}
+                  >
+                    Số bài đã nộp
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      width: "50%",
+                    }}
+                  >
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography
+                        component={"p"}
+                        style={{ fontSize: 25, fontWeight: 700 }}
+                      >
+                        {isCount?.countTaskSubmit}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        paragraph
+                        sx={{ fontSize: 18 }}
+                      >
+                        Đã nộp
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography
+                        component={"p"}
+                        style={{ fontSize: 25, fontWeight: 700 }}
+                      >
+                        {isCount?.countTaskNotSubmit}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        paragraph
+                        sx={{ fontSize: 18 }}
+                      >
+                        Chưa nộp
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Box sx={{ textAlign: "center" }}>
-                    <Typography
-                      component={"p"}
-                      style={{ fontSize: 25, fontWeight: 700 }}
-                    >
-                      0
-                    </Typography>
-                    <Typography variant="body2" paragraph sx={{ fontSize: 18 }}>
-                      Chưa nộp
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
+                </CardContent>
+              )}
               <CardActions
                 disableSpacing
                 sx={{
@@ -304,6 +336,7 @@ export default function GroupExercisePage() {
           open={isCreateExercise}
           setOpen={setIsCreateExercise}
           groupId={groupId}
+          socket={props}
         />
 
         <DialogEditExercise
@@ -311,6 +344,7 @@ export default function GroupExercisePage() {
           open={isEdit}
           setOpen={setIsEdit}
           exercise={exercise}
+          props={props}
         />
 
         {account.role !== "Sinh viên" && (

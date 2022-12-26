@@ -24,6 +24,7 @@ import Iconify from "../../../components/iconify";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Axios from "./../../../utils/Axios/index";
+import useValidator from "../../../utils/Validator";
 
 const styleInputFullField = {
   width: "100%",
@@ -48,6 +49,8 @@ const marjorList = [
 ];
 
 export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
+  const { validate } = useValidator();
+
   const [userEdit, setUserEdit] = useState({
     userId: user.userId,
     major: user.major,
@@ -57,14 +60,77 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
     course: user.course,
   });
 
+  const [errors, setErrors] = useState({
+    address: "",
+    birthday: "",
+    major: undefined,
+  });
+
+  const handleOnInput = (event, error) => {
+    const { name, value } = event.target;
+    setErrors({
+      ...errors,
+      [name]: validate(error, value),
+    });
+  };
+
+  function deepObjectEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = isObject(val1) && isObject(val2);
+
+      if (
+        (areObjects && !deepObjectEqual(val1, val2)) ||
+        (!areObjects && val1 !== val2)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isObject(object) {
+    return object != null && typeof object === "object";
+  }
+
   const updateUser = async () => {
-    const response = await Axios.Accounts.updateUser(userEdit);
-    if (response) {
-      toast.success("Cập nhật người dùng thành công");
-      onChange();
-      setOpen(false);
+    const data = {
+      address: "",
+      birthday: "",
+      major: undefined,
+    };
+
+    if (!deepObjectEqual(data, errors)) {
+      setErrors({
+        address: "",
+        birthday: "",
+        major: undefined,
+      });
+      const response = await Axios.Accounts.updateUser(userEdit);
+      if (response) {
+        toast.success("Cập nhật người dùng thành công");
+        onChange();
+        setOpen(false);
+      } else {
+        toast.error("Cập nhật người dùng thất bại!");
+      }
     } else {
-      toast.error("Cập nhật người dùng thất bại!");
+      setErrors({
+        ...errors,
+        address: "Địa chỉ không được để trống!",
+        birthday: "Ngày sinh không được để trống!",
+        major: "Ngành học không được để trống!",
+      });
+      toast.error("Vui lòng điền đầy đủ thông tin!");
     }
   };
 
@@ -200,6 +266,9 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                     (styleInputFullField,
                     { ...styleInputFullField, ml: 5, width: "90%" })
                   }
+                  error={errors.address ? true : false}
+                  helperText={errors.address}
+                  onInput={(e) => handleOnInput(e, "Địa chỉ")}
                 />
               </Box>
 
@@ -223,6 +292,9 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                   }}
                   autoComplete="none"
                   sx={styleInputFullField}
+                  error={errors.birthday ? true : false}
+                  helperText={errors.birthday}
+                  onInput={(e) => handleOnInput(e, "Ngày sinh")}
                 />
 
                 <Autocomplete
@@ -258,6 +330,9 @@ export const DialogEditUser = ({ open, setOpen, user, onChange }) => {
                         }))
                       }
                       sx={styleInputFullField}
+                      error={errors.major ? true : false}
+                      helperText={errors.major}
+                      onInput={(e) => handleOnInput(e, "Ngành học")}
                     />
                   )}
                 />

@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Iconify from "../../../components/iconify/Iconify";
 import useLogin from "../../../utils/Login/useLogin";
+import useValidator from "../../../utils/Validator";
 import Axios from "./../../../utils/Axios/index";
 
 const styleInputFullField = {
@@ -20,6 +21,8 @@ const styleInputFullField = {
 
 export default function ChangePassword(props) {
   const { logout } = useLogin();
+
+  const { validate } = useValidator();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,24 +37,85 @@ export default function ChangePassword(props) {
     confirmPassword: "",
   });
 
-  const updatePassword = async () => {
-    if (user.newPassword !== user.confirmPassword) {
-      toast.error("Mật khẩu mới không khớp!");
-      return;
-    } else if (user.newPassword === user.oldPassword) {
-      toast.error("Mật khẩu mới không được trùng với mật khẩu cũ!");
-      return;
-    } else {
-      console.log(user);
-      const response = await Axios.Accounts.updatePassword(user);
-      if (response === "Update password success") {
-        toast.success("Cập nhật mật khẩu thành công");
-        setTimeout(() => {
-          logout();
-        }, 6000);
-      } else {
-        toast.error("Cập nhật mật khẩu thất bại!");
+  const [errors, setErrors] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const handleOnInput = (event, error) => {
+    const { name, value } = event.target;
+    setErrors({
+      ...errors,
+      [name]: validate(error, value),
+    });
+  };
+
+  function deepObjectEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = isObject(val1) && isObject(val2);
+
+      if (
+        (areObjects && !deepObjectEqual(val1, val2)) ||
+        (!areObjects && val1 !== val2)
+      ) {
+        return false;
       }
+    }
+
+    return true;
+  }
+
+  function isObject(object) {
+    return object != null && typeof object === "object";
+  }
+
+  const updatePassword = async () => {
+    const data = {
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    };
+    if (!deepObjectEqual(data, errors)) {
+      setErrors({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      if (user.newPassword !== user.confirmPassword) {
+        toast.error("Mật khẩu mới không khớp!");
+        return;
+      } else if (user.newPassword === user.oldPassword) {
+        toast.error("Mật khẩu mới không được trùng với mật khẩu cũ!");
+        return;
+      } else {
+        const response = await Axios.Accounts.updatePassword(user);
+        if (response === "Update password success") {
+          toast.success("Cập nhật mật khẩu thành công");
+          setTimeout(() => {
+            logout();
+          }, 6000);
+        } else {
+          toast.error("Cập nhật mật khẩu thất bại!");
+        }
+      }
+    } else {
+      setErrors({
+        ...errors,
+        oldPassword: "Mật khẩu cũ không được để trống!",
+        newPassword: "Mật khẩu mới không được để trống!",
+        confirmPassword: "Xác nhận mật khẩu mới không được để trống!",
+      });
+      toast.error("Vui lòng điền đầy đủ thông tin!");
     }
   };
 
@@ -108,6 +172,9 @@ export default function ChangePassword(props) {
             setUser({ ...user, oldPassword: e.target.value });
           }}
           sx={styleInputFullField}
+          error={errors.oldPassword ? true : false}
+          helperText={errors.oldPassword}
+          onInput={(e) => handleOnInput(e, "Mật khẩu cũ")}
         />
       </Box>
       <Box>
@@ -141,6 +208,9 @@ export default function ChangePassword(props) {
           }}
           autoComplete="none"
           sx={styleInputFullField}
+          error={errors.newPassword ? true : false}
+          helperText={errors.newPassword}
+          onInput={(e) => handleOnInput(e, "Mật khẩu mới")}
         />
 
         <TextField
@@ -175,6 +245,9 @@ export default function ChangePassword(props) {
           }}
           autoComplete="none"
           sx={styleInputFullField}
+          error={errors.confirmPassword ? true : false}
+          helperText={errors.confirmPassword}
+          onInput={(e) => handleOnInput(e, "Xác nhận mật khẩu mới")}
         />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 7 }}>
