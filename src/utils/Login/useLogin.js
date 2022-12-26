@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function useLogin() {
   const getAccount = () => {
-    const accountString = localStorage.getItem("account");
+    const accountString = sessionStorage.getItem("account");
     const account = JSON.parse(accountString);
     return account;
   };
@@ -13,13 +13,13 @@ export default function useLogin() {
     if (!account) {
       return;
     }
-    localStorage.setItem("account", JSON.stringify(account));
+    sessionStorage.setItem("account", JSON.stringify(account));
     setAccount(account);
     return;
   };
 
   const logout = () => {
-    localStorage.removeItem("account");
+    sessionStorage.removeItem("account");
     window.location = "/login";
   };
 
