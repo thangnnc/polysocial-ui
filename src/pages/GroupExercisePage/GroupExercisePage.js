@@ -22,9 +22,8 @@ import Axios from "./../../utils/Axios/index";
 import Iconify from "../../components/iconify/Iconify";
 import { DialogEditExercise } from "./components/DialogEditExercise";
 
-export default function GroupExercisePage() {
+export default function GroupExercisePage(props) {
   const [open, setOpen] = useState(null);
-
   const { account } = useLogin();
 
   const { groupId } = useParams();
@@ -337,6 +336,7 @@ export default function GroupExercisePage() {
           open={isCreateExercise}
           setOpen={setIsCreateExercise}
           groupId={groupId}
+          socket={props}
         />
 
         <DialogEditExercise
@@ -344,6 +344,7 @@ export default function GroupExercisePage() {
           open={isEdit}
           setOpen={setIsEdit}
           exercise={exercise}
+          props={props}
         />
 
         {account.role !== "Sinh viên" && (

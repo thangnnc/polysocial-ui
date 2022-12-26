@@ -1,5 +1,7 @@
 import {
+  Backdrop,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,6 +20,8 @@ export default function DialogUpPost({ open, handleClose, onChange, socket }) {
   const { validate } = useValidator();
 
   const { groupId } = useParams();
+
+  const [showLoading, setShowLoading] = useState(false);
 
   const [files, setFiles] = useState([]);
 
@@ -80,6 +84,8 @@ export default function DialogUpPost({ open, handleClose, onChange, socket }) {
     };
 
     if (!deepObjectEqual(data, errors)) {
+      handleClose();
+      setShowLoading(!showLoading);
       setErrors({
         content: "",
       });
@@ -91,8 +97,8 @@ export default function DialogUpPost({ open, handleClose, onChange, socket }) {
         itemInputPost.content = "";
         toast.success("Tạo bài viết thành công");
         await socket.emit("Client_request_create_like_comment");
-        handleClose();
         onChange();
+        setShowLoading(false);
       } else {
         toast.error("Tạo bài viết thất bại");
       }
@@ -105,65 +111,75 @@ export default function DialogUpPost({ open, handleClose, onChange, socket }) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={700}>
-      <DialogTitle sx={{ textAlign: "center", fontSize: 22, fontWeight: 700 }}>
-        Tạo Bài Viết
-      </DialogTitle>
-      <DialogContent sx={{ width: 700 }}>
-        <DialogContentText>Hãy viết gì đó thật ý nghĩa!!!</DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="content"
-          name="content"
-          label="Nội dung bài viết"
-          type="email"
-          fullWidth
-          variant="outlined"
-          multiline
-          maxRows={10}
-          sx={{ my: 3 }}
-          onChange={(event) =>
-            setItemInputPost({
-              ...itemInputPost,
-              content: event.target.value,
-            })
-          }
-          error={errors.content ? true : false}
-          helperText={errors.content}
-          onInput={(e) => handleOnInput(e, "Nội dung bài viết")}
-        />
-        <TextField
-          id="file"
-          name="file"
-          type="file"
-          fullWidth
-          variant="outlined"
-          onChange={imageUpload}
-        />
-      </DialogContent>
-      <Box sx={{ display: "flex", alignItems: "center", ml: 3 }}>
-        {files.map((item, index) => (
-          <img
-            key={index}
-            src={item}
-            style={{ width: "100px", height: "100px", marginRight: "5px" }}
-            alt={index}
-          />
-        ))}
-      </Box>
-      <DialogActions>
-        <Button onClick={handleClose} variant="outlined" color="warning">
-          Hủy
-        </Button>
-        <Button
-          className="btn-orange"
-          variant="contained"
-          onClick={handleSummit}
+    <>
+      <Dialog open={open} onClose={handleClose} maxWidth={700}>
+        <DialogTitle
+          sx={{ textAlign: "center", fontSize: 22, fontWeight: 700 }}
         >
-          Đăng Bài
-        </Button>
-      </DialogActions>
-    </Dialog>
+          Tạo Bài Viết
+        </DialogTitle>
+        <DialogContent sx={{ width: 700 }}>
+          <DialogContentText>Hãy viết gì đó thật ý nghĩa!!!</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="content"
+            name="content"
+            label="Nội dung bài viết"
+            type="email"
+            fullWidth
+            variant="outlined"
+            multiline
+            maxRows={10}
+            sx={{ my: 3 }}
+            onChange={(event) =>
+              setItemInputPost({
+                ...itemInputPost,
+                content: event.target.value,
+              })
+            }
+            error={errors.content ? true : false}
+            helperText={errors.content}
+            onInput={(e) => handleOnInput(e, "Nội dung bài viết")}
+          />
+          <TextField
+            id="file"
+            name="file"
+            type="file"
+            fullWidth
+            variant="outlined"
+            onChange={imageUpload}
+          />
+        </DialogContent>
+        <Box sx={{ display: "flex", alignItems: "center", ml: 3 }}>
+          {files.map((item, index) => (
+            <img
+              key={index}
+              src={item}
+              style={{ width: "100px", height: "100px", marginRight: "5px" }}
+              alt={index}
+            />
+          ))}
+        </Box>
+        <DialogActions>
+          <Button onClick={handleClose} variant="outlined" color="warning">
+            Hủy
+          </Button>
+          <Button
+            className="btn-orange"
+            variant="contained"
+            onClick={handleSummit}
+          >
+            Đăng Bài
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={showLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   );
 }

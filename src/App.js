@@ -61,6 +61,7 @@ function App() {
 
   const [listeningDeleteFriend, setListeningDeleteFriend] = useState(false);
   const [listeningResetLike, setListeningResetLike] = useState(false);
+  const [listeningExercise, setListeningExercises] = useState(false);
 
   const listRoomId = [];
   useEffect(() => {
@@ -83,6 +84,24 @@ function App() {
     } catch (error) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  ///listeningDeleteFriend
+  try {
+    socket.on("successful_exercises", () => {
+      setListeningExercises(true);
+    });
+  } catch (error) {}
+
+  useEffect(() => {
+    try {
+      if (listeningExercise) {
+        getAllNotificationDeadline(account?.userId);
+        setListeningExercises(false);
+      }
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listeningExercise]);
+
   ///listeningResetLike
   try {
     socket.on("reset_like_notification", () => {
@@ -497,6 +516,7 @@ function App() {
     const response = await Axios.Notifications.getAllNotificationsDealine(
       account?.userId
     );
+    console.log("rep",response)
     setNotificationsDeadline(response);
   };
 

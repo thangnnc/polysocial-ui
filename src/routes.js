@@ -100,7 +100,7 @@ export default function Router(props) {
         },
         {
           path: "/groups/detail/exercise/:groupId",
-          element: <GroupExercisePage />,
+          element: <GroupExercisePage socket={props} />,
         },
         {
           path: "/groups/detail/exercise/detail/:groupId/:exerciseId",

@@ -20,7 +20,7 @@ const styleInputFullField = {
   mb: 3,
 };
 
-export const DialogEditExercise = ({ open, setOpen, exercise, onChange }) => {
+export const DialogEditExercise = ({ open, setOpen, exercise, onChange,props }) => {
   const [exerciseEdit, setExerciseEdit] = useState({
     content: "",
     deadline: "",
